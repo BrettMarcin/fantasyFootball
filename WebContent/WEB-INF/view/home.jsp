@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head> 
+	<script type="text/javascript" src="../../resources/scripts.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <title>Home</title> 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 </head>
