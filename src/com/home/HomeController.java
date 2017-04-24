@@ -25,8 +25,8 @@ public class HomeController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
-    	theData Data = new theData();
-    	model.addAttribute("content", Data.theWord);
+    	//theData Data = new theData();
+    	//model.addAttribute("content", Data.theWord);
     	model.addAttribute("name", this.theName);
     	return "home"; 
     }
