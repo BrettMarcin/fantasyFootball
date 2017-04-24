@@ -1,9 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head> 
-	<script type="text/javascript" src="../../resources/scripts.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-    <title>Home</title> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="/resources/scripts.js" /></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 </head>
 <body>
@@ -12,17 +11,16 @@
 <button type="button">Start</button>
 <button type="button">Stop</button>
 <h2>${content}</h2>
-<c:choose>
-    <c:when test="${empty name}">
-        	<form action="changeName" method="POST">
+
+
+<% if(request.getAttribute("name") == null){ %>
+	 <form action="changeName" method="POST">
     		<input type="text" name="playerName" placeholder="What's your name?"/>
     		<input type="submit" />
     	</form>
-    </c:when>
-    <c:otherwise>
+<% } else { %>
         <h2>${name}</h2>
-    </c:otherwise>
-</c:choose>
+<%} %>
 
 <h2> Players </h2>
 <table width="50%">

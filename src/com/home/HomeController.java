@@ -1,6 +1,7 @@
 package com.home;
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
 	
-	private String theName;
+	private String theName = null;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
@@ -28,9 +29,9 @@ public class HomeController {
     }
 	
 	@RequestMapping(value = "/changeName", method = RequestMethod.POST)
-	public void changeName(@ModelAttribute String theName, HttpServletResponse response) throws IOException{
-		this.theName = theName;
-		response.sendRedirect("/");
+	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		this.theName = request.getParameter("playerName");
+		response.sendRedirect("/FantasyFootball/");
     }
 	
 }
