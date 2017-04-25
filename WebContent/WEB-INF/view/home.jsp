@@ -10,7 +10,6 @@
 <button type="button">Update Roster</button>
 <button type="button">Start</button>
 <button type="button">Stop</button>
-<h2>${content}</h2>
 
 
 <% if(request.getAttribute("name") == null){ %>
