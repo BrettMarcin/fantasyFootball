@@ -20,20 +20,18 @@ import java.util.*;
 public class HomeController {
 	
 	private String theName = null;
-	private static HashSet<Player> playersOpen = new HashSet<Player>();
-	
-	public void setHash(Player p1){
-		HomeController.playersOpen.add(p1);
-	}
-	
-	public static HashSet<Player> getHash(){
-		return playersOpen;
-	}
+	private static HashSet<Player> playersOpen = null;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
-    	//theData Data = new theData();
-    	//model.addAttribute("content", Data.theWord);
+    	theData Data = new theData();
+    	if(this.playersOpen == null){
+    		this.playersOpen = Data.getRankingPlayers(); 
+    	}
+    	
+    	ArrayList<Player> list = new ArrayList<Player>(this.playersOpen);
+    	
+    	model.addAttribute("listOfPlayers", list);
     	model.addAttribute("name", this.theName);
     	return "home"; 
     }
@@ -43,5 +41,14 @@ public class HomeController {
 		this.theName = request.getParameter("playerName");
 		response.sendRedirect("/FantasyFootball/");
     }
+	
+	public void setHash(Player p1){
+		this.playersOpen = new HashSet<Player>();
+		this.playersOpen.add(p1);
+	}
+	
+	public static HashSet<Player> getHash(){
+		return playersOpen;
+	}
 	
 }

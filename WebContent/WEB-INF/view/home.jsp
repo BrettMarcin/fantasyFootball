@@ -19,6 +19,7 @@
     	</form>
 <% } else { %>
         <h2>${name}</h2>
+        <jsp:include page="listOfPlayers.jsp" />
 <%} %>
 
 <h2> Players </h2>

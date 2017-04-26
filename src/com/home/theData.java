@@ -9,11 +9,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class theData {
-	public String theWord;
-
 	
-	public theData() throws IOException{
-		HomeController home = new HomeController();
+	public theData(){
+		
+	}
+	
+	public HashSet<Player> getRankingPlayers() throws IOException{
+		//call https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p
+		HashSet<Player> playersOpen = new HashSet<Player>();
 		Document doc = Jsoup.connect("https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p").get();
 		Element table = doc.select("table").get(0); 
 		Elements rows = table.select("tr");
@@ -26,23 +29,13 @@ public class theData {
 				String[] words=text.split("\\s");
 				try{
 					Player p1 = new Player(Integer.parseInt(words[0]), words[1], words[2]);
-					home.setHash(p1);
+					playersOpen.add(p1);
 				}catch(Exception e){
 					
 				}
 			}
-			
-			/*Element link = doc.getElementsByTag("p").first();
-			this.theWord = link.text();*/
 		}
-		
-	}
-	
-	public HashSet<Player> getRankingPlayers(){
-		//call https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p
-		
-		
-		return null;
+		return playersOpen;
 	}
 	
 	public HashSet<Player> getRankingPlayers(HashSet<Player> original){
