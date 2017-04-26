@@ -22,7 +22,6 @@ public class HomeController {
 	private String theName = null;
 	private HashSet<Player> playserOpen = new HashSet<Player>();
 	
-	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
     	//theData Data = new theData();

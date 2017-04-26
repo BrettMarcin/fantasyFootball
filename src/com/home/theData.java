@@ -14,10 +14,22 @@ public class theData {
 	
 	public theData() throws IOException{
 		
-		Document doc = Jsoup.connect("http://fantasy.nfl.com/research/scoringleaders").get();
-		//String title = doc.title();
-		Element link = doc.getElementsByTag("p").first();
-		this.theWord = link.text();
+		Document doc = Jsoup.connect("https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p").get();
+		Element table = doc.select("table").get(0); 
+		Elements rows = table.select("tr");
+		for(int i = 2; i < rows.size(); i++){
+			Element row = rows.get(i);
+			Elements cols = row.select("td");
+			String text = cols.text();
+			boolean tierCheck = text.contains("Tier");
+			if(tierCheck != true){
+				String[] words=text.split("\\s");
+				Player p1 = new Player(Integer.parseInt(words[0]), words[1], words[2]);
+			}
+			
+			/*Element link = doc.getElementsByTag("p").first();
+			this.theWord = link.text();*/
+		}
 		
 	}
 	
