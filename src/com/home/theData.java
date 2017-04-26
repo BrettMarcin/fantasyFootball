@@ -13,11 +13,12 @@ public class theData {
 
 	
 	public theData() throws IOException{
-		/*
-		Document doc = Jsoup.connect("http://www.espn.com/").get();
+		
+		Document doc = Jsoup.connect("http://fantasy.nfl.com/research/scoringleaders").get();
+		//String title = doc.title();
 		Element link = doc.getElementsByTag("p").first();
 		this.theWord = link.text();
-		*/
+		
 	}
 	
 	public HashSet<Player> getRankingPlayers(){

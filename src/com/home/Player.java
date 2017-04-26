@@ -12,4 +12,5 @@ public class Player {
 	public int rushYards;
 	public int rushTDs;
 	public int fum;
+	public int rank;
 }
