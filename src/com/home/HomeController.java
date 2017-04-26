@@ -20,7 +20,15 @@ import java.util.*;
 public class HomeController {
 	
 	private String theName = null;
-	private HashSet<Player> playserOpen = new HashSet<Player>();
+	private static HashSet<Player> playersOpen = new HashSet<Player>();
+	
+	public void setHash(Player p1){
+		HomeController.playersOpen.add(p1);
+	}
+	
+	public static HashSet<Player> getHash(){
+		return playersOpen;
+	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {

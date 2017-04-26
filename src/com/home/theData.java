@@ -13,7 +13,7 @@ public class theData {
 
 	
 	public theData() throws IOException{
-		
+		HomeController home = new HomeController();
 		Document doc = Jsoup.connect("https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p").get();
 		Element table = doc.select("table").get(0); 
 		Elements rows = table.select("tr");
@@ -26,6 +26,7 @@ public class theData {
 				String[] words=text.split("\\s");
 				try{
 					Player p1 = new Player(Integer.parseInt(words[0]), words[1], words[2]);
+					home.setHash(p1);
 				}catch(Exception e){
 					
 				}
