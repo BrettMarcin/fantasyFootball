@@ -30,6 +30,9 @@ public class HomeController {
     	}
     	
     	ArrayList<Player> list = new ArrayList<Player>(this.playersOpen);
+    	quick_sort sorting_object = new quick_sort(list);
+    	sorting_object.quickSort(0, list.size() - 1);
+    	list = sorting_object.theList;
     	
     	model.addAttribute("listOfPlayers", list);
     	model.addAttribute("name", this.theName);

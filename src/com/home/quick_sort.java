@@ -1,23 +1,25 @@
 package com.home;
-/*
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class quick_sort {
 	
-	public ArrayList<Player>
+	public ArrayList<Player> theList = null;
 	
-	public ArrayList<Player> quickSort(int low, int high){
+	public quick_sort( ArrayList<Player> newList){
+		this.theList = newList;
+	}
+	
+	public void quickSort(int low, int high){
 		int i = low, j = high;
         // Get the pivot element from the middle of the list
-        int pivot = numbers[low + (high-low)/2];
+        int pivot = this.theList.get(low + (high-low)/2).rank;
 
         // Divide into two lists
         while (i <= j) {
-                while (numbers[i] < pivot) {
+                while (this.theList.get(i).rank < pivot) {
                         i++;
                 }
-                while (numbers[j] > pivot) {
+                while (this.theList.get(j).rank > pivot) {
                    j--;
                 }
                 
@@ -28,10 +30,15 @@ public class quick_sort {
                 }
         }
         if (low < j)
-                quicksort(low, j);
+        	quickSort(low, j);
         if (i < high)
-                quicksort(i, high);
+        	quickSort(i, high);
+	}
+	
+	private void exchange(int i, int j) {
+        Player temp = this.theList.get(i);
+        this.theList.set(i, this.theList.get(j));
+        this.theList.set(j, temp);
 	}
 	
 }
-*/

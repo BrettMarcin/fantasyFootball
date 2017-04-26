@@ -2,6 +2,8 @@
 <%@ page import ="com.home.Player" %>
 <% ArrayList<Player> players = (ArrayList<Player>)request.getAttribute("listOfPlayers"); %>
 
+<button>Draft player</button>
+
 <table>
 	<tr>
 		<th>Rank</th>
@@ -16,7 +18,7 @@
 		<th>REC TDS</th>
 	</tr>
 	<% for(Player aPlayer : players){ %>
-		<tr>
+		<tr class="playerInfo">
 			<td><%= aPlayer.rank %></td>
 			<td><%= aPlayer.first + " " + aPlayer.last %></td>
 		</tr>

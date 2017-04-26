@@ -19,11 +19,11 @@
 	<!-- Step 5: Define Spring MVC view resolver -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="prefix" value="/view/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
-	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/WebContent/resources/**" location="/resources/" />
 	<mvc:annotation-driven/>
 </beans>
 
