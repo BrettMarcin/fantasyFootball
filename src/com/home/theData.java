@@ -24,7 +24,11 @@ public class theData {
 			boolean tierCheck = text.contains("Tier");
 			if(tierCheck != true){
 				String[] words=text.split("\\s");
-				Player p1 = new Player(Integer.parseInt(words[0]), words[1], words[2]);
+				try{
+					Player p1 = new Player(Integer.parseInt(words[0]), words[1], words[2]);
+				}catch(Exception e){
+					
+				}
 			}
 			
 			/*Element link = doc.getElementsByTag("p").first();
