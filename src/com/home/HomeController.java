@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +43,13 @@ public class HomeController {
 	@RequestMapping(value = "/changeName", method = RequestMethod.POST)
 	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		this.theName = request.getParameter("playerName");
+		response.sendRedirect("/FantasyFootball/");
+    }
+	
+	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
+	public void draftPlayer(@RequestBody String jsonString, HttpServletResponse response) throws IOException{
+		System.out.println(jsonString);
+		
 		response.sendRedirect("/FantasyFootball/");
     }
 	
