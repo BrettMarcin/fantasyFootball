@@ -19,7 +19,7 @@
 	</tr>
 	<% for(Player aPlayer : players){ %>
 		<tr class="playerInfo">
-			<td><%= aPlayer.rank %></td>
+			<td class="playerRank"><%= aPlayer.rank %></td>
 			<td class="playerName"><%= aPlayer.first + " " + aPlayer.last %></td>
 		</tr>
 	<% } %>

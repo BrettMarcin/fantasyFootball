@@ -48,7 +48,22 @@ public class HomeController {
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public void draftPlayer(@RequestBody String jsonString, HttpServletResponse response) throws IOException{
-		System.out.println(jsonString);
+		Player newPlayer = new Player();
+		
+//		for(int i = 0; i < jsonString.length(); i++){
+//			if(jsonString.charAt(i) != '+'){
+//				newPlayer.first.
+//			}
+//		}
+		jsonString = jsonString.substring(0, jsonString.length()-1);
+		String parts[] = jsonString.split("\\+");
+		newPlayer.first = parts[0];
+		newPlayer.last = parts[1];
+		newPlayer.rank = Integer.parseInt(parts[2]);
+		System.out.println("called");
+		if(this.playersOpen.contains(newPlayer.hashCode())){
+			System.out.println("we have it");
+		}
 		
 		response.sendRedirect("/FantasyFootball/");
     }

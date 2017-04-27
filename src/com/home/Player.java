@@ -18,6 +18,30 @@ public class Player {
 		this.first = first;
 		this.last = last;
 		this.rank = rank;
+		this.pos = null;
+		this.team = null;
+		this.Fpoints = 0;
+		this.passYards = 0;
+		this.passTDs = 0;
+		this.ints = 0;
+		this.rushYards = 0;
+		this.rushTDs = 0;
+		this.fum = 0;
+	}
+	
+	public Player(){
+		this.first = null;
+		this.last = null;
+		this.rank = 0;
+		this.pos = null;
+		this.team = null;
+		this.Fpoints = 0;
+		this.passYards = 0;
+		this.passTDs = 0;
+		this.ints = 0;
+		this.rushYards = 0;
+		this.rushTDs = 0;
+		this.fum = 0;
 	}
 	
 }
