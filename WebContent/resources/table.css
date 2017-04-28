@@ -1,3 +1,14 @@
 tr{ background-color: #D8D8D8; 
 border-style: groove;}
-body table tr.selectedRow{background-color: #A00000;}
+body table tr.selectedRow{background-color: #A00000 ;}
+
+.tableBody{
+	height: 100px;
+}
+
+.allPlayers{
+   overflow-y:scroll;
+   height:600px;
+   width: 900px;
+   display:block;
+}

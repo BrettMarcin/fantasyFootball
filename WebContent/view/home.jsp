@@ -4,9 +4,11 @@
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts.js" var="theJS" />
 	<spring:url value="/WebContent/resources/table.css" var="theCSS" />
+	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<script src="${theJS}"></script>
 	<link href="${theCSS}" rel="stylesheet" />
+	<link href="${bootstrap}" rel="stylesheet" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 </head>
 <body>

@@ -4,8 +4,10 @@
 
 <button id="draftButton">Draft player</button>
 
-<table>
-	<tr>
+
+<table class="allPlayers table-bordered table-hover">
+	<thead>
+	<tr class="TableHead">
 		<th>Rank</th>
 		<th>Player</th>
 		<th>Fantasy Points Last year</th>
@@ -17,10 +19,13 @@
 		<th>REC YDS</th>
 		<th>REC TDS</th>
 	</tr>
+	</thead>
+	<tbody>
 	<% for(Player aPlayer : players){ %>
 		<tr class="playerInfo">
 			<td class="playerRank"><%= aPlayer.rank %></td>
 			<td class="playerName"><%= aPlayer.first + " " + aPlayer.last %></td>
 		</tr>
 	<% } %>
+	</tbody>
 </table>
