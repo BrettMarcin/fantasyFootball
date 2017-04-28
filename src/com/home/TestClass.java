@@ -67,7 +67,7 @@ public class TestClass {
 			String text = cols.text();
 			words = text.split("\\s");
 			for(int z = 0; z < words.length; z++){
-				System.out.print(words[z]);
+				System.out.print("   " + words[z]);
 			}
 			System.out.println("");
 			//System.out.println(url);

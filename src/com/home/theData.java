@@ -54,6 +54,8 @@ public class theData {
 			Elements cols = row.select("td");
 			String text = cols.text();
 			words = text.split("\\s");
+			Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
+			playerInfo.add(p1);
 		}
 		String secondHalf = "&position=O&sort=pts&statCategory=stats&statSeason=2016&statType=seasonStats&statWeek=1";
 		int location = 26;
@@ -74,6 +76,8 @@ public class theData {
 				Elements cols = row.select("td");
 				String text = cols.text();
 				words = text.split("\\s");
+				Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
+				playerInfo.add(p1);
 			}
 			location += 25;
 		}
@@ -94,6 +98,8 @@ public class theData {
 				Elements cols = row.select("td");
 				String text = cols.text();
 				words = text.split("\\s");
+				Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
+				playerInfo.add(p1);
 			}
 			location++;
 		}

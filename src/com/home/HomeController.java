@@ -22,6 +22,7 @@ public class HomeController {
 	
 	private String theName = null;
 	private static HashSet<Player> playersOpen = null;
+	private static HashSet<Player> playerInfo = null;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
@@ -29,11 +30,17 @@ public class HomeController {
     	if(this.playersOpen == null){
     		this.playersOpen = Data.getRankingPlayers(); 
     	}
-    	
+    	if(this.playerInfo == null){
+    		this.playerInfo = Data.getPlayerInfo();
+    	}
     	ArrayList<Player> list = new ArrayList<Player>(this.playersOpen);
+    	ArrayList<Player> info = new ArrayList<Player>(this.playerInfo);
     	quick_sort sorting_object = new quick_sort(list);
     	sorting_object.quickSort(0, list.size() - 1);
     	list = sorting_object.theList;
+    	for(Player i : info){
+    		
+    	}
     	
     	model.addAttribute("listOfPlayers", list);
     	model.addAttribute("name", this.theName);
