@@ -15,7 +15,6 @@ public class theData {
 	}
 	
 	public HashSet<Player> getRankingPlayers() throws IOException{
-		//call https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p
 		HashSet<Player> playersOpen = new HashSet<Player>();
 		Document doc = Jsoup.connect("https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p").get();
 		Element table = doc.select("table").get(0); 
@@ -36,6 +35,76 @@ public class theData {
 			}
 		}
 		return playersOpen;
+	}
+	public HashSet<Player> getPlayerInfo() throws IOException{
+		HashSet<Player> playerInfo = new HashSet<Player>();
+		Document doc = null;
+		String url = "http://fantasy.nfl.com/research/scoringleaders?offset=01&position=O&sort=pts&statCategory=stats&statSeason=2016&statType=seasonStats&statWeek=1";
+		try {
+			doc = Jsoup.connect(url).get();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Element table = doc.select("table").get(0); 
+		Elements rows = table.select("tr");
+		String words[];
+		for(int k = 2; k < rows.size(); k++){
+			Element row = rows.get(k);
+			Elements cols = row.select("td");
+			String text = cols.text();
+			words = text.split("\\s");
+			Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
+			playerInfo.add(p1);
+		}
+		String secondHalf = "&position=O&sort=pts&statCategory=stats&statSeason=2016&statType=seasonStats&statWeek=1";
+		int location = 26;
+		while (location < 100){
+			url = "http://fantasy.nfl.com/research/scoringleaders?offset=";
+			url = url + location;
+			url = url + secondHalf;
+			try {
+				doc = Jsoup.connect(url).get();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			table = doc.select("table").get(0); 
+			rows = table.select("tr");
+			for(int k = 2; k < rows.size(); k++){
+				Element row = rows.get(k);
+				Elements cols = row.select("td");
+				String text = cols.text();
+				words = text.split("\\s");
+				Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
+				playerInfo.add(p1);
+			}
+			location += 25;
+		}
+		while(location < 627){
+			url = "http://fantasy.nfl.com/research/scoringleaders?offset=";
+			url = url + location;
+			url = url + secondHalf;
+			try {
+				doc = Jsoup.connect(url).get();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			table = doc.select("table").get(0); 
+			rows = table.select("tr");
+			for(int k = 2; k < rows.size(); k++){
+				Element row = rows.get(k);
+				Elements cols = row.select("td");
+				String text = cols.text();
+				words = text.split("\\s");
+				Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
+				playerInfo.add(p1);
+			}
+			location++;
+		}
+		
+		return playerInfo;
 	}
 	
 	public HashSet<Player> getRankingPlayers(HashSet<Player> original){

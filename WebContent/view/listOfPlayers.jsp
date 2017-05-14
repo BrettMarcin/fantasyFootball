@@ -25,6 +25,14 @@
 		<tr class="playerInfo">
 			<td class="playerRank"><%= aPlayer.rank %></td>
 			<td class="playerName"><%= aPlayer.first + " " + aPlayer.last %></td>
+			<td class = "pointsLast"><%= aPlayer.Fpoints  %></td>
+			<td class = "passYDs"><%= aPlayer.passYards %></td>
+			<td class = "passTDs"><%= aPlayer.passTDs %></td>
+			<td class = "ints"><%= aPlayer.ints %></td>
+			<td class = "rushYDs"><%= aPlayer.rushYards %></td>
+			<td class = "rushTDs"><%= aPlayer.rushTDs %></td>
+			<td class = "recYards"><%= aPlayer.recYards %></td>
+			<td class = "recTDs"><%= aPlayer.recTDs %></td>
 		</tr>
 	<% } %>
 	</tbody>

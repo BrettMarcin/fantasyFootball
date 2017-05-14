@@ -24,7 +24,7 @@ public class TestClass {
 		Element table = doc.select("table").get(0); 
 		Elements rows = table.select("tr");
 		String[] words;
-		for(int i = 2; i < rows.size(); i++){
+		/*for(int i = 2; i < rows.size(); i++){
 			Element row = rows.get(i);
 			Elements cols = row.select("td");
 			String text = cols.text();
@@ -37,7 +37,7 @@ public class TestClass {
 					System.out.println("Rank: " + words[0] + ", First: " + words[1] + ", Last: " + words[2]);
 				}catch(Exception e){
 					
-				}*/
+				}
 				
 				try{
 					Player p1 = new Player(Integer.parseInt(words[0]), words[1], words[2]);
@@ -51,11 +51,78 @@ public class TestClass {
 				} 
 				
 			}
+		}*/
+		String url = "http://fantasy.nfl.com/research/scoringleaders?offset=01&position=O&sort=pts&statCategory=stats&statSeason=2016&statType=seasonStats&statWeek=1";
+		try {
+			doc = Jsoup.connect(url).get();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		
-		
-		
+		table = doc.select("table").get(0); 
+		rows = table.select("tr");
+		for(int k = 2; k < rows.size(); k++){
+			Element row = rows.get(k);
+			Elements cols = row.select("td");
+			String text = cols.text();
+			words = text.split("\\s");
+			for(int z = 0; z < words.length; z++){
+				System.out.print("   " + words[z]);
+			}
+			System.out.println("");
+			//System.out.println(url);
+		}
+		String secondHalf = "&position=O&sort=pts&statCategory=stats&statSeason=2016&statType=seasonStats&statWeek=1";
+		int location = 26;
+		while (location < 100){
+			url = "http://fantasy.nfl.com/research/scoringleaders?offset=";
+			url = url + location;
+			url = url + secondHalf;
+			try {
+				doc = Jsoup.connect(url).get();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			table = doc.select("table").get(0); 
+			rows = table.select("tr");
+			for(int k = 2; k < rows.size(); k++){
+				Element row = rows.get(k);
+				Elements cols = row.select("td");
+				String text = cols.text();
+				words = text.split("\\s");
+				for(int z = 0; z < words.length; z++){
+					System.out.print(words[z]);
+				}
+				System.out.println("");
+				//System.out.println(url);
+			}
+			location += 25;
+		}
+		while(location < 627){
+			url = "http://fantasy.nfl.com/research/scoringleaders?offset=";
+			url = url + location;
+			url = url + secondHalf;
+			try {
+				doc = Jsoup.connect(url).get();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			table = doc.select("table").get(0); 
+			rows = table.select("tr");
+			for(int k = 2; k < rows.size(); k++){
+				Element row = rows.get(k);
+				Elements cols = row.select("td");
+				String text = cols.text();
+				words = text.split("\\s");
+				for(int z = 0; z < words.length; z++){
+					System.out.print(words[z]);
+				}
+				System.out.println("");
+			}
+			location++;
+		}	
 	}
 
 }
