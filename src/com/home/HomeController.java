@@ -3,7 +3,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.*;
@@ -23,9 +24,16 @@ public class HomeController {
 	private String theName = null;
 	private static HashSet<Player> playersOpen = null;
 	private static HashSet<Player> playerInfo = null;
+	private final static Logger log = Logger.getLogger(HomeController.class.getName());
+	
+	@javax.annotation.PostConstruct
+	public void init() {
+	   
+	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
+		System.out.println("here");
     	theData Data = new theData();
     	if(this.playersOpen == null){
     		this.playersOpen = Data.getRankingPlayers(); 
@@ -54,7 +62,8 @@ public class HomeController {
     }
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
-	public void draftPlayer(@RequestBody String jsonString, HttpServletResponse response) throws IOException{
+	public @ResponseBody Player draftPlayer(@RequestBody Player json) {
+		/*
 		Player newPlayer = new Player();
 		
 		jsonString = jsonString.substring(0, jsonString.length()-1);
@@ -67,16 +76,7 @@ public class HomeController {
 		}
 		
 		this.playersOpen.remove(newPlayer);
-		//response.sendRedirect("/FantasyFootball/");
+		*/
+		return null;
     }
-	
-	public void setHash(Player p1){
-		this.playersOpen = new HashSet<Player>();
-		this.playersOpen.add(p1);
-	}
-	
-	public static HashSet<Player> getHash(){
-		return playersOpen;
-	}
-	
 }

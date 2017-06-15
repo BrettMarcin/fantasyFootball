@@ -1,41 +1,34 @@
 package com.home;
 
-public class Player {
-	public String first;
-	public String last;
-	public String pos;
-	public String team;
-	public double Fpoints;
-	public int passYards;
-	public int passTDs;
-	public int ints;
-	public int rushYards;
-	public int rushTDs;
-	public int fum;
-	public int rank;
-	public int recYards;
-	public int recTDs;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement public class Player {
+	@XmlElement public String first;
+	@XmlElement public String last;
+	@XmlElement public String pos;
+	@XmlElement public String team;
+	@XmlElement public String Fpoints;
+	@XmlElement public String passYards;
+	@XmlElement public String passTDs;
+	@XmlElement public String ints;
+	@XmlElement public String rushYards;
+	@XmlElement public String rushTDs;
+	@XmlElement public String fum;
+	@XmlElement public int rank;
+	@XmlElement public String recYards;
+	@XmlElement public String recTDs;
 	
-	public Player(int rank, String first, String last){
+	public Player(int rank, String first, String last, String pos){
 		this.first = first;
 		this.last = last;
 		this.rank = rank;
-		this.pos = null;
-		this.team = null;
-		this.Fpoints = 0;
-		this.passYards = 0;
-		this.passTDs = 0;
-		this.ints = 0;
-		this.rushYards = 0;
-		this.rushTDs = 0;
-		this.fum = 0;
-		this.recYards = 0;
-		this.recTDs = 0;
+		this.pos = pos;
 	}
-	public Player(String first, String last, int FPoints, int passYards, int passTDs, int ints, int rushYards, int rushTDs, int recYards, int recTDs){
+	public Player(String first, String last, String pos, String FPoints, String passYards, String passTDs, String ints, String rushYards, String rushTDs, String recYards, String recTDs, String fumble){
 		this.first = first;
 		this.last = last;
-		this.pos = null;
+		this.pos = pos;
 		this.team = null;
 		this.Fpoints = FPoints;
 		this.passYards = passYards;
@@ -43,25 +36,8 @@ public class Player {
 		this.ints = ints;
 		this.rushYards = rushYards;
 		this.rushTDs = rushTDs;
-		this.fum = 0;
+		this.fum = fumble;
 		this.recYards = recYards;
 		this.recTDs = recTDs;
 	}
-	public Player(){
-		this.first = null;
-		this.last = null;
-		this.rank = 0;
-		this.pos = null;
-		this.team = null;
-		this.Fpoints = 0;
-		this.passYards = 0;
-		this.passTDs = 0;
-		this.ints = 0;
-		this.rushYards = 0;
-		this.rushTDs = 0;
-		this.fum = 0;
-		this.recYards = 0;
-		this.recTDs = 0;
-	}
-	
 }

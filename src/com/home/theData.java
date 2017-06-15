@@ -2,6 +2,8 @@ package com.home;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.TreeMap;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,8 +16,18 @@ public class theData {
 		
 	}
 	
-	public HashSet<Player> getRankingPlayers() throws IOException{
-		HashSet<Player> playersOpen = new HashSet<Player>();
+	public static void main(String[] args) throws IOException
+	{
+		TreeMap<String,Player>  bst = getPlayers();
+		Iterator itr = bst.values().iterator();
+		while(itr.hasNext()){
+			Player thePlayer = (Player)itr.next();
+			System.out.println("THe rank: " + Integer.toString(thePlayer.rank) + " name: " + thePlayer.first + " " + thePlayer.last + " passYds: " + thePlayer.passYards + " rushYds: " + thePlayer.rushYards);
+		}
+	}
+	
+	public static TreeMap<String,Player> getRankingPlayers() throws IOException{
+		TreeMap<String,Player> playersOpen = new TreeMap<String,Player>();
 		Document doc = Jsoup.connect("https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p").get();
 		Element table = doc.select("table").get(0); 
 		Elements rows = table.select("tr");
@@ -27,8 +39,9 @@ public class theData {
 			if(tierCheck != true){
 				String[] words=text.split("\\s");
 				try{
-					Player p1 = new Player(Integer.parseInt(words[0]), words[1], words[2]);
-					playersOpen.add(p1);
+					//words[4].substring(0, 1);
+					Player p1 = new Player(Integer.parseInt(words[0]), words[1], words[2], words[4].substring(0, 2));
+					playersOpen.put(p1.first + p1.last + p1.pos, p1);
 				}catch(Exception e){
 					
 				}
@@ -36,80 +49,50 @@ public class theData {
 		}
 		return playersOpen;
 	}
-	public HashSet<Player> getPlayerInfo() throws IOException{
-		HashSet<Player> playerInfo = new HashSet<Player>();
+	public static TreeMap<String,Player> getPlayerInfo(TreeMap<String,Player> bst) throws IOException{
+		int location = 1;
+		String url = null;
 		Document doc = null;
-		String url = "http://fantasy.nfl.com/research/scoringleaders?offset=01&position=O&sort=pts&statCategory=stats&statSeason=2016&statType=seasonStats&statWeek=1";
-		try {
-			doc = Jsoup.connect(url).get();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Element table = doc.select("table").get(0); 
-		Elements rows = table.select("tr");
 		String words[];
-		for(int k = 2; k < rows.size(); k++){
-			Element row = rows.get(k);
-			Elements cols = row.select("td");
-			String text = cols.text();
-			words = text.split("\\s");
-			Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
-			playerInfo.add(p1);
-		}
-		String secondHalf = "&position=O&sort=pts&statCategory=stats&statSeason=2016&statType=seasonStats&statWeek=1";
-		int location = 26;
-		while (location < 100){
-			url = "http://fantasy.nfl.com/research/scoringleaders?offset=";
-			url = url + location;
-			url = url + secondHalf;
-			try {
-				doc = Jsoup.connect(url).get();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			table = doc.select("table").get(0); 
-			rows = table.select("tr");
-			for(int k = 2; k < rows.size(); k++){
-				Element row = rows.get(k);
-				Elements cols = row.select("td");
-				String text = cols.text();
-				words = text.split("\\s");
-				Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
-				playerInfo.add(p1);
-			}
-			location += 25;
-		}
 		while(location < 627){
 			url = "http://fantasy.nfl.com/research/scoringleaders?offset=";
 			url = url + location;
-			url = url + secondHalf;
 			try {
 				doc = Jsoup.connect(url).get();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			table = doc.select("table").get(0); 
-			rows = table.select("tr");
+			Element table = doc.select("table").get(0); 
+			Elements rows = table.select("tr");
 			for(int k = 2; k < rows.size(); k++){
 				Element row = rows.get(k);
 				Elements cols = row.select("td");
 				String text = cols.text();
 				words = text.split("\\s");
-				Player p1 = new Player(words[1], words[2], Integer.parseInt(words[17]), Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), Integer.parseInt(words[10]), Integer.parseInt(words[11]), Integer.parseInt(words[12]), Integer.parseInt(words[13]));
-				playerInfo.add(p1);
+				int off = 0;
+				if(words.length < 18){
+					off = -2;
+				}
+						//              first,    last,     pos,        FPoints         passYards passTDs,          ints,        rushYards,     rushTDs,         recYards,     recTDs,      fumble
+				Player p1 = new Player(words[1], words[2], words[3], words[17+off], words[7+off], words[8+off], words[9+off], words[10+off], words[11+off], words[12+off], words[13+off], words[16+off]);
+				Player p2 = bst.get(words[1] + words[2] + words[3].toUpperCase());
+				if(p2 != null){
+					p1.rank = p2.rank;
+					bst.remove(words[1] + words[2]);
+					bst.put(words[1] + words[2] + words[3].toUpperCase(), p1);
+				}
+				if(words[1].equals("David") && words[2].equals("Johnson")){
+					System.out.println("Here");
+				}
 			}
-			location++;
+			location+= 25;
 		}
-		
-		return playerInfo;
+		return bst;
 	}
 	
-	public HashSet<Player> getRankingPlayers(HashSet<Player> original){
-		//call http://fantasy.nfl.com/research/scoringleaders#researchScoringLeaders=researchScoringLeaders%2C%2Fresearch%2Fscoringleaders%253Foffset%253D26%2526position%253DO%2526sort%253Dpts%2526statCategory%253Dstats%2526statSeason%253D2016%2526statType%253DseasonStats%2526statWeek%253D17%2Creplace
-		//original.clone()
-		return null;
+	public static TreeMap<String,Player> getPlayers() throws IOException{
+		TreeMap<String,Player> bst = getRankingPlayers();
+		bst = getPlayerInfo(bst);
+		return bst;
 	}
 }
