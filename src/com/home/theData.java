@@ -1,10 +1,9 @@
 package com.home;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.TreeMap;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.TreeMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,6 +15,7 @@ public class theData {
 		
 	}
 	
+	/*
 	public static void main(String[] args) throws IOException
 	{
 		TreeMap<String,Player>  bst = getPlayers();
@@ -25,6 +25,7 @@ public class theData {
 			System.out.println("THe rank: " + Integer.toString(thePlayer.rank) + " name: " + thePlayer.first + " " + thePlayer.last + " passYds: " + thePlayer.passYards + " rushYds: " + thePlayer.rushYards);
 		}
 	}
+	*/
 	
 	public static TreeMap<String,Player> getRankingPlayers() throws IOException{
 		TreeMap<String,Player> playersOpen = new TreeMap<String,Player>();
@@ -81,18 +82,16 @@ public class theData {
 					bst.remove(words[1] + words[2]);
 					bst.put(words[1] + words[2] + words[3].toUpperCase(), p1);
 				}
-				if(words[1].equals("David") && words[2].equals("Johnson")){
-					System.out.println("Here");
-				}
 			}
 			location+= 25;
 		}
 		return bst;
 	}
 	
-	public static TreeMap<String,Player> getPlayers() throws IOException{
+	public static ArrayList<Player> getPlayers() throws IOException{
 		TreeMap<String,Player> bst = getRankingPlayers();
 		bst = getPlayerInfo(bst);
-		return bst;
+		ArrayList<Player> list = new ArrayList<Player>(bst.values());
+		return list;
 	}
 }

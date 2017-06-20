@@ -3,42 +3,38 @@ import java.util.ArrayList;
 
 public class quick_sort {
 	
-	public ArrayList<Player> theList = null;
-	
-	public quick_sort( ArrayList<Player> newList){
-		this.theList = newList;
-	}
-	
-	public void quickSort(int low, int high){
+	public static ArrayList<Player> sort(ArrayList<Player> theList, int low, int high){
 		int i = low, j = high;
         // Get the pivot element from the middle of the list
-        int pivot = this.theList.get(low + (high-low)/2).rank;
+        int pivot = theList.get(low + (high-low)/2).rank;
 
         // Divide into two lists
         while (i <= j) {
-                while (this.theList.get(i).rank < pivot) {
+                while (theList.get(i).rank < pivot) {
                         i++;
                 }
-                while (this.theList.get(j).rank > pivot) {
+                while (theList.get(j).rank > pivot) {
                    j--;
                 }
                 
                 if (i <= j) {
-                        exchange(i, j);
+                		theList = exchange(theList, i, j);
                         i++;
                         j--;
                 }
         }
         if (low < j)
-        	quickSort(low, j);
+        	theList = sort(theList, low, j);
         if (i < high)
-        	quickSort(i, high);
+        	theList = sort(theList, i, high);
+        return theList;
 	}
 	
-	private void exchange(int i, int j) {
-        Player temp = this.theList.get(i);
-        this.theList.set(i, this.theList.get(j));
-        this.theList.set(j, temp);
+	private static ArrayList<Player> exchange(ArrayList<Player> theList, int i, int j) {
+        Player temp = theList.get(i);
+        theList.set(i, theList.get(j));
+        theList.set(j, temp);
+        return theList;
 	}
 	
 }
