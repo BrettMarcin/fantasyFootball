@@ -1,36 +1,37 @@
 package com.home;
 
-/*
+
+import java.util.ArrayList;
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-*/
-import java.util.ArrayList;
 
-//@Entity
-//@Table(name="Team")
+@Entity
+@Table(name="Team")
 public class Team {
 
-	//@Id
-	//@Column(name="id")
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id
+	@Column(name="id_team")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	//@Column
+	@Column
 	public String name;
-	//@Column
+	@Column
 	public String teamName;
-	//@Column
+	@ElementCollection
 	public ArrayList<Player> QB;
-	//@Column
+	@ElementCollection
 	public ArrayList<Player> WR;
-	//@Column
+	@ElementCollection
 	public ArrayList<Player> RB;
-	//@Column
+	@ElementCollection
 	public ArrayList<Player> TE;
-	//@Column
+	@ElementCollection
 	public ArrayList<Player> DST;
 	
 	public Team(String theTeamName){
