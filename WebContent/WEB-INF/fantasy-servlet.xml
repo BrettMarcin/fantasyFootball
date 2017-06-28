@@ -31,8 +31,8 @@
           destroy-method="close">
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
         <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/teams?useSSL=false" />
-        <property name="user" value="local" />
-        <property name="password" value="password" /> 
+        <property name="user" value="new_user" />
+        <property name="password" value="new_password" /> 
 
         <!-- these are connection pool properties for C3P0 -->
 		<property name="initialPoolSize" value="5"/>

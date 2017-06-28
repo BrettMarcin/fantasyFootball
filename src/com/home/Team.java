@@ -2,13 +2,15 @@ package com.home;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,18 +25,28 @@ public class Team {
 	public String name;
 	@Column
 	public String teamName;
-	@ElementCollection
-	public ArrayList<Player> QB;
-	@ElementCollection
-	public ArrayList<Player> WR;
-	@ElementCollection
-	public ArrayList<Player> RB;
-	@ElementCollection
-	public ArrayList<Player> TE;
-	@ElementCollection
-	public ArrayList<Player> DST;
+	
+	@JoinColumn(name="QB")
+	@OneToMany
+	public List<Player> QB;
+	@JoinColumn(name="WR")
+	@OneToMany
+	public List<Player> WR;
+	@JoinColumn(name="RB")
+	@OneToMany
+	public List<Player> RB;
+	@JoinColumn(name="TE")
+	@OneToMany
+	public List<Player> TE;
+	@JoinColumn(name="DST")
+	@OneToMany
+	public List<Player> DST;
 	
 	public Team(String theTeamName){
 		teamName = theTeamName;
+	}
+	
+	public Team(){
+		super();
 	}
 }

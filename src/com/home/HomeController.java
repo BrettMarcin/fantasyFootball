@@ -4,6 +4,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,8 @@ public class HomeController {
 	private String theName = null;
 	private static ArrayList<Player> thePlayers = null;
 	private final static Logger log = Logger.getLogger(HomeController.class.getName());
+	@Autowired
+	private TeamService teamService;
 	
 	@javax.annotation.PostConstruct
 	public void init() throws IOException {
@@ -27,7 +31,9 @@ public class HomeController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
-		
+		teamService.saveTeam(new Team("Bob's team"));
+		List<Team> theTeams = teamService.getTeams();
+		System.out.println(theTeams.get(0).teamName);
     	model.addAttribute("listOfPlayers", thePlayers);
     	model.addAttribute("name", this.theName);
     	return "home"; 
@@ -57,4 +63,9 @@ public class HomeController {
 		*/
 		return null;
     }
+	
+	@RequestMapping(value = "/saveTeam", method = RequestMethod.POST)
+	public void saveTeam(HttpServletRequest request, HttpServletResponse response){
+		
+	}
 }

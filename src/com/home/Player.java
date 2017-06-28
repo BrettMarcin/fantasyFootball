@@ -69,4 +69,9 @@ import javax.persistence.Column;
 		this.recYards = recYards;
 		this.recTDs = recTDs;
 	}
+	
+	public Player(){
+		super();
+	}
+	
 }
