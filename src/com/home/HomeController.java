@@ -4,6 +4,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,8 @@ public class HomeController {
 	private String theName = null;
 	private static ArrayList<Player> thePlayers = null;
 	private final static Logger log = Logger.getLogger(HomeController.class.getName());
+	@Autowired
+	private TeamService teamService;
 	
 	@javax.annotation.PostConstruct
 	public void init() throws IOException {
@@ -27,7 +31,6 @@ public class HomeController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
-		
     	model.addAttribute("listOfPlayers", thePlayers);
     	model.addAttribute("name", this.theName);
     	return "home"; 
@@ -39,22 +42,19 @@ public class HomeController {
 		response.sendRedirect("/FantasyFootball/");
     }
 	
+	@RequestMapping(value = "/getJson", method = RequestMethod.POST)
+	@ResponseBody
+	public void getJson(@RequestBody Player thePlayer){
+	    System.out.println(thePlayer.first + " " + thePlayer.last);
+	}
+	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public @ResponseBody Player draftPlayer(@RequestBody Player json) {
-		/*
-		Player newPlayer = new Player();
-		
-		jsonString = jsonString.substring(0, jsonString.length()-1);
-		String parts[] = jsonString.split("\\+");
-		newPlayer.first = parts[0];
-		newPlayer.last = parts[1];
-		newPlayer.rank = Integer.parseInt(parts[2]);
-		if(this.playersOpen.contains(newPlayer)){
-			System.out.println("we have it");
-		}
-		
-		this.playersOpen.remove(newPlayer);
-		*/
 		return null;
     }
+	
+	@RequestMapping(value = "/saveTeam", method = RequestMethod.POST)
+	public void saveTeam(HttpServletRequest request, HttpServletResponse response){
+		
+	}
 }

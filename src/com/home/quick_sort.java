@@ -5,10 +5,8 @@ public class quick_sort {
 	
 	public static ArrayList<Player> sort(ArrayList<Player> theList, int low, int high){
 		int i = low, j = high;
-        // Get the pivot element from the middle of the list
         int pivot = theList.get(low + (high-low)/2).rank;
 
-        // Divide into two lists
         while (i <= j) {
                 while (theList.get(i).rank < pivot) {
                         i++;

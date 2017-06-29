@@ -1,39 +1,51 @@
 package com.home;
 
-/*
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-*/
-import java.util.ArrayList;
 
-//@Entity
-//@Table(name="Team")
+@Entity
+@Table(name="Team")
 public class Team {
 
-	//@Id
-	//@Column(name="id")
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id
+	@Column(name="id_team")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	//@Column
+	@Column
 	public String name;
-	//@Column
+	@Column
 	public String teamName;
-	//@Column
-	public ArrayList<Player> QB;
-	//@Column
-	public ArrayList<Player> WR;
-	//@Column
-	public ArrayList<Player> RB;
-	//@Column
-	public ArrayList<Player> TE;
-	//@Column
-	public ArrayList<Player> DST;
+	@JoinColumn(name="QB")
+	@OneToMany
+	public List<Player> QB;
+	@JoinColumn(name="WR")
+	@OneToMany
+	public List<Player> WR;
+	@JoinColumn(name="RB")
+	@OneToMany
+	public List<Player> RB;
+	@JoinColumn(name="TE")
+	@OneToMany
+	public List<Player> TE;
+	@JoinColumn(name="DST")
+	@OneToMany
+	public List<Player> DST;
 	
 	public Team(String theTeamName){
 		teamName = theTeamName;
+	}
+	
+	public Team(){
+		super();
 	}
 }
