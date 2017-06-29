@@ -19,8 +19,7 @@ public class TeamDAOImpl implements TeamDAO {
 	@Override
 	public List<Team> getTeams() {
 		Session currentSession = sessionFactory.getCurrentSession();
-		Query<Team> theQuery = 
-				currentSession.createQuery("from Team", Team.class);
+		Query<Team> theQuery = currentSession.createQuery("from Team", Team.class);
 		List<Team> teams = theQuery.getResultList();		
 		return teams;
 	}
@@ -29,6 +28,21 @@ public class TeamDAOImpl implements TeamDAO {
 	public void saveTeam(Team theTeam){
 		Session currentSession = sessionFactory.getCurrentSession();
 		currentSession.save(theTeam);
+	}
+	
+	@Override
+	public Team getTeam(int theId) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Team theTeam = currentSession.get(Team.class, theId);
+		return theTeam;
+	}
+	
+	@Override
+	public void deleteTeam(int theId) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query theQuery = currentSession.createQuery("delete from Team where id=:teamId");
+		theQuery.setParameter("teamId", theId);
+		theQuery.executeUpdate();		
 	}
 
 }

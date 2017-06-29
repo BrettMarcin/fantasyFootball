@@ -5,7 +5,7 @@
 <button id="draftButton">Draft player</button>
 
 
-<table class="allPlayers table-bordered table-hover">
+<table class="allPlayers table table-bordered table-hover">
 	<thead>
 	<tr class="TableHead">
 		<th>Rank</th>

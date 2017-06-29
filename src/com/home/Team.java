@@ -25,7 +25,6 @@ public class Team {
 	public String name;
 	@Column
 	public String teamName;
-	
 	@JoinColumn(name="QB")
 	@OneToMany
 	public List<Player> QB;

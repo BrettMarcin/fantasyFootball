@@ -31,9 +31,6 @@ public class HomeController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(Model model) throws IOException {
-		teamService.saveTeam(new Team("Bob's team"));
-		List<Team> theTeams = teamService.getTeams();
-		System.out.println(theTeams.get(0).teamName);
     	model.addAttribute("listOfPlayers", thePlayers);
     	model.addAttribute("name", this.theName);
     	return "home"; 
@@ -45,22 +42,14 @@ public class HomeController {
 		response.sendRedirect("/FantasyFootball/");
     }
 	
+	@RequestMapping(value = "/getJson", method = RequestMethod.POST)
+	@ResponseBody
+	public void getJson(@RequestBody Player thePlayer){
+	    System.out.println(thePlayer.first + " " + thePlayer.last);
+	}
+	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public @ResponseBody Player draftPlayer(@RequestBody Player json) {
-		/*
-		Player newPlayer = new Player();
-		
-		jsonString = jsonString.substring(0, jsonString.length()-1);
-		String parts[] = jsonString.split("\\+");
-		newPlayer.first = parts[0];
-		newPlayer.last = parts[1];
-		newPlayer.rank = Integer.parseInt(parts[2]);
-		if(this.playersOpen.contains(newPlayer)){
-			System.out.println("we have it");
-		}
-		
-		this.playersOpen.remove(newPlayer);
-		*/
 		return null;
     }
 	

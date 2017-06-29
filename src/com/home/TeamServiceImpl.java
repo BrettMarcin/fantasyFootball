@@ -23,4 +23,16 @@ public class TeamServiceImpl implements TeamService{
 	public void saveTeam(Team theTeam) {
 		teamDAO.saveTeam(theTeam);
 	}
+	
+	@Override
+	@Transactional
+	public Team getTeam(int theId){
+		return teamDAO.getTeam(theId);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteTeam(int theId){
+		teamDAO.deleteTeam(theId);
+	}
 }
