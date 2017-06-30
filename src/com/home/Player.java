@@ -28,25 +28,25 @@ import javax.persistence.Column;
 	@Column
 	@XmlElement public String team;
 	@Column
-	@XmlElement public String Fpoints;
+	@XmlElement public String Fpoints = "-";
 	@Column
-	@XmlElement public String passYards;
+	@XmlElement public String passYards = "-";
 	@Column
-	@XmlElement public String passTDs;
+	@XmlElement public String passTDs = "-";
 	@Column
-	@XmlElement public String ints;
+	@XmlElement public String ints = "-";
 	@Column
-	@XmlElement public String rushYards;
+	@XmlElement public String rushYards = "-";
 	@Column
-	@XmlElement public String rushTDs;
+	@XmlElement public String rushTDs = "-";
 	@Column
-	@XmlElement public String fum;
+	@XmlElement public String fum = "-";
 	@Column
 	@XmlElement public int rank;
 	@Column
-	@XmlElement public String recYards;
+	@XmlElement public String recYards = "-";
 	@Column
-	@XmlElement public String recTDs;
+	@XmlElement public String recTDs = "-";
 	
 	public Player(int rank, String first, String last, String pos){
 		this.first = first;

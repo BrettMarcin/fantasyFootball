@@ -20,7 +20,7 @@
 		<th>REC TDS</th>
 	</tr>
 	</thead>
-	<tbody>
+	<tbody class-"table-striped">
 	<% for(Player aPlayer : players){ %>
 		<tr class="playerInfo">
 			<td class="playerRank"><%= aPlayer.rank %></td>

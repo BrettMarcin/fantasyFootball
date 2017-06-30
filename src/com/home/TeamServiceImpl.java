@@ -35,4 +35,9 @@ public class TeamServiceImpl implements TeamService{
 	public void deleteTeam(int theId){
 		teamDAO.deleteTeam(theId);
 	}
+	@Override
+	@Transactional
+	public void clearTeams(List<Team> theTeams){
+		teamDAO.clearTeams(theTeams);
+	}
 }

@@ -20,7 +20,7 @@ public class Team {
 	@Id
 	@Column(name="id_team")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	public int id;
 	@Column
 	public String name;
 	@Column
@@ -41,8 +41,9 @@ public class Team {
 	@OneToMany
 	public List<Player> DST;
 	
-	public Team(String theTeamName){
+	public Team(String theTeamName, String theName){
 		teamName = theTeamName;
+		name = theName;
 	}
 	
 	public Team(){

@@ -44,5 +44,14 @@ public class TeamDAOImpl implements TeamDAO {
 		theQuery.setParameter("teamId", theId);
 		theQuery.executeUpdate();		
 	}
-
+	
+	@Override
+	public void clearTeams(List<Team> theTeams){
+		for (Team theTeam : theTeams){
+			Session currentSession = sessionFactory.getCurrentSession();
+			Query theQuery = currentSession.createQuery("delete from Team where id=:teamId");
+			theQuery.setParameter("teamId", theTeam.id);
+			theQuery.executeUpdate();	
+		}
+	}
 }
