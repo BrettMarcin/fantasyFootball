@@ -1,7 +1,7 @@
 # Fantasy Football
  
  # MySql
- ** If you already have MySql please confirm you have version  5.7.15 or newer**
+ **If you already have MySql please confirm you have version  5.7.15 or newer**
  1. Download MySql
      * Windows: https://dev.mysql.com/downloads/installer/
      * Mac: Download Homebrew:
