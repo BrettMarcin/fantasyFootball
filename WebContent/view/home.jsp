@@ -35,7 +35,9 @@
 	</form> 
 <% } else { %>
 	<h3>Welcome! <%=localTeam.teamName%> press start to start the draft</h3>
-	<button type="submit" class="btn btn-primary">Start Draft!</button>
+	<form action="startDraft" method="GET">
+		<button type="submit" class="btn btn-primary">Start Draft!</button>
+	</form>
 <% } %>
 
 

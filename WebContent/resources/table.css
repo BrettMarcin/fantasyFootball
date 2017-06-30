@@ -1,4 +1,11 @@
 
+#timeline ul{
+  list-style: none;
+}
+#timeline li{
+  display: inline;
+}
+
 body table tr.selectedRow{background-color: #00FFFF;}
 
 .tableBody{

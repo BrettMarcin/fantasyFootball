@@ -46,6 +46,10 @@ public class Team {
 		name = theName;
 	}
 	
+	public Team(String theTeamName){
+		teamName = theTeamName;
+	}
+	
 	public Team(){
 		super();
 	}

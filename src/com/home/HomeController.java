@@ -23,7 +23,10 @@ public class HomeController {
 	
 	private static ArrayList<Player> thePlayers = null;
 	private boolean draftStarted = false;
+	List<Team> theTimeline;
 	private final static Logger log = Logger.getLogger(HomeController.class.getName());
+	private int round = -1;
+	private int pickNumber = 1;
 	@Autowired
 	private TeamService teamService;
 	
@@ -44,13 +47,16 @@ public class HomeController {
 		}
 		model.addAttribute("localTeam", localTeam);
 		model.addAttribute("theTeams", teamService.getTeams());
+		response.addCookie(new Cookie("teamCookie", cookieValue));
 		if (draftStarted){
 			model.addAttribute("listOfPlayers", thePlayers);
+			model.addAttribute("theTimeline", theTimeline);
+			model.addAttribute("round", round);
+			model.addAttribute("pickNumber", pickNumber);
+			return "listOfPlayers";
 		} else {
-			
+			return "home"; 
 		}
-		response.addCookie(new Cookie("teamCookie", cookieValue));
-    	return "home"; 
     }
 	
 	@RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
@@ -62,14 +68,35 @@ public class HomeController {
 		response.sendRedirect("/FantasyFootball/");
     }
 	
-	@RequestMapping(value = "/getJson", method = RequestMethod.POST)
+	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
 	@ResponseBody
-	public void getJson(@RequestBody Player thePlayer){
-	    System.out.println(thePlayer.first + " " + thePlayer.last);
+	public void startDraft(HttpServletResponse response) throws IOException{
+		draftStarted = true;
+		getOrder();
+		response.sendRedirect("/FantasyFootball/");
+	}
+	
+	@RequestMapping(value = "/nextPick", method = RequestMethod.GET)
+	@ResponseBody
+	public void nextPick(@RequestBody Player thePlayer){
+	    
 	}
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public @ResponseBody Player draftPlayer(@RequestBody Player json) {
 		return null;
     }
+	
+	@RequestMapping(value = "/getJson", method = RequestMethod.POST)
+	@ResponseBody
+	public void getJson(@RequestBody Player thePlayer){
+	    System.out.println(thePlayer.first + " " + thePlayer.last);
+	}
+	
+	private void getOrder(){
+		if (round == -1){
+			theTimeline = CreateOrder.order(teamService.getTeams());
+			round = 1;
+		}
+	}
 }
