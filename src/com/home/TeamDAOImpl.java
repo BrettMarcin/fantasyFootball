@@ -2,6 +2,7 @@ package com.home;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -53,5 +54,10 @@ public class TeamDAOImpl implements TeamDAO {
 			theQuery.setParameter("teamId", theTeam.id);
 			theQuery.executeUpdate();	
 		}
+	}
+	
+	@Override
+	public void updateTeam(Team localTeam){
+        sessionFactory.getCurrentSession().update(localTeam);;
 	}
 }

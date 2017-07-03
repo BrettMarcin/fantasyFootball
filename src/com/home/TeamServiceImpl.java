@@ -40,4 +40,9 @@ public class TeamServiceImpl implements TeamService{
 	public void clearTeams(List<Team> theTeams){
 		teamDAO.clearTeams(theTeams);
 	}
+	@Override
+	@Transactional
+	public void updateTeam(Team localTeam){
+		teamDAO.updateTeam(localTeam);
+	}
 }

@@ -26,7 +26,7 @@ import javax.persistence.Column;
 	@Column
 	@XmlElement public String pos;
 	@Column
-	@XmlElement public String team;
+	@XmlElement public String team = "N/A";
 	@Column
 	@XmlElement public String Fpoints = "-";
 	@Column
@@ -54,11 +54,35 @@ import javax.persistence.Column;
 		this.rank = rank;
 		this.pos = pos;
 	}
+	
+	public Player(String first, String last, String pos, String team, int rank){
+		this.first = first;
+		this.last = last;
+		this.pos = pos;
+		this.team = team;
+		this.rank = rank;
+	}
+	
+	public Player(String first, String last, String pos, String FPoints, String passYards, String passTDs, String ints, String rushYards, String rushTDs, String recYards, String recTDs, String fumble, String theTeam){
+		this.first = first;
+		this.last = last;
+		this.pos = pos;
+		this.team = theTeam;
+		this.Fpoints = FPoints;
+		this.passYards = passYards;
+		this.passTDs = passTDs;
+		this.ints = ints;
+		this.rushYards = rushYards;
+		this.rushTDs = rushTDs;
+		this.fum = fumble;
+		this.recYards = recYards;
+		this.recTDs = recTDs;
+	}
+	
 	public Player(String first, String last, String pos, String FPoints, String passYards, String passTDs, String ints, String rushYards, String rushTDs, String recYards, String recTDs, String fumble){
 		this.first = first;
 		this.last = last;
 		this.pos = pos;
-		this.team = null;
 		this.Fpoints = FPoints;
 		this.passYards = passYards;
 		this.passTDs = passTDs;
@@ -72,6 +96,14 @@ import javax.persistence.Column;
 	
 	public Player(){
 		super();
+	}
+	
+	public boolean isMatch(Player theOther){
+		if(theOther.first.equals(first) && theOther.last.equals(last) && theOther.team.equals(team) && theOther.pos.equals(pos)){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

@@ -4,6 +4,13 @@
 }
 #timeline li{
   display: inline;
+  width: 100px;
+}
+
+.timeline{
+	overflow-x:scroll;
+	width: 900px;
+	display:block;
 }
 
 body table tr.selectedRow{background-color: #00FFFF;}
@@ -15,6 +22,6 @@ body table tr.selectedRow{background-color: #00FFFF;}
 .allPlayers{
    overflow-y:scroll;
    height:600px;
-   width: 900px;
+   width: 850px;
    display:block;
 }

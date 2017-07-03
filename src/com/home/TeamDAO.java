@@ -8,4 +8,5 @@ public interface TeamDAO {
 	public Team getTeam(int theId);
 	public void deleteTeam(int theId);
 	public void clearTeams(List<Team> theTeams);
+	public void updateTeam(Team localTeam);
 }

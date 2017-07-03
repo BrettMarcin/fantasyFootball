@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,20 +27,20 @@ public class Team {
 	@Column
 	public String teamName;
 	@JoinColumn(name="QB")
-	@OneToMany
-	public List<Player> QB;
+	@OneToMany(fetch= FetchType.LAZY)
+	public List<Player> QB = new ArrayList();
 	@JoinColumn(name="WR")
-	@OneToMany
-	public List<Player> WR;
+	@OneToMany(fetch= FetchType.LAZY)
+	public List<Player> WR = new ArrayList();
 	@JoinColumn(name="RB")
-	@OneToMany
-	public List<Player> RB;
+	@OneToMany(fetch= FetchType.LAZY)
+	public List<Player> RB = new ArrayList();
 	@JoinColumn(name="TE")
-	@OneToMany
-	public List<Player> TE;
+	@OneToMany(fetch= FetchType.LAZY)
+	public List<Player> TE = new ArrayList();
 	@JoinColumn(name="DST")
-	@OneToMany
-	public List<Player> DST;
+	@OneToMany(fetch= FetchType.LAZY)
+	public List<Player> DST = new ArrayList();
 	
 	public Team(String theTeamName, String theName){
 		teamName = theTeamName;
@@ -52,5 +53,29 @@ public class Team {
 	
 	public Team(){
 		super();
+	}
+	
+	public void addPlayer(Player thePlayer){
+		switch(thePlayer.pos){
+		case "QB":
+			QB.add(thePlayer);
+			break;
+		case "WR":
+			WR.add(thePlayer);
+			break;
+		case "RB":
+			RB.add(thePlayer);
+			break;
+		case "TE":
+			TE.add(thePlayer);
+			break;
+		case "DST":
+			DST.add(thePlayer);
+			break;
+		}
+	}
+	
+	public List<Player> getRB(){
+		return RB;
 	}
 }
