@@ -53,7 +53,6 @@ public class HomeController {
 			model.addAttribute("theTimeline", theTimeline);
 			model.addAttribute("round", round);
 			model.addAttribute("pickNumber", pickNumber);
-			model.addAttribute("RB", localTeam.getRB());
 			return "listOfPlayers";
 		} else {
 			return "home"; 
@@ -87,9 +86,9 @@ public class HomeController {
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException {
 		if(!cookieValue.equals("defaultCookieValue")){
-			Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-			localTeam.addPlayer(json);
-			teamService.updateTeam(localTeam);
+			//Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+			//localTeam.addPlayer(json);
+			//teamService.updateTeam(localTeam);
 			for (Player thePlayer : thePlayers){
 				if(thePlayer.isMatch(json)){
 					thePlayers.remove(thePlayer);

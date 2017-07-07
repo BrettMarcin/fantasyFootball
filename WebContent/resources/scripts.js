@@ -27,7 +27,6 @@ $(function() {
 	    		team: team,
 	    		rank: parseInt(playerRank)
 	    	}
-	    	console.log(jsonData);
 	    	$.ajax({
 	            url: '/FantasyFootball/draftPlayer',
 	            type: "POST",

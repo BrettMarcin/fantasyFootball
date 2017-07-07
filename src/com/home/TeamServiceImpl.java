@@ -1,9 +1,11 @@
 package com.home;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,19 @@ public class TeamServiceImpl implements TeamService{
 	@Override
 	@Transactional
 	public void saveTeam(Team theTeam) {
+		theTeam.DST = new ArrayList<>();
+		theTeam.QB = new ArrayList<>();
+		theTeam.RB = new ArrayList<>();
+		theTeam.WR = new ArrayList<>();
+		theTeam.TE = new ArrayList<>();
 		teamDAO.saveTeam(theTeam);
 	}
 	
 	@Override
 	@Transactional
 	public Team getTeam(int theId){
-		return teamDAO.getTeam(theId);
+		Team theTeam = teamDAO.getTeam(theId);
+		return theTeam;
 	}
 	
 	@Override
