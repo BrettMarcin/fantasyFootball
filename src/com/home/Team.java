@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.transaction.Transactional;
@@ -27,8 +28,10 @@ public class Team {
 	public String name;
 	@Column
 	public String teamName;
-	@JoinColumn(name="QB")
-	@OneToMany(fetch= FetchType.LAZY)
+	@OneToMany
+	@JoinTable( name="TEAM_RB", 
+    joinColumns=@JoinColumn(name="id_team"), 
+    inverseJoinColumns=@JoinColumn(name="id_player")) //its optional using for name configuration of the join table
 	public List<Player> QB;
 	@JoinColumn(name="WR")
 	@OneToMany(fetch= FetchType.LAZY)
