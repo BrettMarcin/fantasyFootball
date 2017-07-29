@@ -21,19 +21,16 @@ $(function() {
 		
 	    if(infoOfLastCLicked != null){
 	    	jsonData = {
-	    		first: infoOfLastCLicked[0],
-	    		last: infoOfLastCLicked[1],
-	    		pos: pos,
-	    		team: team,
-	    		rank: parseInt(playerRank)
-	    	}
+                    first: infoOfLastCLicked[0],
+                    last: infoOfLastCLicked[1],
+                    pos: pos,
+                    team: team
+	    	};
+	    	console.log(jsonData);
 	    	$.ajax({
-	            url: '/FantasyFootball/draftPlayer',
+	            url: '/draftPlayer',
 	            type: "POST",
-	            headers: { 
-	                'Accept': 'application/json',
-	                'Content-Type': 'application/json' 
-	            },
+                contentType: "application/json",
 	            processData: false,
 	            dataType: "json",
 	            data: JSON.stringify(jsonData),
@@ -43,10 +40,46 @@ $(function() {
                 }
 	        });
 	    }
-	    location.reload();
+        window.location.reload();
 	    infoOfLastCLicked = null;
 	    playerRank = null;
 	    team = null;
 		pos = null;
 	});
 });
+
+function getTeam(){
+    $.ajax({
+        url: '/getTeam',
+        type: "GET",
+        headers: {
+            'Accept': 'application/json'
+        },
+        processData: false,
+        async: true,
+        success: function (data) {
+            addToPlayerTable(data);
+        }
+    });
+};
+
+function addToPlayerTable(data){
+    console.log(data);
+    var theTableRow = '';
+    if (data.QB !== null){
+        theTableRow = '<td>' + data.QB.first + '</td><td>' + data.QB.last + '</td>';
+        $('#qb_id').append(theTableRow);
+    }
+    if (data.RB !== null){
+        theTableRow = '<td>' + data.RB.first + '</td><td>' + data.RB.last + '</td>';
+        $('#rb1_id').append(theTableRow);
+    }
+    if (data.WR !== null){
+        theTableRow = '<td>' + data.WR.first + '</td><td>' + data.WR.last + '</td>';
+        $('#wr1_id').append(theTableRow);
+    }
+    if (data.TE !== null){
+        theTableRow = '<td>' + data.TE.first + '</td><td>' + data.TE.last + '</td>';
+        $('#te_id').append(theTableRow);
+    }
+}

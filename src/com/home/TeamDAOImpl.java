@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import javax.persistence.PersistenceUtil;
 
 @Repository
 public class TeamDAOImpl implements TeamDAO {
@@ -59,6 +60,17 @@ public class TeamDAOImpl implements TeamDAO {
 	
 	@Override
 	public void updateTeam(Team localTeam){
-        sessionFactory.getCurrentSession().update(localTeam);;
+		Session currentSession = sessionFactory.getCurrentSession();
+		if(localTeam.QB == null)
+            Hibernate.initialize(localTeam.QB);
+        if(localTeam.WR == null)
+            Hibernate.initialize(localTeam.WR);
+        if(localTeam.TE == null)
+            Hibernate.initialize(localTeam.TE);
+        if(localTeam.DST == null)
+            Hibernate.initialize(localTeam.DST);
+        if(localTeam.RB == null)
+            Hibernate.initialize(localTeam.RB);
+		currentSession.saveOrUpdate(localTeam);
 	}
 }

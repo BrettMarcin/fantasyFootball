@@ -1,104 +1,96 @@
 package com.home;
 
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.FetchMode;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name="Team")
-public class Team {
+@XmlRootElement public class Team{
 
 	@Id
 	@Column(name="id_team")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public int id;
 	@Column
-	public String name;
+	@XmlElement public String name;
 	@Column
-	public String teamName;
-	@OneToMany
-	@JoinTable( name="TEAM_RB", 
-    joinColumns=@JoinColumn(name="id_team"), 
-    inverseJoinColumns=@JoinColumn(name="id_player")) //its optional using for name configuration of the join table
-	public List<Player> QB;
-	@JoinColumn(name="WR")
-	@OneToMany(fetch= FetchType.LAZY)
-	public List<Player> WR;
-	@JoinColumn(name="RB")
-	@OneToMany
-	public List<Player> RB;
-	@JoinColumn(name="TE")
-	@OneToMany(fetch= FetchType.LAZY)
-	public List<Player> TE;
-	@JoinColumn(name="DST")
-	@OneToMany(fetch= FetchType.LAZY)
-	public List<Player> DST;
+	@XmlElement public String teamName;
+
+	@JoinColumn(name="id_player_qb")
+	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@OneToOne
+	@Cascade({CascadeType.SAVE_UPDATE})
+	//@Cascade({CascadeType.ALL})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public Player QB = null;
+
+	@JoinColumn(name="id_player_wr")
+	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@OneToOne
+	@Cascade({CascadeType.SAVE_UPDATE})
+	//@Cascade({CascadeType.ALL})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public Player WR = null;
+
+
+	@JoinColumn(name="id_player_rb")
+	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@OneToOne
+	@Cascade({CascadeType.SAVE_UPDATE})
+	//@Cascade({CascadeType.ALL})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public Player RB = null;
+
+	@JoinColumn(name="id_player_te")
+	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@OneToOne
+	//@Cascade({CascadeType.ALL})
+	@Cascade({CascadeType.SAVE_UPDATE})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public Player TE = null;
+
+	@JoinColumn(name="id_player_dst")
+	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@OneToOne
+	//@Cascade({CascadeType.ALL})
+	@Cascade({CascadeType.SAVE_UPDATE})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public Player DST = null;
 	
 	public Team(String theTeamName, String theName){
 		teamName = theTeamName;
 		name = theName;
-		QB = new ArrayList<>();
-		WR = new ArrayList<>();
-		RB = new ArrayList<>();
-		TE = new ArrayList<>();
-		DST = new ArrayList<>();
 	}
 	
 	public Team(String theTeamName){
 		teamName = theTeamName;
-		QB = new ArrayList<>();
-		WR = new ArrayList<>();
-		RB = new ArrayList<>();
-		TE = new ArrayList<>();
-		DST = new ArrayList<>();
 	}
 	
 	public Team(){
 		super();
-		QB = new ArrayList<>();
-		WR = new ArrayList<>();
-		RB = new ArrayList<>();
-		TE = new ArrayList<>();
-		DST = new ArrayList<>();
 	}
 	
 	public void addPlayer(Player thePlayer){
-		switch(thePlayer.pos){
-		case "QB":
-			QB.add(thePlayer);
-			break;
-		case "WR":
-			WR.add(thePlayer);
-			break;
-		case "RB":
-			RB.add(thePlayer);
-			break;
-		case "TE":
-			TE.add(thePlayer);
-			break;
-		case "DST":
-			DST.add(thePlayer);
-			break;
-		}
-	}
-	
-	public List<Player> getRB(){
-		if (RB != null){
-			return RB;
-		} else {
-			return null;
+		if (thePlayer.pos.equals("QB")){
+			QB = thePlayer;
+		} else if(thePlayer.pos.equals("WR")){
+			WR = thePlayer;
+		} else if(thePlayer.pos.equals("RB")){
+			RB = thePlayer;
+		} else if(thePlayer.pos.equals("TE")){
+			TE = thePlayer;
+		} else if (thePlayer.pos.equals("DST")){
+			DST = thePlayer;
 		}
 	}
 }

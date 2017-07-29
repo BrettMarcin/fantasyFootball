@@ -57,7 +57,7 @@
 				<th>REC TDS</th>
 			</tr>
 			</thead>
-			<tbody class-"table-striped">
+			<tbody class="table-striped">
 			<% for(Player aPlayer : players){ %>
 				<tr class="playerInfo">
 					<td class="playerRank"><%= aPlayer.rank %></td>

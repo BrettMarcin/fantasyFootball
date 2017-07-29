@@ -23,11 +23,6 @@ public class TeamServiceImpl implements TeamService{
 	@Override
 	@Transactional
 	public void saveTeam(Team theTeam) {
-		theTeam.DST = new ArrayList<>();
-		theTeam.QB = new ArrayList<>();
-		theTeam.RB = new ArrayList<>();
-		theTeam.WR = new ArrayList<>();
-		theTeam.TE = new ArrayList<>();
 		teamDAO.saveTeam(theTeam);
 	}
 	

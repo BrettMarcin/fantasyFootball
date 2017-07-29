@@ -65,7 +65,7 @@ public class HomeController {
 		teamService.saveTeam(localTeam);
 		Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
 		response.addCookie(newCookie);
-		response.sendRedirect("/FantasyFootball/");
+		response.sendRedirect("/");
     }
 	
 	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
@@ -73,7 +73,7 @@ public class HomeController {
 	public void startDraft(HttpServletResponse response) throws IOException{
 		draftStarted = true;
 		getOrder();
-		response.sendRedirect("/FantasyFootball/");
+		response.sendRedirect("/");
 	}
 	
 	@RequestMapping(value = "/nextPick", method = RequestMethod.GET)
@@ -81,14 +81,20 @@ public class HomeController {
 	public void nextPick(@RequestBody Player thePlayer){
 	    
 	}
-	
+
+    @RequestMapping(value = "/getTeam", method = RequestMethod.GET)
+    @ResponseBody
+    public Team getTeam(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue){
+            Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+            return localTeam;
+    }
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
-	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException {
-		if(!cookieValue.equals("defaultCookieValue")){
-			//Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-			//localTeam.addPlayer(json);
-			//teamService.updateTeam(localTeam);
+	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, HttpServletResponse response) throws IOException {
+	    if(!cookieValue.equals("defaultCookieValue")){
+			Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+			localTeam.addPlayer(json);
+			teamService.updateTeam(localTeam);
 			for (Player thePlayer : thePlayers){
 				if(thePlayer.isMatch(json)){
 					thePlayers.remove(thePlayer);
@@ -96,6 +102,7 @@ public class HomeController {
 				}
 			}	
 		}
+        response.sendRedirect("/");
     }
 	
 	@RequestMapping(value = "/getJson", method = RequestMethod.POST)

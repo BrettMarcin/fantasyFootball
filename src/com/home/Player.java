@@ -8,11 +8,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import java.io.Serializable;
 
 
 @Entity
 @Table(name="Player")
-@XmlRootElement public class Player {
+@XmlRootElement public class Player{
 	
 	@Id
 	@Column(name="id_player")
