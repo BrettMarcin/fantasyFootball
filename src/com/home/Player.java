@@ -8,11 +8,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import java.io.Serializable;
 
 
 @Entity
 @Table(name="Player")
-@XmlRootElement public class Player {
+@XmlRootElement public class Player{
 	
 	@Id
 	@Column(name="id_player")
@@ -26,27 +27,27 @@ import javax.persistence.Column;
 	@Column
 	@XmlElement public String pos;
 	@Column
-	@XmlElement public String team;
+	@XmlElement public String team = "N/A";
 	@Column
-	@XmlElement public String Fpoints;
+	@XmlElement public String Fpoints = "-";
 	@Column
-	@XmlElement public String passYards;
+	@XmlElement public String passYards = "-";
 	@Column
-	@XmlElement public String passTDs;
+	@XmlElement public String passTDs = "-";
 	@Column
-	@XmlElement public String ints;
+	@XmlElement public String ints = "-";
 	@Column
-	@XmlElement public String rushYards;
+	@XmlElement public String rushYards = "-";
 	@Column
-	@XmlElement public String rushTDs;
+	@XmlElement public String rushTDs = "-";
 	@Column
-	@XmlElement public String fum;
+	@XmlElement public String fum = "-";
 	@Column
 	@XmlElement public int rank;
 	@Column
-	@XmlElement public String recYards;
+	@XmlElement public String recYards = "-";
 	@Column
-	@XmlElement public String recTDs;
+	@XmlElement public String recTDs = "-";
 	
 	public Player(int rank, String first, String last, String pos){
 		this.first = first;
@@ -54,11 +55,35 @@ import javax.persistence.Column;
 		this.rank = rank;
 		this.pos = pos;
 	}
+	
+	public Player(String first, String last, String pos, String team, int rank){
+		this.first = first;
+		this.last = last;
+		this.pos = pos;
+		this.team = team;
+		this.rank = rank;
+	}
+	
+	public Player(String first, String last, String pos, String FPoints, String passYards, String passTDs, String ints, String rushYards, String rushTDs, String recYards, String recTDs, String fumble, String theTeam){
+		this.first = first;
+		this.last = last;
+		this.pos = pos;
+		this.team = theTeam;
+		this.Fpoints = FPoints;
+		this.passYards = passYards;
+		this.passTDs = passTDs;
+		this.ints = ints;
+		this.rushYards = rushYards;
+		this.rushTDs = rushTDs;
+		this.fum = fumble;
+		this.recYards = recYards;
+		this.recTDs = recTDs;
+	}
+	
 	public Player(String first, String last, String pos, String FPoints, String passYards, String passTDs, String ints, String rushYards, String rushTDs, String recYards, String recTDs, String fumble){
 		this.first = first;
 		this.last = last;
 		this.pos = pos;
-		this.team = null;
 		this.Fpoints = FPoints;
 		this.passYards = passYards;
 		this.passTDs = passTDs;
@@ -72,6 +97,14 @@ import javax.persistence.Column;
 	
 	public Player(){
 		super();
+	}
+	
+	public boolean isMatch(Player theOther){
+		if(theOther.first.equals(first) && theOther.last.equals(last) && theOther.team.equals(team) && theOther.pos.equals(pos)){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

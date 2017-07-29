@@ -1,6 +1,19 @@
-tr{ background-color: #D8D8D8; 
-border-style: groove;}
-body table tr.selectedRow{background-color: #A00000 ;}
+
+#timeline ul{
+  list-style: none;
+}
+#timeline li{
+  display: inline;
+  width: 100px;
+}
+
+.timeline{
+	overflow-x:scroll;
+	width: 900px;
+	display:block;
+}
+
+body table tr.selectedRow{background-color: #00FFFF;}
 
 .tableBody{
 	height: 100px;
@@ -9,6 +22,6 @@ body table tr.selectedRow{background-color: #A00000 ;}
 .allPlayers{
    overflow-y:scroll;
    height:600px;
-   width: 900px;
+   width: 850px;
    display:block;
 }

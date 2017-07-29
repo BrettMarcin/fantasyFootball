@@ -10,22 +10,44 @@
 	<link href="${theCSS}" rel="stylesheet" />
 	<link href="${bootstrap}" rel="stylesheet" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <%@ page import ="java.util.*" %>
+	<%@ page import ="com.home.Team" %>
+    <% List<Team> teams = (List<Team>)request.getAttribute("theTeams"); %>
+    <% Team localTeam = (Team)request.getAttribute("localTeam"); %>
 </head>
 <body>
 
-<button type="button">Update Roster</button>
-<button type="button">Start</button>
-<button type="button">Stop</button>
+<h1> Welcome to Fantasy Football! </h1>
+<h2>Created by Brett Marcinkiewicz and Jacob Kahn</h2>
 
-
-<% if(request.getAttribute("name") == null){ %>
-	 <form action="changeName" method="POST">
-    		<input type="text" name="playerName" placeholder="What's your name?"/>
-    		<input type="submit" />
-    	</form>
+<% if(localTeam == null) { %>
+	<h3>Create your team!</h3>
+	<form action="setLocalTeam" method="POST">
+  		<div class="form-group">
+    		<label for="TeamNameInput">Enter Team Name:</label>
+    		<input class="form-control" name="TeamNameInput">
+  		</div>
+  		<div class="form-group">
+    		<label for="theName">Enter Your Name:</label>
+    		<input class="form-control" name="theName">
+  		</div>
+  		<button type="submit" class="btn btn-primary">Submit</button>
+	</form> 
 <% } else { %>
-        <h2>${name}</h2>
-        <jsp:include page="listOfPlayers.jsp" />
-<%} %>
+	<h3>Welcome! <%=localTeam.teamName%> press start to start the draft</h3>
+	<form action="startDraft" method="GET">
+		<button type="submit" class="btn btn-primary">Start Draft!</button>
+	</form>
+<% } %>
+
+
+<h3> Current users in Session:<h3>
+<ul class="list-group">
+	<% for(Team aTeam : teams){ %>
+		<% if (aTeam != null) %>
+  			<li class="list-group-item">Team Name: <%=aTeam.teamName%>, Owned by: <%=aTeam.name%></li>
+	<% } %>>
+</ul>
+
 </body>
 </html>
