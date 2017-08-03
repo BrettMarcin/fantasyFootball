@@ -34,61 +34,106 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player QB = null;
 
-	@JoinColumn(name="id_player_wr")
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@JoinColumn(name="id_player_wr1")
 	@OneToOne
 	@Cascade({CascadeType.SAVE_UPDATE})
-	//@Cascade({CascadeType.ALL})
 	@Fetch(FetchMode.JOIN)
-	@XmlElement public Player WR = null;
+	@XmlElement public Player WR1 = null;
 
-
-	@JoinColumn(name="id_player_rb")
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@JoinColumn(name="id_player_wr2")
 	@OneToOne
 	@Cascade({CascadeType.SAVE_UPDATE})
-	//@Cascade({CascadeType.ALL})
 	@Fetch(FetchMode.JOIN)
-	@XmlElement public Player RB = null;
+	@XmlElement public Player WR2 = null;
+
+	@JoinColumn(name="id_player_rb1")
+	@OneToOne
+	@Cascade({CascadeType.SAVE_UPDATE})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public Player RB1 = null;
+
+	@JoinColumn(name="id_player_rb2")
+	@OneToOne
+	@Cascade({CascadeType.SAVE_UPDATE})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public Player RB2 = null;
 
 	@JoinColumn(name="id_player_te")
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@OneToOne
-	//@Cascade({CascadeType.ALL})
 	@Cascade({CascadeType.SAVE_UPDATE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player TE = null;
 
-	@JoinColumn(name="id_player_dst")
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@JoinColumn(name="id_player_flex")
 	@OneToOne
-	//@Cascade({CascadeType.ALL})
+	@Cascade({CascadeType.SAVE_UPDATE})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public Player FLEX = null;
+
+	@JoinColumn(name="id_player_dst")
+	@OneToOne
 	@Cascade({CascadeType.SAVE_UPDATE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player DST = null;
+
+	@JoinTable(name="id_player")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@OneToMany
+	@Cascade({CascadeType.ALL})
+	@Fetch(FetchMode.JOIN)
+	@XmlElement public List<Player> bench = null;
 	
 	public Team(String theTeamName, String theName){
 		teamName = theTeamName;
 		name = theName;
+		bench = new ArrayList<>();
 	}
 	
 	public Team(String theTeamName){
 		teamName = theTeamName;
+		bench = new ArrayList<>();
 	}
 	
 	public Team(){
 		super();
+		bench = new ArrayList<>();
 	}
 	
 	public void addPlayer(Player thePlayer){
 		if (thePlayer.pos.equals("QB")){
-			QB = thePlayer;
+			if (QB == null){
+				QB = thePlayer;
+			} else {
+				bench.add(thePlayer);
+			}
 		} else if(thePlayer.pos.equals("WR")){
-			WR = thePlayer;
+			if(WR1 == null){
+				WR1 = thePlayer;
+			} else if(WR2 == null){
+				WR2 = thePlayer;
+			} else if(FLEX == null){
+				FLEX = thePlayer;
+			} else {
+				bench.add(thePlayer);
+			}
 		} else if(thePlayer.pos.equals("RB")){
-			RB = thePlayer;
+			if(RB1 == null){
+				RB1 = thePlayer;
+			} else if(RB2 == null){
+				RB2 = thePlayer;
+			} else if(FLEX == null){
+				FLEX = thePlayer;
+			} else {
+				bench.add(thePlayer);
+			}
 		} else if(thePlayer.pos.equals("TE")){
-			TE = thePlayer;
+			if(TE == null){
+				RB1 = thePlayer;
+			}  else if(FLEX == null){
+				FLEX = thePlayer;
+			} else {
+				bench.add(thePlayer);
+			}
 		} else if (thePlayer.pos.equals("DST")){
 			DST = thePlayer;
 		}

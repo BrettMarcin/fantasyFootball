@@ -9,12 +9,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -23,10 +18,12 @@ public class HomeController {
 	
 	private static ArrayList<Player> thePlayers = null;
 	private boolean draftStarted = false;
-	List<Team> theTimeline;
+	private List<Team> theTimeline;
 	private final static Logger log = Logger.getLogger(HomeController.class.getName());
 	private int round = -1;
 	private int pickNumber = 1;
+    private Timer timer;
+    private long startTime;
 	@Autowired
 	private TeamService teamService;
 	
@@ -73,43 +70,74 @@ public class HomeController {
 	public void startDraft(HttpServletResponse response) throws IOException{
 		draftStarted = true;
 		getOrder();
+		System.out.println();
+        setTimer(120);
+        startTime = System.currentTimeMillis();
 		response.sendRedirect("/");
 	}
-	
-	@RequestMapping(value = "/nextPick", method = RequestMethod.GET)
-	@ResponseBody
-	public void nextPick(@RequestBody Player thePlayer){
-	    
-	}
 
-    @RequestMapping(value = "/getTeam", method = RequestMethod.GET)
+    @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)
     @ResponseBody
-    public Team getTeam(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue){
-            Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-            return localTeam;
+    public  ArrayList<Player> getPlayers(){
+            return thePlayers;
+    }
+
+    @RequestMapping(value = "/getTeam/{teamName}", method = RequestMethod.GET)
+    @ResponseBody
+    public Team getTeam(@PathVariable("teamName") String teamName){
+        Team theTeam = teamService.getTeamByTeamName(teamName);
+    	return theTeam;
+    }
+
+    @RequestMapping(value = "/getTime", method = RequestMethod.GET)
+    @ResponseBody
+    public long getTime(){
+        return (System.currentTimeMillis()) - startTime;
     }
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, HttpServletResponse response) throws IOException {
-	    if(!cookieValue.equals("defaultCookieValue")){
+        if(theTimeline.get(0).teamName.equals("Round"))
+            theTimeline.remove(0);
+        if(!cookieValue.equals("defaultCookieValue")){
 			Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-			localTeam.addPlayer(json);
-			teamService.updateTeam(localTeam);
-			for (Player thePlayer : thePlayers){
-				if(thePlayer.isMatch(json)){
-					thePlayers.remove(thePlayer);
-					break;
-				}
-			}	
+            if(theTimeline.get(0).teamName.equals(localTeam.teamName)){
+                theTimeline.remove(0);
+                localTeam.addPlayer(json);
+                teamService.updateTeam(localTeam);
+                for (Player thePlayer : thePlayers){
+                    if(thePlayer.isMatch(json)){
+                        thePlayers.remove(thePlayer);
+                        break;
+                    }
+                }
+                setTimer(120);
+                startTime = System.currentTimeMillis();
+            }
 		}
+        pickNumber++;
         response.sendRedirect("/");
     }
-	
-	@RequestMapping(value = "/getJson", method = RequestMethod.POST)
-	@ResponseBody
-	public void getJson(@RequestBody Player thePlayer){
-	    System.out.println(thePlayer.first + " " + thePlayer.last);
-	}
+
+    public void setTimer(int seconds) {
+        if (timer != null)
+            timer.cancel();
+        timer = new Timer();
+        //Scheduling NextTask() call in 10 second.
+        timer.schedule(new NextTask(), seconds * 1000);
+    }
+
+    private void autoDraftPlayer(){
+        if(theTimeline.get(0).teamName.equals("Round"))
+            theTimeline.remove(0);
+        Team localTeam = teamService.getTeam(theTimeline.get(0).id);
+        theTimeline.remove(0);
+        localTeam.addPlayer(thePlayers.get(0));
+        thePlayers.remove(0);
+        teamService.updateTeam(localTeam);
+        setTimer(120);
+        startTime = System.currentTimeMillis();
+    }
 	
 	private void getOrder(){
 		if (round == -1){
@@ -117,4 +145,12 @@ public class HomeController {
 			round = 1;
 		}
 	}
+
+    class NextTask extends TimerTask {
+        @Override
+        public void run() {
+            autoDraftPlayer();
+            timer.cancel(); // Terminate the thread
+        }
+    }
 }

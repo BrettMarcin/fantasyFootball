@@ -4,10 +4,15 @@
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts.js" var="theJS" />
 	<spring:url value="/WebContent/resources/table.css" var="theCSS" />
+    <spring:url value="/WebContent/resources/led.css" var="ledCSS" />
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="${theJS}"></script>
 	<link rel="stylesheet" type="text/css" href="${theCSS}" />
+    <link rel="stylesheet" type="text/css" href="${ledCSS}" />
 	<link href="${bootstrap}" rel="stylesheet" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <%@ page import ="java.util.*" %>
@@ -35,12 +40,31 @@
 <% } %>
 </ul>
 
-<button id="draftButton">Draft player</button>
+<button id="draftButton" onclick="draftButton()">Draft player</button>
+
+<div class="led">
+    <div class="board">
+        <div id="led">
+            <div id="time-mm" class="block-digital num-0">
+            </div>
+            <div id="time-m" class="block-digital num-0">
+            </div>
+            <div id="time-m-colon" class="block-digital colon">
+            </div>
+            <div id="time-ss" class="block-digital num-0">
+            </div>
+            <div id="time-s" class="block-digital num-0">
+            </div>
+            <div id="time-padding" class="block-padding">
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
 	<div class="col-md-8">
 		<h2>Draft List</h2>
-		<table class="allPlayers table table-bordered table-hover">
+		<table id="resizable" class="ui-widget-content allPlayers table table-sm table-bordered table-hover ">
 			<thead>
 			<tr class="TableHead">
 				<th>Rank</th>
@@ -57,24 +81,24 @@
 				<th>REC TDS</th>
 			</tr>
 			</thead>
-			<tbody class="table-striped">
-			<% for(Player aPlayer : players){ %>
-				<tr class="playerInfo">
-					<td class="playerRank"><%= aPlayer.rank %></td>
-					<td class="playerName"><%= aPlayer.first + " " + aPlayer.last %></td>
-					<td class="playerTeam"><%= aPlayer.team %></td>
-					<td class="playerPos"><%= aPlayer.pos %></td>
-					<td class = "pointsLast"><%= aPlayer.Fpoints  %></td>
-					<td class = "passYDs"><%= aPlayer.passYards %></td>
-					<td class = "passTDs"><%= aPlayer.passTDs %></td>
-					<td class = "ints"><%= aPlayer.ints %></td>
-					<td class = "rushYDs"><%= aPlayer.rushYards %></td>
-					<td class = "rushTDs"><%= aPlayer.rushTDs %></td>
-					<td class = "recYards"><%= aPlayer.recYards %></td>
-					<td class = "recTDs"><%= aPlayer.recTDs %></td>
-				</tr>
-			<% } %>
-			</tbody>
+			<tbody id="tbody_draft_table" class="table-striped">
+				<% for(Player aPlayer : players){ %>
+			<tr class="thePlayer playerInfo <%= aPlayer.first %> <%= aPlayer.last %> <%= aPlayer.pos %> <%= aPlayer.team %>">
+				<td class="thePlayer playerRank"><%= aPlayer.rank %></td>
+				<td class="thePlayer playerName"><%= aPlayer.first + " " + aPlayer.last %></td>
+				<td class="thePlayer playerTeam"><%= aPlayer.team %></td>
+				<td class="thePlayer playerPos"><%= aPlayer.pos %></td>
+				<td class = "thePlayer pointsLast"><%= aPlayer.Fpoints  %></td>
+				<td class = "thePlayer passYDs"><%= aPlayer.passYards %></td>
+				<td class = "thePlayer passTDs"><%= aPlayer.passTDs %></td>
+				<td class = "thePlayer ints"><%= aPlayer.ints %></td>
+				<td class = "thePlayer rushYDs"><%= aPlayer.rushYards %></td>
+				<td class = "thePlayer rushTDs"><%= aPlayer.rushTDs %></td>
+				<td class = "thePlayer recYards"><%= aPlayer.recYards %></td>
+				<td class = "thePlayer recTDs"><%= aPlayer.recTDs %></td>
+			</tr>
+				<% } %>
+            </tbody>
 		</table>
 	</div>
 	<div class="col-md-4">

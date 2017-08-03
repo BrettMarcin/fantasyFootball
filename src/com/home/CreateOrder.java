@@ -12,12 +12,12 @@ public class CreateOrder {
 		List<Team> oddTeams = theTeams;
 		Collections.reverse(oddTeams);
 		for (int i = 0; i < 12; i++){
+			theTimeline.add(new Team("Round"));
 			if (i % 2 == 0){
 				theTimeline.addAll(theTeams);
 			} else {
 				theTimeline.addAll(oddTeams);
 			}
-			theTimeline.add(new Team("Round"));
 		}
 		return theTimeline;
 	}

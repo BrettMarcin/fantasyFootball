@@ -6,6 +6,8 @@
 	<spring:url value="/WebContent/resources/table.css" var="theCSS" />
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="${theJS}"></script>
 	<link href="${theCSS}" rel="stylesheet" />
 	<link href="${bootstrap}" rel="stylesheet" />
