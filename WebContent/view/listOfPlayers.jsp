@@ -34,32 +34,13 @@
 		<li class="list-group-item">Round <%=theRound%></li>
 		<% round++; %>
 	<%} else { %>
-		<li class="list-group-item">#<%=pickNum%> <%=aTeam.teamName%></li>
+    <li class="list-group-item aTeamTimeline"><div class="pickNumber"><%=pickNum%></div> <%=aTeam.teamName%></li>
 		<% pickNumber++;%>
 	<%} %>
 <% } %>
 </ul>
 
 <button id="draftButton" onclick="draftButton()">Draft player</button>
-
-<div class="led">
-    <div class="board">
-        <div id="led">
-            <div id="time-mm" class="block-digital num-0">
-            </div>
-            <div id="time-m" class="block-digital num-0">
-            </div>
-            <div id="time-m-colon" class="block-digital colon">
-            </div>
-            <div id="time-ss" class="block-digital num-0">
-            </div>
-            <div id="time-s" class="block-digital num-0">
-            </div>
-            <div id="time-padding" class="block-padding">
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="row">
 	<div class="col-md-8">

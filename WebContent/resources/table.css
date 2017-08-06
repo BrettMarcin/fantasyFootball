@@ -1,4 +1,19 @@
 
+.list-group-item.aTeamTimeline {
+    height: 47px;
+    display: block;
+    font: 18px/20px "Arial";
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    padding: 8px 0;
+    border-top: 1px solid #717682;
+    background: #4f5459;
+    background: url("/resources/images/clockSpriteNarrow_1501945774.png") repeat-x left -500px;
+    cursor: pointer;
+    zoom: 1;
+}
+
 #timeline ul{
   list-style: none;
 }
@@ -10,6 +25,7 @@
 .timeline{
 	overflow-x:scroll;
 	width: 900px;
+    padding: 15px;
 	display:block;
 }
 

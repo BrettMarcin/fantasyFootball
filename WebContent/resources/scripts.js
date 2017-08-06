@@ -35,37 +35,37 @@ function getTeam(theTeam){
 function addToPlayerTable(data){
     var theTableRow = '';
     $("#theTeamName").text(data.teamName);
-    $('.teamPlayers').remove();
+    $('td.teamPlayers').remove();
     if (data.QB !== null){
-        theTableRow = '<td class="teamPlayers">' + data.QB.first + '</td><td>' + data.QB.last + '</td>';
+        theTableRow = '<td class="teamPlayers">' + data.QB.first + '</td><td class="teamPlayers">' + data.QB.last + '</td>';
         $('#qb_id').append(theTableRow);
     }
     if (data.RB1 !== null){
-        theTableRow = '<td class="teamPlayers">' + data.RB1.first + '</td><td>' + data.RB1.last + '</td>';
+        theTableRow = '<td class="teamPlayers">' + data.RB1.first + '</td><td class="teamPlayers">' + data.RB1.last + '</td>';
         $('#rb1_id').append(theTableRow);
     }
     if (data.RB2 !== null){
-        theTableRow = '<td class="teamPlayers">' + data.RB2.first + '</td><td>' + data.RB2.last + '</td>';
+        theTableRow = '<td class="teamPlayers">' + data.RB2.first + '</td><td class="teamPlayers">' + data.RB2.last + '</td>';
         $('#rb2_id').append(theTableRow);
     }
     if (data.WR1 !== null){
-        theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td>' + data.WR1.last + '</td>';
+        theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td class="teamPlayers">' + data.WR1.last + '</td>';
         $('#wr1_id').append(theTableRow);
     }
     if (data.WR2 !== null){
-        theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td>' + data.WR1.last + '</td>';
+        theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td class="teamPlayers">' + data.WR1.last + '</td>';
         $('#wr2_id').append(theTableRow);
     }
     if (data.TE !== null){
-        theTableRow = '<td class="teamPlayers">' + data.TE.first + '</td><td>' + data.TE.last + '</td>';
+        theTableRow = '<td class="teamPlayers">' + data.TE.first + '</td><td class="teamPlayers">' + data.TE.last + '</td>';
         $('#te_id').append(theTableRow);
     }
     if (data.FLEX !== null){
-        theTableRow = '<td class="teamPlayers">' + data.FLEX.first + '</td><td>' + data.FLEX.last + '</td>';
+        theTableRow = '<td class="teamPlayers">' + data.FLEX.first + '</td><td class="teamPlayers">' + data.FLEX.last + '</td>';
         $('#flex_id').append(theTableRow);
     }
     for (var i = 0; i < data.bench.length; i++){
-        theTableRow = '<tr><td>' +  data.bench[i].pos + '</td><td>' + data.bench[i].first + '</td><td>' + data.bench[i].last + '</td></tr>';
+        theTableRow = '<tr><td class="teamPlayers">' +  data.bench[i].pos + '</td><td class="teamPlayers">' + data.bench[i].first + '</td><td class="teamPlayers">' + data.bench[i].last + '</td></tr>';
         $(theTableRow).insertAfter('#bench_header');
     }
 }
@@ -76,10 +76,6 @@ function getTime(){
             url: '/getTime',
             type: "GET",
             success: function (result) {
-                console.log('The Time minutes:');
-                console.log(1 - parseInt((result/(1000*60))%60));
-                console.log('The Time secs:');
-                console.log(60 - parseInt((result/1000)%60));
                 var minutes = 1 - parseInt((result/(1000*60))%60);
                 var sec = 60 - parseInt((result/1000)%60);
                 updateClock(minutes, sec);
@@ -88,7 +84,7 @@ function getTime(){
             error: function () {
                 getTime();
             }});
-    }, 1000);
+    }, 980);
 }
 
 function pollServer() {
@@ -215,8 +211,13 @@ function updateClock(minutes, seconds){
         els[k].innerHTML = arr_lights.join("");
         arr_lights=[];
     }
-    mm.className = "block-digital num-"+parseInt(minutes/10);
-    mx.className = "block-digital num-"+parseInt(minutes%10);
+    if (parseInt(minutes) === 0){
+        mm.className = "block-digital num-"+parseInt(0);
+        mx.className = "block-digital num-"+parseInt(0);
+    } else {
+        mm.className = "block-digital num-"+parseInt(minutes/10);
+        mx.className = "block-digital num-"+parseInt(minutes%10);
+    }
     ss.className = "block-digital num-"+parseInt(seconds/10);
     sx.className = "block-digital num-"+parseInt(seconds%10);
 }
