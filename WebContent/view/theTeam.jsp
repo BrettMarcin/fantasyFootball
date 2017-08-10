@@ -14,10 +14,12 @@
     </ul>
 </div>
 
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 panel panel-default">
 <h2 id="theTeamName"><%=localTeam.teamName%></h2>
-</div>
 <h3>Starters</h3>
-<table class="theTeam table-bordered table-sm">
+<table class="theTeam table table-sm table-bordered">
     <thead>
         <tr>
             <th>Position</th>
@@ -25,33 +27,51 @@
             <th>Last</th>
         </tr>
     </thead>
+    <tbody>
     <tr id="qb_id">
         <th>QB</th>
+        <td class="pos_name" id="QB_first"></td>
+        <td class="pos_name" id="QB_last"></td>
     </tr>
 	<tr id="rb1_id">
 		<th>RB1</th>
+        <td class="pos_name" id="RB1_first"></td>
+        <td class="pos_name" id="RB1_last"></td>
 	</tr>
     <tr id="rb2_id">
         <th>RB2</th>
+        <td class="pos_name" id="RB2_first"></td>
+        <td class="pos_name" id="RB2_last"></td>
     </tr>
     <tr id="wr1_id">
         <th>WR1</th>
+        <td class="pos_name" id="WR1_first"></td>
+        <td class="pos_name" id="WR1_last"></td>
     </tr>
     <tr id="wr2_id">
         <th>WR2</th>
+        <td class="pos_name" id="WR2_first"></td>
+        <td class="pos_name" id="WR2_last"></td>
     </tr>
     <tr id="te_id">
         <th>TE</th>
+        <td class="pos_name" id="TE_first"></td>
+        <td class="pos_name" id="TE_last"></td>
     </tr>
     <tr id="flex_id">
         <th>FLEX</th>
+        <td class="pos_name" id="FLEX_first"></td>
+        <td class="pos_name" id="FLEX_last"></td>
     </tr>
     <tr id="dst_id">
-        <th>dst</th>
+        <th>DS/T</th>
+        <td class="pos_name" id="DST"></td>
+        <td></td>
     </tr>
+    </tbody>
 </table>
 <h3>Bench</h3>
-<table class="table-bordered">
+<table class="table table-sm table-bordered">
     <thead id="bench_header">
     <tr>
         <th>Position</th>
@@ -60,3 +80,6 @@
     </tr>
     </thead>
 </table>
+        </div>
+    </div>
+</div>

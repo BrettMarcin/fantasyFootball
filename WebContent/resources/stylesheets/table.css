@@ -1,0 +1,67 @@
+
+ul#timeline{
+    width: 1200px;
+    height: 80px;
+    list-style-type:none;
+    white-space:nowrap;
+    overflow-x: scroll;
+}
+
+ul#timeline li{
+    display: inline-block;
+    width: 85px;
+    padding: 30px;
+}
+
+ul#timeline li.team{
+    background-color: rgb(32, 32, 32);
+    background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,1)), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32));
+    background-size: 100% 100%, 10px 10px, 10px 10px, 10px 5px;
+    background-position: 0px 0px, 0px 0px, 5px 5px, 0px 0px;
+    font-size: 10px;
+    color: white;
+}
+
+ul#timeline li.round {
+    transform: rotate(-90deg);
+    -webkit-transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);
+    -o-transform:rotate(-90deg);
+    display: inline-block;
+    padding: 1px;
+    margin-left: -35px;
+    margin-right: -32px;
+    text-align: center;
+    background-color: white;
+}
+
+body table tr.thePlayer.selectedRow{background-color: #00FFFF;}
+
+#theClock{
+    display:inline;
+    width: 100px;
+    height: 80px;
+}
+
+#seconds{
+    display:inline;
+}
+
+#minute{
+    display:inline;
+}
+
+.tableBody{
+	height: 100px;
+}
+
+.allPlayers{
+   overflow-y:scroll;
+   height:550px;
+   width: 850px;
+   display:block;
+}
+
+.theTeam{
+    width: 200px;
+}

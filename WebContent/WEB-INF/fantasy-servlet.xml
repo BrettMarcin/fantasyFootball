@@ -14,11 +14,7 @@
 		http://www.springframework.org/schema/tx 
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<!-- Step 3: Add support for component scanning -->
 	<context:component-scan base-package="com.home" />
-
-	<!-- Step 4: Add support for conversion, formatting and validation support -->
-
 	<!-- Step 5: Define Spring MVC view resolver -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -32,8 +28,7 @@
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
         <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/teams?useSSL=false" />
         <property name="user" value="new_user" />
-        <property name="password" value="new_password" /> 
-
+        <property name="password" value="new_password" />
         <!-- these are connection pool properties for C3P0 -->
         <property name="minPoolSize" value="5" />
         <property name="maxPoolSize" value="20" />

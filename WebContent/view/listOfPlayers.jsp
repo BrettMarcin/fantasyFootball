@@ -2,9 +2,9 @@
 <html>
 <head> 
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-	<spring:url value="/WebContent/resources/scripts.js" var="theJS" />
-	<spring:url value="/WebContent/resources/table.css" var="theCSS" />
-    <spring:url value="/WebContent/resources/led.css" var="ledCSS" />
+	<spring:url value="/WebContent/resources/scripts/scripts.js" var="theJS" />
+	<spring:url value="/WebContent/resources/stylesheets/table.css" var="theCSS" />
+    <spring:url value="/WebContent/resources/stylesheets/led.css" var="ledCSS" />
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -26,20 +26,24 @@
     <% int round = (int)request.getAttribute("round"); %>
 </head>
 
-<ul class="list-group timeline" id="timeline" style="width: 1000px; height: 40px; white-space:nowrap; display:block; overflow-x:scroll;">
-<% for (Team aTeam : theTimeline) {%>
+<div class="clock panel panel-default" id="theClock">
+    <div id="minute">02</div>:<div id="seconds">00</div>
+</div>
+
+<ul class="list-group timeline panel panel-default" id="timeline">
+	<% for (Team aTeam : theTimeline) {%>
 	<% String theRound = String.valueOf(round); %>
 	<% String pickNum = String.valueOf(pickNumber); %>
 	<% if(aTeam.teamName == "Round"){ %>
-		<li class="list-group-item">Round <%=theRound%></li>
-		<% round++; %>
+	<li class="list-group-item timelineItem round">Round <%=theRound%></li>
+	<% round++; %>
 	<%} else { %>
-    <li class="list-group-item aTeamTimeline"><div class="pickNumber"><%=pickNum%></div> <%=aTeam.teamName%></li>
-		<% pickNumber++;%>
+	<li class="list-group-item timelineItem team">#<%=pickNum%> <%=aTeam.teamName%></li>
+	<% pickNumber++;%>
 	<%} %>
-<% } %>
+	<% } %>
 </ul>
-
+<br>
 <button id="draftButton" onclick="draftButton()">Draft player</button>
 
 <div class="row">

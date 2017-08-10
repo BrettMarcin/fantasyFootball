@@ -13,6 +13,8 @@ $(function() {
     $('a.dropdown-item').click(function(){
         getTeam($(this).text());
     });
+    updateTeam();
+    updateTimeline();
     getTime();
     pollServer();
 });
@@ -32,37 +34,91 @@ function getTeam(theTeam){
     });
 };
 
+function updateTeam(){
+    var theTeam;
+    window.setTimeout(function () {
+        theTeam = $('#theTeamName').text();
+        getTeam(theTeam);
+        updateTeam();
+    }, 980);
+}
+
+function updateTimeline(){
+    window.setTimeout(function () {
+        $.ajax({
+            async: false,
+            type: "GET",
+            url: '/getTimeline',
+            success: function (result) {
+                console.log('Updating the timeline!');
+                var stringBuilder = '';
+                var round = getCurrentRound();
+                var pick = getCurrentPick();
+                $('.timelineItem').remove();
+                for (var i = 0; i < result.length; i++){
+                    if(result[i].teamName === 'Round'){
+                        stringBuilder += '<li class="list-group-item timelineItem round">Round ' + round + '</li>';
+                        round++;
+                    } else {
+                        stringBuilder += '<li class="list-group-item timelineItem team">#' + pick + ' ' + result[i].teamName + '</li>';
+                        pick++;
+                    }
+                }
+                $('#timeline').append(stringBuilder);
+                updateTimeline();
+            },
+            error: function () {
+                updateTimeline();
+            }});
+    }, 980);
+}
+
 function addToPlayerTable(data){
     var theTableRow = '';
     $("#theTeamName").text(data.teamName);
-    $('td.teamPlayers').remove();
+    //$('td.teamPlayers').remove();
+    $('td.pos_name').text('');
     if (data.QB !== null){
-        theTableRow = '<td class="teamPlayers">' + data.QB.first + '</td><td class="teamPlayers">' + data.QB.last + '</td>';
-        $('#qb_id').append(theTableRow);
+        //theTableRow = '<td class="teamPlayers">' + data.QB.first + '</td><td class="teamPlayers">' + data.QB.last + '</td>';
+        //$('#qb_id').append(theTableRow);
+        $('#QB_first').text(data.QB.first);
+        $('#QB_last').text(data.QB.last);
     }
     if (data.RB1 !== null){
-        theTableRow = '<td class="teamPlayers">' + data.RB1.first + '</td><td class="teamPlayers">' + data.RB1.last + '</td>';
-        $('#rb1_id').append(theTableRow);
+        //theTableRow = '<td class="teamPlayers">' + data.RB1.first + '</td><td class="teamPlayers">' + data.RB1.last + '</td>';
+        //$('#rb1_id').append(theTableRow);
+        $('#RB1_first').text(data.RB1.first);
+        $('#RB1_last').text(data.RB1.last);
     }
     if (data.RB2 !== null){
-        theTableRow = '<td class="teamPlayers">' + data.RB2.first + '</td><td class="teamPlayers">' + data.RB2.last + '</td>';
-        $('#rb2_id').append(theTableRow);
+        //theTableRow = '<td class="teamPlayers">' + data.RB2.first + '</td><td class="teamPlayers">' + data.RB2.last + '</td>';
+        //$('#rb2_id').append(theTableRow);
+        $('#RB2_first').text(data.RB2.first);
+        $('#RB2_last').text(data.RB2.last);
     }
     if (data.WR1 !== null){
-        theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td class="teamPlayers">' + data.WR1.last + '</td>';
-        $('#wr1_id').append(theTableRow);
+        //theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td class="teamPlayers">' + data.WR1.last + '</td>';
+        //$('#wr1_id').append(theTableRow);
+        $('#WR1_first').text(data.WR1.first);
+        $('#WR1_last').text(data.WR1.last);
     }
     if (data.WR2 !== null){
-        theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td class="teamPlayers">' + data.WR1.last + '</td>';
-        $('#wr2_id').append(theTableRow);
+        //theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td class="teamPlayers">' + data.WR1.last + '</td>';
+        //$('#wr2_id').append(theTableRow);
+        $('#WR2_first').text(data.WR1.first);
+        $('#WR2_last').text(data.WR1.last);
     }
     if (data.TE !== null){
-        theTableRow = '<td class="teamPlayers">' + data.TE.first + '</td><td class="teamPlayers">' + data.TE.last + '</td>';
-        $('#te_id').append(theTableRow);
+        //theTableRow = '<td class="teamPlayers">' + data.TE.first + '</td><td class="teamPlayers">' + data.TE.last + '</td>';
+        //$('#te_id').append(theTableRow);
+        $('#TE_first').text(data.TE.first);
+        $('#TE_last').text(data.TE.last);
     }
     if (data.FLEX !== null){
-        theTableRow = '<td class="teamPlayers">' + data.FLEX.first + '</td><td class="teamPlayers">' + data.FLEX.last + '</td>';
-        $('#flex_id').append(theTableRow);
+        //theTableRow = '<td class="teamPlayers">' + data.FLEX.first + '</td><td class="teamPlayers">' + data.FLEX.last + '</td>';
+        //$('#flex_id').append(theTableRow);
+        $('#FLEX_first').text(data.FLEX.first);
+        $('#FLEX_last').text(data.FLEX.last);
     }
     for (var i = 0; i < data.bench.length; i++){
         theTableRow = '<tr><td class="teamPlayers">' +  data.bench[i].pos + '</td><td class="teamPlayers">' + data.bench[i].first + '</td><td class="teamPlayers">' + data.bench[i].last + '</td></tr>';
@@ -78,7 +134,8 @@ function getTime(){
             success: function (result) {
                 var minutes = 1 - parseInt((result/(1000*60))%60);
                 var sec = 60 - parseInt((result/1000)%60);
-                updateClock(minutes, sec);
+                $('#minute').text(minutes);
+                $('#seconds').text(sec);
                 getTime();
             },
             error: function () {
@@ -180,44 +237,28 @@ function draftButton() {
     pos = null;
 }
 
-function updateClock(minutes, seconds){
-    var led = document.getElementById('led'),
-        els = led.childNodes,
-        uid=0, size=15, w=0, h=0, row=0, col=0,
-        arr_lights=[];
-
-    var mm = document.getElementById('time-mm'),
-        mx = document.getElementById('time-m'),
-        ss = document.getElementById('time-ss'),
-        sx = document.getElementById('time-s');
-
-    for(var k=0, len=els.length; k<len; k++){
-        if(els[k].nodeType!=1)
-            continue;
-        w = parseInt(els[k].clientWidth);
-        h	= parseInt(els[k].clientHeight);
-        row	= parseInt(h/size);
-        col	= parseInt(w/size);
-
-        var t, l, sum=0;
-        for(var i=0; i<row; i++){
-            for(var j=0; j<col; j++){
-                uid++;
-                t = size*i;
-                l = size*j;
-                arr_lights.push( '<div uid="'+uid+'" id="l-'+uid+'" class="light row-'+i+' col-'+j+'" style="top:'+t+'px;left:'+l+'px"></div>');
-            }
+function getCurrentPick(){
+    var theData = -79;
+    $.ajax({
+        async: false,
+        type: "GET",
+        url: '/getPick',
+        success: function (result) {
+            theData = result;
         }
-        els[k].innerHTML = arr_lights.join("");
-        arr_lights=[];
-    }
-    if (parseInt(minutes) === 0){
-        mm.className = "block-digital num-"+parseInt(0);
-        mx.className = "block-digital num-"+parseInt(0);
-    } else {
-        mm.className = "block-digital num-"+parseInt(minutes/10);
-        mx.className = "block-digital num-"+parseInt(minutes%10);
-    }
-    ss.className = "block-digital num-"+parseInt(seconds/10);
-    sx.className = "block-digital num-"+parseInt(seconds%10);
+    });
+    return theData;
+}
+
+function getCurrentRound(){
+    var theData = -79;
+    $.ajax({
+        async: false,
+        type: "GET",
+        url: '/getRound',
+        success: function (result) {
+            theData = result;
+        }
+    });
+    return theData;
 }
