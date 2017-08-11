@@ -26,6 +26,7 @@ public class HomeController {
     private long startTime;
 	@Autowired
 	private TeamService teamService;
+	private MessageService messageService;
 	
 	@javax.annotation.PostConstruct
 	public void init() throws IOException {
@@ -119,6 +120,18 @@ public class HomeController {
         response.sendRedirect("/");
     }
 
+    @RequestMapping(value = "/getMessages", method = RequestMethod.GET)
+    @ResponseBody
+    public Message getMessages()
+    {
+        List<Message> messages = messageService.getMessages();
+        for(Message m : messages)
+        {
+            return m;
+        }
+        return new Message();
+    }
+
     public void setTimer(int seconds) {
         if (timer != null)
             timer.cancel();
@@ -153,4 +166,5 @@ public class HomeController {
             timer.cancel(); // Terminate the thread
         }
     }
+
 }

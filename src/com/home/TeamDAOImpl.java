@@ -23,7 +23,7 @@ public class TeamDAOImpl implements TeamDAO {
 	public List<Team> getTeams() {
 		Session currentSession = sessionFactory.getCurrentSession();
 		Query<Team> theQuery = currentSession.createQuery("from Team", Team.class);
-		List<Team> teams = theQuery.getResultList();		
+		List<Team> teams = theQuery.getResultList();
 		return teams;
 	}
 	

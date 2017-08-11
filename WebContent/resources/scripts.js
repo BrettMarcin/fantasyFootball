@@ -31,6 +31,25 @@ function getTeam(theTeam){
         }
     });
 };
+function getMessages(){
+    $.ajax({
+        url: '/getMessages',
+        type: "GET",
+        headers: {
+            'Accept': 'application/json'
+        },
+        processData: false,
+        async: true,
+        success: function (data){
+            displayMessages(data);
+        }
+    });
+}
+
+function displayMessages(data)
+{
+
+}
 
 function addToPlayerTable(data){
     var theTableRow = '';
