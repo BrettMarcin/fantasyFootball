@@ -50,7 +50,6 @@ function updateTimeline(){
             type: "GET",
             url: '/getTimeline',
             success: function (result) {
-                console.log('Updating the timeline!');
                 var stringBuilder = '';
                 var round = getCurrentRound();
                 var pick = getCurrentPick();
@@ -120,9 +119,11 @@ function addToPlayerTable(data){
         $('#FLEX_first').text(data.FLEX.first);
         $('#FLEX_last').text(data.FLEX.last);
     }
+    theTableRow = '<tbody id="bench_body"></tbody>';
+    $(theTableRow).insertAfter('#bench_header');
     for (var i = 0; i < data.bench.length; i++){
-        theTableRow = '<tr><td class="teamPlayers">' +  data.bench[i].pos + '</td><td class="teamPlayers">' + data.bench[i].first + '</td><td class="teamPlayers">' + data.bench[i].last + '</td></tr>';
-        $(theTableRow).insertAfter('#bench_header');
+        theTableRow = '<tr><td class="pos_name">' +  data.bench[i].pos + '</td><td class="pos_name">' + data.bench[i].first + '</td><td class="pos_name">' + data.bench[i].last + '</td></tr>';
+        $(theTableRow).append('#bench_body');
     }
 }
 
@@ -134,6 +135,10 @@ function getTime(){
             success: function (result) {
                 var minutes = 1 - parseInt((result/(1000*60))%60);
                 var sec = 60 - parseInt((result/1000)%60);
+                if (sec < 10){
+                    sec = '0' + sec.toString();
+                }
+                minutes = '0' + minutes.toString();
                 $('#minute').text(minutes);
                 $('#seconds').text(sec);
                 getTime();

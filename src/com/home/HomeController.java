@@ -26,6 +26,7 @@ public class HomeController {
     private long startTime;
 	@Autowired
 	private TeamService teamService;
+	private boolean endDraft = true;
 	
 	@javax.annotation.PostConstruct
 	public void init() throws IOException {
@@ -39,47 +40,63 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
 		Team localTeam = null;
-		if (!cookieValue.equals("defaultCookieValue")){
-			localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-		}
-		model.addAttribute("localTeam", localTeam);
-		model.addAttribute("theTeams", teamService.getTeams());
-		response.addCookie(new Cookie("teamCookie", cookieValue));
+        if (!cookieValue.equals("defaultCookieValue")){
+            localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+        }
+        model.addAttribute("localTeam", localTeam);
+        model.addAttribute("theTeams", teamService.getTeams());
 		if (draftStarted){
 			model.addAttribute("listOfPlayers", thePlayers);
 			model.addAttribute("theTimeline", theTimeline);
 			model.addAttribute("round", round);
 			model.addAttribute("pickNumber", pickNumber);
+            response.addCookie(new Cookie("teamCookie", cookieValue));
 			return "listOfPlayers";
+		} else if(endDraft == true){
+			return "home";
 		} else {
-			return "home"; 
-		}
+		    return "end";
+        }
     }
 	
 	@RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
 	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"));
-		teamService.saveTeam(localTeam);
-		Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
-		response.addCookie(newCookie);
-		response.sendRedirect("/");
+        List<Team> theTeams = teamService.getTeams();
+	    if (theTeams.size() < 10) {
+            Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"));
+            teamService.saveTeam(localTeam);
+            Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
+            response.addCookie(newCookie);
+            response.sendRedirect("/");
+        }
+    }
+
+    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
+    public void sendEmail(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException{
+        if (endDraft == true && draftStarted == false){
+            if (!cookieValue.equals("defaultCookieValue")) {
+                Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+            }
+        }
     }
 	
 	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
 	@ResponseBody
 	public void startDraft(HttpServletResponse response) throws IOException{
-		draftStarted = true;
-		getOrder();
-		System.out.println();
-        setTimer(120);
-        startTime = System.currentTimeMillis();
-		response.sendRedirect("/");
+	    if (draftStarted == false){
+            draftStarted = true;
+            getOrder();
+            System.out.println();
+            setTimer(120);
+            startTime = System.currentTimeMillis();
+            response.sendRedirect("/");
+        }
 	}
 
     @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)
     @ResponseBody
     public  ArrayList<Player> getPlayers(){
-            return thePlayers;
+        return thePlayers;
     }
 
     @RequestMapping(value = "/getTeam/{teamName}", method = RequestMethod.GET)
@@ -98,7 +115,11 @@ public class HomeController {
     @RequestMapping(value = "/getTime", method = RequestMethod.GET)
     @ResponseBody
     public long getTime(){
-        return (System.currentTimeMillis()) - startTime;
+        if (draftStarted == true){
+            return (System.currentTimeMillis()) - startTime;
+        } else {
+            return -696969;
+        }
     }
 
     @RequestMapping(value = "/getTimeline", method = RequestMethod.GET)
@@ -118,39 +139,46 @@ public class HomeController {
     public int getRound(){
         return round;
     }
+
+    @RequestMapping(value = "/theEndDraft", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean theEndDraft(){
+        return endDraft;
+    }
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, HttpServletResponse response) throws IOException {
-        if(theTimeline.get(0).teamName.equals("Round")){
-            theTimeline.remove(0);
-            round++;
-        }
-        if(!cookieValue.equals("defaultCookieValue")){
-			Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-            if(theTimeline.get(0).teamName.equals(localTeam.teamName)){
+        if (draftStarted == true) {
+            if (theTimeline.get(0).teamName.equals("Round")) {
                 theTimeline.remove(0);
-                localTeam.addPlayer(json);
-                teamService.updateTeam(localTeam);
-                for (Player thePlayer : thePlayers){
-                    if(thePlayer.isMatch(json)){
-                        thePlayers.remove(thePlayer);
-                        break;
-                    }
-                }
-                setTimer(120);
-                startTime = System.currentTimeMillis();
-                pickNumber++;
+                round++;
             }
-		}
+            if (!cookieValue.equals("defaultCookieValue")) {
+                Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+                if (theTimeline.get(0).teamName.equals(localTeam.teamName)) {
+                    theTimeline.remove(0);
+                    localTeam.addPlayer(json);
+                    teamService.updateTeam(localTeam);
+                    for (Player thePlayer : thePlayers) {
+                        if (thePlayer.isMatch(json)) {
+                            thePlayers.remove(thePlayer);
+                            break;
+                        }
+                    }
+                    setTimer(120);
+                    startTime = System.currentTimeMillis();
+                    pickNumber++;
+                }
+            }
+        }
         response.sendRedirect("/");
     }
 
     public void setTimer(int seconds) {
-        System.out.println("Setting a new Timer!");
-//        if (timer != null)
-//
         if (timer == null){
             timer = new Timer();
+        } else {
+            timer.purge();
         }
         timer.schedule(new NextTask(), seconds * 1000);
     }

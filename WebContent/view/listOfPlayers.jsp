@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	<script src="${theJS}"></script>
 	<link rel="stylesheet" type="text/css" href="${theCSS}" />
     <link rel="stylesheet" type="text/css" href="${ledCSS}" />
@@ -25,11 +26,18 @@
     <% int pickNumber = (int)request.getAttribute("pickNumber"); %>
     <% int round = (int)request.getAttribute("round"); %>
 </head>
-
+<body>
+<div id="particles-js">
+	<div id="theDraft">
+<h3>Fantasy Football</h3>
+<div class="row">
+	<div class="col-sm-1">
 <div class="clock panel panel-default" id="theClock">
-    <div id="minute">02</div>:<div id="seconds">00</div>
+	<p id="minute">02</p><p style="display: inline; font-size: 50px;">:</p><p id="seconds">00</p>
 </div>
+	</div>
 
+	<div class="col-sm-11">
 <ul class="list-group timeline panel panel-default" id="timeline">
 	<% for (Team aTeam : theTimeline) {%>
 	<% String theRound = String.valueOf(round); %>
@@ -45,6 +53,8 @@
 </ul>
 <br>
 <button id="draftButton" onclick="draftButton()">Draft player</button>
+</div>
+</div>
 
 <div class="row">
 	<div class="col-md-8">
@@ -90,3 +100,11 @@
 		<jsp:include page="theTeam.jsp" />
 	</div>
 </div>
+</div>
+<script>
+    particlesJS.load('particles-js', '/WebContent/resources/scripts/particles.json', function(){
+        console.log('particles.json loaded...');
+    });
+</script>
+</div>
+</body>

@@ -1,4 +1,21 @@
 
+#theDraft {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#particles-js{
+    background: black;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -10;
+    top: 0;
+    left: 0
+}
+
 ul#timeline{
     width: 1200px;
     height: 80px;
@@ -29,26 +46,24 @@ ul#timeline li.round {
     -o-transform:rotate(-90deg);
     display: inline-block;
     padding: 1px;
-    margin-left: -35px;
+    margin-left: -30px;
     margin-right: -32px;
     text-align: center;
     background-color: white;
 }
 
-body table tr.thePlayer.selectedRow{background-color: #00FFFF;}
 
-#theClock{
-    display:inline;
-    width: 100px;
-    height: 80px;
-}
+
+body table tr.thePlayer.selectedRow{background-color: #00FFFF;}
 
 #seconds{
     display:inline;
+    font-size: 50px;
 }
 
 #minute{
     display:inline;
+    font-size: 50px;
 }
 
 .tableBody{
