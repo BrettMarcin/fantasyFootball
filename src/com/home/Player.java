@@ -27,7 +27,7 @@ import java.io.Serializable;
 	@Column
 	@XmlElement public String pos;
 	@Column
-	@XmlElement public String team = "N/A";
+	@XmlElement public String team = "FA";
 	@Column
 	@XmlElement public String Fpoints = "-";
 	@Column

@@ -28,6 +28,8 @@ public class theData {
 	*/
 	
 	public static TreeMap<String,Player> getRankingPlayers() throws IOException{
+		int offset = 0;
+		String last;
 		TreeMap<String,Player> playersOpen = new TreeMap<String,Player>();
 		Document doc = Jsoup.connect("https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php?partner=cbs_nfl_rankings_pre_p").get();
 		Element table = doc.select("table").get(0); 
@@ -40,8 +42,13 @@ public class theData {
 			if(tierCheck != true){
 				String[] words=text.split("\\s");
 				try{
-					String name = words[2];
-					Player p1 = new Player(Integer.parseInt(words[0]), words[1], name, words[4].substring(0, 2));
+					offset = 0;
+					last = words[2];
+					if(words[2] == "Jr."){
+						last += " Jr.";
+						offset = 1;
+					}
+					Player p1 = new Player(Integer.parseInt(words[0]), words[1], last, words[4 + offset].substring(0, 2));
 					playersOpen.put(p1.first + p1.last + p1.pos + words[3].toUpperCase(), p1);
 				}catch(Exception e){
 					
@@ -68,23 +75,42 @@ public class theData {
 			for(int k = 2; k < rows.size(); k++){
 				Element row = rows.get(k);
 				Elements cols = row.select("td");
-				String text = cols.text();
-				words = text.split("\\s");
+				// Name, position, and team
+				String[] Name = cols.get(1).select("a").get(0).text().split("\\s");
+				String[] teamAndPos = cols.get(1).select("em").get(0).text().split("\\s");
+				String pos = teamAndPos[0].toUpperCase();
+				//passing yards
+				String passingYds = cols.get(3).text();
+				String passingTds = cols.get(4).text();
+				String ints = cols.get(5).text();
+				String rushingYds = cols.get(6).text();
+				String rushingTds = cols.get(7).text();
+				String recYds = cols.get(8).text();
+				String recTds = cols.get(9).text();
+				String fumbles = cols.get(12).text();
+				String total = cols.get(13).text();
+				String last = "";
 				int off = 0;
 				Player p1 = null;
-				if(words.length < 18){
-					off = -2;
-					//              first,    last,     pos,        FPoints         passYards passTDs,          ints,        rushYards,     rushTDs,         recYards,     recTDs,      fumble
-					p1 = new Player(words[1], words[2], words[3], words[17+off], words[7+off], words[8+off], words[9+off], words[10+off], words[11+off], words[12+off], words[13+off], words[16+off]);
+				// Build last name
+				for(int i = 1; i < Name.length; i++){
+					last += Name[i];
+					if (i + 1 != Name.length){
+						last += " ";
+					}
+				}
+				if(teamAndPos.length == 1){
+					//              first,   last, pos, FPoints  passYards passTDs,    ints,   rushYards,     rushTDs,   recYards,     recTDs,      fumble
+					p1 = new Player(Name[0], last, pos, total, passingYds, passingTds, ints, rushingYds, rushingTds, recYds, recTds, fumbles);
 				} else {
 					//              first,    last,     pos,        FPoints         passYards passTDs,          ints,        rushYards,     rushTDs,         recYards,     recTDs,      fumble        team
-					p1 = new Player(words[1], words[2], words[3], words[17+off], words[7+off], words[8+off], words[9+off], words[10+off], words[11+off], words[12+off], words[13+off], words[16+off], words[5].toUpperCase());
+					p1 = new Player(Name[0], last, pos, total, passingYds, passingTds, ints, rushingYds, rushingTds, recYds, recTds, fumbles, teamAndPos[2].toUpperCase());
 				}
-				Player p2 = bst.get(words[1] + words[2] + words[3].toUpperCase() + p1.team.toUpperCase());
+				Player p2 = bst.get(Name[0] + last + pos + p1.team.toUpperCase());
 				if(p2 != null){
 					p1.rank = p2.rank;
-					bst.remove(words[1] + words[2]);
-					bst.put(words[1] + words[2] + words[3].toUpperCase() + p1.team.toUpperCase(), p1);
+					bst.remove(Name[0] + last);
+					bst.put(Name[0] + last + pos + p1.team.toUpperCase(), p1);
 				}
 			}
 			location+= 25;

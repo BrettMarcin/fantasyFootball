@@ -9,4 +9,5 @@ public interface TeamService {
 	public void deleteTeam(int theId);
 	public void clearTeams(List<Team> theTeams);
 	public void updateTeam(Team localTeam);
+	public Team getTeamByTeamName(String theTeamName);
 }

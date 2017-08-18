@@ -63,14 +63,22 @@ public class TeamDAOImpl implements TeamDAO {
 		Session currentSession = sessionFactory.getCurrentSession();
 		if(localTeam.QB == null)
             Hibernate.initialize(localTeam.QB);
-        if(localTeam.WR == null)
-            Hibernate.initialize(localTeam.WR);
+        if(localTeam.WR1 == null)
+            Hibernate.initialize(localTeam.WR1);
+        if(localTeam.WR2 == null)
+            Hibernate.initialize(localTeam.WR2);
         if(localTeam.TE == null)
             Hibernate.initialize(localTeam.TE);
         if(localTeam.DST == null)
             Hibernate.initialize(localTeam.DST);
-        if(localTeam.RB == null)
-            Hibernate.initialize(localTeam.RB);
+        if(localTeam.RB1 == null)
+            Hibernate.initialize(localTeam.RB1);
+        if(localTeam.RB2 == null)
+            Hibernate.initialize(localTeam.RB2);
+        if(localTeam.FLEX == null)
+            Hibernate.initialize(localTeam.FLEX);
+        if(localTeam.bench.size() == 0)
+            Hibernate.initialize(localTeam.bench);
 		currentSession.saveOrUpdate(localTeam);
 	}
 }

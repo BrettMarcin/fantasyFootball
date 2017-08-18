@@ -9,12 +9,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -23,12 +18,16 @@ public class HomeController {
 	
 	private static ArrayList<Player> thePlayers = null;
 	private boolean draftStarted = false;
-	List<Team> theTimeline;
+	private ArrayList<Team> theTimeline;
 	private final static Logger log = Logger.getLogger(HomeController.class.getName());
 	private int round = -1;
 	private int pickNumber = 1;
+    private Timer timer;
+    private Timer cpuTimer;
+    private long startTime;
 	@Autowired
 	private TeamService teamService;
+	private boolean endDraft = true;
 	
 	@javax.annotation.PostConstruct
 	public void init() throws IOException {
@@ -38,78 +37,218 @@ public class HomeController {
 		if (theTeams.size() > 0)
 			teamService.clearTeams(theTeams);
 	}
+
+    @RequestMapping(value = "/resetDraft", method = RequestMethod.GET)
+    public void resetDraft(HttpServletResponse response) throws IOException {
+	    endDraft = true;
+        Cookie cookie = new Cookie("teamCookie", null);
+        cookie.setMaxAge(0);
+        init();
+        round = -1;
+        pickNumber = 1;
+        response.addCookie(cookie);
+        response.sendRedirect("/");
+    }
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
 		Team localTeam = null;
-		if (!cookieValue.equals("defaultCookieValue")){
-			localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-		}
-		model.addAttribute("localTeam", localTeam);
-		model.addAttribute("theTeams", teamService.getTeams());
-		response.addCookie(new Cookie("teamCookie", cookieValue));
+        if (!cookieValue.equals("defaultCookieValue")){
+            localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+        }
+        model.addAttribute("localTeam", localTeam);
+        model.addAttribute("theTeams", teamService.getTeams());
 		if (draftStarted){
 			model.addAttribute("listOfPlayers", thePlayers);
 			model.addAttribute("theTimeline", theTimeline);
 			model.addAttribute("round", round);
 			model.addAttribute("pickNumber", pickNumber);
+            response.addCookie(new Cookie("teamCookie", cookieValue));
 			return "listOfPlayers";
+            //return "end";
+		} else if(endDraft == true){
+			return "home";
 		} else {
-			return "home"; 
-		}
+		    return "end";
+        }
     }
 	
 	@RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
 	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"));
-		teamService.saveTeam(localTeam);
-		Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
-		response.addCookie(newCookie);
-		response.sendRedirect("/");
+        List<Team> theTeams = teamService.getTeams();
+	    if (theTeams.size() < 10) {
+            Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"), false);
+            teamService.saveTeam(localTeam);
+            Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
+            response.addCookie(newCookie);
+            response.sendRedirect("/");
+        }
+    }
+
+    @RequestMapping(value = "/addACpu", method = RequestMethod.POST)
+    public void addACpu(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        List<Team> theTeams = teamService.getTeams();
+        if (theTeams.size() < 10) {
+            Team localTeam = new Team(request.getParameter("CpuName"), "Cpu" ,true);
+            teamService.saveTeam(localTeam);
+            response.sendRedirect("/");
+        }
+    }
+
+    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
+    public void sendEmail(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException{
+        if (endDraft == true && draftStarted == false){
+            if (!cookieValue.equals("defaultCookieValue")) {
+                Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+            }
+        }
     }
 	
 	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
 	@ResponseBody
 	public void startDraft(HttpServletResponse response) throws IOException{
-		draftStarted = true;
-		getOrder();
-		response.sendRedirect("/");
-	}
-	
-	@RequestMapping(value = "/nextPick", method = RequestMethod.GET)
-	@ResponseBody
-	public void nextPick(@RequestBody Player thePlayer){
-	    
+	    if (draftStarted == false){
+            draftStarted = true;
+            getOrder();
+            System.out.println();
+            setTimer(120);
+            setCPUTimer(5);
+            startTime = System.currentTimeMillis();
+            response.sendRedirect("/");
+        }
 	}
 
-    @RequestMapping(value = "/getTeam", method = RequestMethod.GET)
+    @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)
     @ResponseBody
-    public Team getTeam(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue){
-            Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-            return localTeam;
+    public  ArrayList<Player> getPlayers(){
+        return thePlayers;
+    }
+
+    @RequestMapping(value = "/getTeam/{teamName}", method = RequestMethod.GET)
+    @ResponseBody
+    public Team getTeam(@PathVariable("teamName") String teamName){
+        Team theTeam = teamService.getTeamByTeamName(teamName);
+    	return theTeam;
+    }
+
+    @RequestMapping(value = "/getTeams", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Team> getTeams(){
+        return teamService.getTeams();
+    }
+
+    @RequestMapping(value = "/getTime", method = RequestMethod.GET)
+    @ResponseBody
+    public long getTime(){
+        if (draftStarted == true){
+            return (System.currentTimeMillis()) - startTime;
+        } else {
+            return -696969;
+        }
+    }
+
+    @RequestMapping(value = "/getTimeline", method = RequestMethod.GET)
+    @ResponseBody
+    public ArrayList<Team> getTimeline(){
+        return theTimeline;
+    }
+
+    @RequestMapping(value = "/getPick", method = RequestMethod.GET)
+    @ResponseBody
+    public int getPick(){
+        return pickNumber;
+    }
+
+    @RequestMapping(value = "/isDraftStillGoing", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean isDraftStillGoing(){
+        return draftStarted;
+    }
+
+    @RequestMapping(value = "/getRound", method = RequestMethod.GET)
+    @ResponseBody
+    public int getRound(){
+        return round;
+    }
+
+    @RequestMapping(value = "/theEndDraft", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean theEndDraft(){
+        return endDraft;
     }
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, HttpServletResponse response) throws IOException {
-	    if(!cookieValue.equals("defaultCookieValue")){
-			Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-			localTeam.addPlayer(json);
-			teamService.updateTeam(localTeam);
-			for (Player thePlayer : thePlayers){
-				if(thePlayer.isMatch(json)){
-					thePlayers.remove(thePlayer);
-					break;
-				}
-			}	
-		}
+        if (draftStarted == true && theTimeline.size() != 0) {
+            if (theTimeline.get(0).teamName.equals("Round")) {
+                theTimeline.remove(0);
+                round++;
+            }
+            if(!theTimeline.get(0).isACpu) {
+                if (!cookieValue.equals("defaultCookieValue")) {
+                    Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+                    if (theTimeline.get(0).teamName.equals(localTeam.teamName)) {
+                        theTimeline.remove(0);
+                        localTeam.addPlayer(json);
+                        teamService.updateTeam(localTeam);
+                        for (Player thePlayer : thePlayers) {
+                            if (thePlayer.isMatch(json)) {
+                                thePlayers.remove(thePlayer);
+                                break;
+                            }
+                        }
+                        setTimer(120);
+                        startTime = System.currentTimeMillis();
+                        pickNumber++;
+                    }
+                }
+            }
+
+            if (theTimeline.size() == 0){
+                endDraft = false;
+                draftStarted = false;
+            } else {
+                setCPUTimer(5);
+            }
+        }
         response.sendRedirect("/");
     }
-	
-	@RequestMapping(value = "/getJson", method = RequestMethod.POST)
-	@ResponseBody
-	public void getJson(@RequestBody Player thePlayer){
-	    System.out.println(thePlayer.first + " " + thePlayer.last);
-	}
+
+    public void setTimer(int seconds) {
+        if (timer == null){
+            timer = new Timer();
+        } else {
+            timer.purge();
+        }
+        timer.schedule(new NextTask(), seconds * 1000);
+    }
+
+    public void setCPUTimer(int seconds) {
+        if (cpuTimer == null){
+            cpuTimer = new Timer();
+        } else {
+            cpuTimer.purge();
+        }
+        cpuTimer.schedule(new checkComputer(), seconds * 1000);
+    }
+
+    private void autoDraftPlayer(){
+        if (theTimeline.size() != 0) {
+            if (theTimeline.get(0).teamName.equals("Round")) {
+                theTimeline.remove(0);
+                round++;
+            }
+            Team localTeam = teamService.getTeam(theTimeline.get(0).id);
+            theTimeline.remove(0);
+            localTeam.addPlayer(thePlayers.get(0));
+            thePlayers.remove(0);
+            teamService.updateTeam(localTeam);
+            setTimer(120);
+            setCPUTimer(5);
+            pickNumber++;
+            startTime = System.currentTimeMillis();
+        }
+    }
 	
 	private void getOrder(){
 		if (round == -1){
@@ -117,4 +256,28 @@ public class HomeController {
 			round = 1;
 		}
 	}
+
+    class NextTask extends TimerTask {
+        @Override
+        public void run() {
+            autoDraftPlayer();
+        }
+    }
+
+    class checkComputer extends TimerTask {
+        @Override
+        public void run() {
+            if (theTimeline.size() > 0){
+                if(theTimeline.get(0).teamName.equals("Round")){
+                    theTimeline.remove(0);
+                    round++;
+                }
+                if(theTimeline.get(0).isACpu){
+                    autoDraftPlayer();
+                } else {
+                    cpuTimer.purge();
+                }
+            }
+        }
+    }
 }

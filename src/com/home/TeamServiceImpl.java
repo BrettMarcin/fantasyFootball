@@ -32,6 +32,17 @@ public class TeamServiceImpl implements TeamService{
 		Team theTeam = teamDAO.getTeam(theId);
 		return theTeam;
 	}
+
+	@Override
+	@Transactional
+	public Team getTeamByTeamName(String theTeamName){
+		List<Team> theTeams = getTeams();
+		for (Team theTeam : theTeams){
+			if(theTeam.teamName.equals(theTeamName))
+				return theTeam;
+		}
+		return null;
+	}
 	
 	@Override
 	@Transactional
