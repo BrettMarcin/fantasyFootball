@@ -6,20 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e1b615fd-ab21-4cb6-ae5d-6a54be227b4d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WebContent/resources/stylesheets/home.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/resources/scripts/scripts.js" afterPath="$PROJECT_DIR$/WebContent/resources/scripts/scripts.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/resources/stylesheets/table.css" afterPath="$PROJECT_DIR$/WebContent/resources/stylesheets/table.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/view/end.jsp" afterPath="$PROJECT_DIR$/WebContent/view/end.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/view/home.jsp" afterPath="$PROJECT_DIR$/WebContent/view/home.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/view/listOfPlayers.jsp" afterPath="$PROJECT_DIR$/WebContent/view/listOfPlayers.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/view/theTeam.jsp" afterPath="$PROJECT_DIR$/WebContent/view/theTeam.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/Email.java" afterPath="$PROJECT_DIR$/src/com/home/Email.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/HomeController.java" afterPath="$PROJECT_DIR$/src/com/home/HomeController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/Team.java" afterPath="$PROJECT_DIR$/src/com/home/Team.java" />
-    </list>
+    <list default="true" id="e1b615fd-ab21-4cb6-ae5d-6a54be227b4d" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/build/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -77,8 +64,8 @@
       <file leaf-file-name="table.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WebContent/resources/stylesheets/table.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
-              <caret line="29" column="23" lean-forward="true" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
+            <state relative-caret-position="374">
+              <caret line="25" column="12" lean-forward="true" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -656,12 +643,12 @@
       <workItem from="1502050705193" duration="1941000" />
       <workItem from="1502231032345" duration="8046000" />
       <workItem from="1502251982921" duration="22346000" />
-      <workItem from="1502558396527" duration="24525000" />
+      <workItem from="1502558396527" duration="25443000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="115462000" />
+    <option name="totallyTimeSpent" value="116380000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -957,7 +944,7 @@
         <state relative-caret-position="135">
           <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="2" selection-end-line="63" selection-end-column="7" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -967,7 +954,7 @@
         <state relative-caret-position="30">
           <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="27" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1112,8 +1099,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WebContent/resources/stylesheets/table.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="29" column="23" lean-forward="true" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
+        <state relative-caret-position="374">
+          <caret line="25" column="12" lean-forward="true" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="12" />
           <folding />
         </state>
       </provider>
