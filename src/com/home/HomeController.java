@@ -23,6 +23,7 @@ public class HomeController {
 	private int round = -1;
 	private int pickNumber = 1;
     private Timer timer;
+    private Timer cpuTimer;
     private long startTime;
 	@Autowired
 	private TeamService teamService;
@@ -36,6 +37,18 @@ public class HomeController {
 		if (theTeams.size() > 0)
 			teamService.clearTeams(theTeams);
 	}
+
+    @RequestMapping(value = "/resetDraft", method = RequestMethod.GET)
+    public void resetDraft(HttpServletResponse response) throws IOException {
+	    endDraft = true;
+        Cookie cookie = new Cookie("teamCookie", null);
+        cookie.setMaxAge(0);
+        init();
+        round = -1;
+        pickNumber = 1;
+        response.addCookie(cookie);
+        response.sendRedirect("/");
+    }
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
@@ -52,6 +65,7 @@ public class HomeController {
 			model.addAttribute("pickNumber", pickNumber);
             response.addCookie(new Cookie("teamCookie", cookieValue));
 			return "listOfPlayers";
+            //return "end";
 		} else if(endDraft == true){
 			return "home";
 		} else {
@@ -63,10 +77,20 @@ public class HomeController {
 	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
         List<Team> theTeams = teamService.getTeams();
 	    if (theTeams.size() < 10) {
-            Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"));
+            Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"), false);
             teamService.saveTeam(localTeam);
             Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
             response.addCookie(newCookie);
+            response.sendRedirect("/");
+        }
+    }
+
+    @RequestMapping(value = "/addACpu", method = RequestMethod.POST)
+    public void addACpu(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        List<Team> theTeams = teamService.getTeams();
+        if (theTeams.size() < 10) {
+            Team localTeam = new Team(request.getParameter("CpuName"), "Cpu" ,true);
+            teamService.saveTeam(localTeam);
             response.sendRedirect("/");
         }
     }
@@ -88,6 +112,7 @@ public class HomeController {
             getOrder();
             System.out.println();
             setTimer(120);
+            setCPUTimer(5);
             startTime = System.currentTimeMillis();
             response.sendRedirect("/");
         }
@@ -134,6 +159,12 @@ public class HomeController {
         return pickNumber;
     }
 
+    @RequestMapping(value = "/isDraftStillGoing", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean isDraftStillGoing(){
+        return draftStarted;
+    }
+
     @RequestMapping(value = "/getRound", method = RequestMethod.GET)
     @ResponseBody
     public int getRound(){
@@ -148,27 +179,36 @@ public class HomeController {
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, HttpServletResponse response) throws IOException {
-        if (draftStarted == true) {
+        if (draftStarted == true && theTimeline.size() != 0) {
             if (theTimeline.get(0).teamName.equals("Round")) {
                 theTimeline.remove(0);
                 round++;
             }
-            if (!cookieValue.equals("defaultCookieValue")) {
-                Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-                if (theTimeline.get(0).teamName.equals(localTeam.teamName)) {
-                    theTimeline.remove(0);
-                    localTeam.addPlayer(json);
-                    teamService.updateTeam(localTeam);
-                    for (Player thePlayer : thePlayers) {
-                        if (thePlayer.isMatch(json)) {
-                            thePlayers.remove(thePlayer);
-                            break;
+            if(!theTimeline.get(0).isACpu) {
+                if (!cookieValue.equals("defaultCookieValue")) {
+                    Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+                    if (theTimeline.get(0).teamName.equals(localTeam.teamName)) {
+                        theTimeline.remove(0);
+                        localTeam.addPlayer(json);
+                        teamService.updateTeam(localTeam);
+                        for (Player thePlayer : thePlayers) {
+                            if (thePlayer.isMatch(json)) {
+                                thePlayers.remove(thePlayer);
+                                break;
+                            }
                         }
+                        setTimer(120);
+                        startTime = System.currentTimeMillis();
+                        pickNumber++;
                     }
-                    setTimer(120);
-                    startTime = System.currentTimeMillis();
-                    pickNumber++;
                 }
+            }
+
+            if (theTimeline.size() == 0){
+                endDraft = false;
+                draftStarted = false;
+            } else {
+                setCPUTimer(5);
             }
         }
         response.sendRedirect("/");
@@ -183,19 +223,31 @@ public class HomeController {
         timer.schedule(new NextTask(), seconds * 1000);
     }
 
-    private void autoDraftPlayer(){
-        if(theTimeline.get(0).teamName.equals("Round")){
-            theTimeline.remove(0);
-            round++;
+    public void setCPUTimer(int seconds) {
+        if (cpuTimer == null){
+            cpuTimer = new Timer();
+        } else {
+            cpuTimer.purge();
         }
-        Team localTeam = teamService.getTeam(theTimeline.get(0).id);
-        theTimeline.remove(0);
-        localTeam.addPlayer(thePlayers.get(0));
-        thePlayers.remove(0);
-        teamService.updateTeam(localTeam);
-        setTimer(120);
-        pickNumber++;
-        startTime = System.currentTimeMillis();
+        cpuTimer.schedule(new checkComputer(), seconds * 1000);
+    }
+
+    private void autoDraftPlayer(){
+        if (theTimeline.size() != 0) {
+            if (theTimeline.get(0).teamName.equals("Round")) {
+                theTimeline.remove(0);
+                round++;
+            }
+            Team localTeam = teamService.getTeam(theTimeline.get(0).id);
+            theTimeline.remove(0);
+            localTeam.addPlayer(thePlayers.get(0));
+            thePlayers.remove(0);
+            teamService.updateTeam(localTeam);
+            setTimer(120);
+            setCPUTimer(5);
+            pickNumber++;
+            startTime = System.currentTimeMillis();
+        }
     }
 	
 	private void getOrder(){
@@ -209,7 +261,23 @@ public class HomeController {
         @Override
         public void run() {
             autoDraftPlayer();
-            //timer.cancel(); // Terminate the thread
+        }
+    }
+
+    class checkComputer extends TimerTask {
+        @Override
+        public void run() {
+            if (theTimeline.size() > 0){
+                if(theTimeline.get(0).teamName.equals("Round")){
+                    theTimeline.remove(0);
+                    round++;
+                }
+                if(theTimeline.get(0).isACpu){
+                    autoDraftPlayer();
+                } else {
+                    cpuTimer.purge();
+                }
+            }
         }
     }
 }

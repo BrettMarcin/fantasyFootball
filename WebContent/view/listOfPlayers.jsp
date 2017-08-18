@@ -4,7 +4,6 @@
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts/scripts.js" var="theJS" />
 	<spring:url value="/WebContent/resources/stylesheets/table.css" var="theCSS" />
-    <spring:url value="/WebContent/resources/stylesheets/led.css" var="ledCSS" />
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -13,7 +12,6 @@
 	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	<script src="${theJS}"></script>
 	<link rel="stylesheet" type="text/css" href="${theCSS}" />
-    <link rel="stylesheet" type="text/css" href="${ledCSS}" />
 	<link href="${bootstrap}" rel="stylesheet" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <%@ page import ="java.util.*" %>
@@ -31,13 +29,13 @@
 	<div id="theDraft">
 <h3>Fantasy Football</h3>
 <div class="row">
-	<div class="col-sm-1">
+	<div class="col-sm-2" style="margin-right: 50px;">
 <div class="clock panel panel-default" id="theClock">
 	<p id="minute">02</p><p style="display: inline; font-size: 50px;">:</p><p id="seconds">00</p>
 </div>
 	</div>
 
-	<div class="col-sm-11">
+	<div class="col-sm-9">
 <ul class="list-group timeline panel panel-default" id="timeline">
 	<% for (Team aTeam : theTimeline) {%>
 	<% String theRound = String.valueOf(round); %>
@@ -52,9 +50,18 @@
 	<% } %>
 </ul>
 <br>
+	</div>
+	<div class="row">
+		<div class="col-md-2">
 <button id="draftButton" onclick="draftButton()">Draft player</button>
-</div>
-</div>
+			<div class="panel panel-default" id="SelectedPlayer">
+			<h4>Currently Selected Player</h4>
+				<p id="SelectedPlayerP"></p>
+			</div>
+		</div>
+	</div>
+
+
 
 <div class="row">
 	<div class="col-md-8">
@@ -96,10 +103,12 @@
             </tbody>
 		</table>
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-4 panel panel-default">
 		<jsp:include page="theTeam.jsp" />
 	</div>
 </div>
+	<div class="spacer">
+	</div>
 </div>
 <script>
     particlesJS.load('particles-js', '/WebContent/resources/scripts/particles.json', function(){
@@ -108,3 +117,4 @@
 </script>
 </div>
 </body>
+</html>

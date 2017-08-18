@@ -13,6 +13,7 @@ $(function() {
     $('a.dropdown-item').click(function(){
         getTeam($(this).text());
     });
+    checkIfDraftIsRunning();
     updateTeam();
     updateTimeline();
     getTime();
@@ -32,6 +33,29 @@ function getTeam(theTeam){
             addToPlayerTable(data);
         }
     });
+};
+
+
+function checkIfDraftIsRunning(){
+    window.setTimeout(function () {
+        $.ajax({
+            url: '/isDraftStillGoing',
+            type: "GET",
+            headers: {
+                'Accept': 'application/json'
+            },
+            processData: false,
+            async: false,
+            success: function (data) {
+                if (data) {
+                    checkIfDraftIsRunning();
+                } else {
+                    console.log('Draft has ended!');
+                    window.location.reload();
+                }
+            }
+        });
+    }, 10000);
 };
 
 function updateTeam(){
@@ -67,7 +91,7 @@ function updateTimeline(){
                 updateTimeline();
             },
             error: function () {
-                updateTimeline();
+                //updateTimeline();
             }});
     }, 980);
 }
@@ -104,8 +128,8 @@ function addToPlayerTable(data){
     if (data.WR2 !== null){
         //theTableRow = '<td class="teamPlayers">' + data.WR1.first + '</td><td class="teamPlayers">' + data.WR1.last + '</td>';
         //$('#wr2_id').append(theTableRow);
-        $('#WR2_first').text(data.WR1.first);
-        $('#WR2_last').text(data.WR1.last);
+        $('#WR2_first').text(data.WR2.first);
+        $('#WR2_last').text(data.WR2.last);
     }
     if (data.TE !== null){
         //theTableRow = '<td class="teamPlayers">' + data.TE.first + '</td><td class="teamPlayers">' + data.TE.last + '</td>';
@@ -119,11 +143,12 @@ function addToPlayerTable(data){
         $('#FLEX_first').text(data.FLEX.first);
         $('#FLEX_last').text(data.FLEX.last);
     }
+    $('#bench_body').remove();
     theTableRow = '<tbody id="bench_body"></tbody>';
     $(theTableRow).insertAfter('#bench_header');
     for (var i = 0; i < data.bench.length; i++){
         theTableRow = '<tr><td class="pos_name">' +  data.bench[i].pos + '</td><td class="pos_name">' + data.bench[i].first + '</td><td class="pos_name">' + data.bench[i].last + '</td></tr>';
-        $(theTableRow).append('#bench_body');
+        $('#bench_body').append(theTableRow);
     }
 }
 
@@ -144,7 +169,7 @@ function getTime(){
                 getTime();
             },
             error: function () {
-                getTime();
+                //getTime();
             }});
     }, 980);
 }
@@ -159,7 +184,7 @@ function pollServer() {
                 pollServer();
             },
             error: function () {
-                pollServer();
+                //pollServer();
             }});
     }, 2000);
 }
@@ -167,8 +192,12 @@ function pollServer() {
 function updateDraftTable(players){
     var StringBuilder;
     $('.thePlayer').remove();
-
+    var foundThePlayer = true;
+    //var foundThePlayer = false;
     for(var i = 0; i < players.length; i++){
+        if(infoOfLastCLicked != null && (players[i].first === infoOfLastCLicked[0] && players[i].last === infoOfLastCLicked[1])){
+            foundThePlayer = true;
+        }
         StringBuilder = '<tr class="thePlayer playerInfo ' + players[i].first + players[i].last + players[i].pos + players[i].team + '">';
         StringBuilder += '<td class="thePlayer playerRank">' + players[i].rank + '</td>';
         StringBuilder += '<td class="thePlayer playerName">' + players[i].first + ' ' + players[i].last + '</td>';
@@ -185,17 +214,24 @@ function updateDraftTable(players){
         $('#tbody_draft_table').append(StringBuilder);
     }
 
-
-    var theArray = theLastRowSelected.split(' ');
-    if(theArray.length === 6){
-        var theRow = '.' + theArray[0] + '.' + theArray[1] + '.' + theArray[2] + theArray[3] + theArray[4] + theArray[5];
+    if(foundThePlayer) {
+        var theArray = theLastRowSelected.split(' ');
+        if (theArray.length === 6) {
+            var theRow = '.' + theArray[0] + '.' + theArray[1] + '.' + theArray[2] + theArray[3] + theArray[4] + theArray[5];
+        } else {
+            var theRow = '.' + theArray[0] + '.' + theArray[1] + '.' + theArray[2];
+        }
+        if (theLastRowSelected !== '') {
+            $(theRow).addClass('selectedRow');
+        }
+        clickRow();
     } else {
-        var theRow = '.' + theArray[0] + '.' + theArray[1] + '.' + theArray[2];
+        infoOfLastCLicked = null;
+        playerRank = null;
+        team = null;
+        pos = null;
+        $('#SelectedPlayerP').text('');
     }
-    if(theLastRowSelected !== ''){
-        $(theRow).addClass('selectedRow');
-    }
-    clickRow();
 }
 
 function clickRow(){
@@ -209,6 +245,7 @@ function clickRow(){
         team = $(this).children('td.thePlayer.playerTeam').text();
         infoOfLastCLicked = (String)(infoOfLastCLicked);
         infoOfLastCLicked = (infoOfLastCLicked).split(/\s+/);
+        $('#SelectedPlayerP').text(infoOfLastCLicked[0] + ' ' + infoOfLastCLicked[1]);
     });
 }
 
@@ -240,6 +277,7 @@ function draftButton() {
     playerRank = null;
     team = null;
     pos = null;
+    $('#SelectedPlayerP').text('');
 }
 
 function getCurrentPick(){
@@ -266,4 +304,15 @@ function getCurrentRound(){
         }
     });
     return theData;
+}
+
+function resetDraft(){
+    $.ajax({
+        async: false,
+        type: "GET",
+        url: '/resetDraft',
+        success: function () {
+            window.location.reload();
+        }
+    });
 }

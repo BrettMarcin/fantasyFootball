@@ -15,8 +15,7 @@
 </div>
 
 <div class="container">
-    <div class="row">
-        <div class="col-sm-6 panel panel-default">
+            <div class="col-sm-5">
 <h2 id="theTeamName"><%=localTeam.teamName%></h2>
 <h3>Starters</h3>
 <table class="theTeam table table-sm table-bordered">
@@ -79,7 +78,10 @@
         <th>Last</th>
     </tr>
     </thead>
+    <tbody id="bench_body">
+
+    </tbody>
 </table>
-        </div>
+            </div>
     </div>
 </div>

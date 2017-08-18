@@ -26,6 +26,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@Column
 	@XmlElement public String teamName;
 
+	@Column
+	@XmlElement public boolean isACpu;
+
 	@JoinColumn(name="id_player_qb")
 	//@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@OneToOne
@@ -40,9 +43,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player WR1 = null;
 
-	@JoinColumn(name="id_player_wr2")
+	@JoinColumn(name="id_player_theW2")
 	@OneToOne
-	@Cascade({CascadeType.SAVE_UPDATE})
+	@Cascade({CascadeType.ALL})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player WR2 = null;
 
@@ -83,10 +86,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public List<Player> bench = null;
 	
-	public Team(String theTeamName, String theName){
+	public Team(String theTeamName, String theName, boolean isCpu){
 		teamName = theTeamName;
 		name = theName;
 		bench = new ArrayList<>();
+		isACpu = isCpu;
+	}
+
+	public Team(String theTeamName, boolean isCpu){
+		teamName = theTeamName;
+		bench = new ArrayList<>();
+		isACpu = isCpu;
 	}
 	
 	public Team(String theTeamName){

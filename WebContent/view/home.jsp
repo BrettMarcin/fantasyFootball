@@ -45,6 +45,21 @@
 	<form action="startDraft" method="GET">
 		<button type="submit" class="btn btn-primary">Start Draft!</button>
 	</form>
+<div class="container panel panel-default">
+    <h3>Create a CPU!</h3>
+    <div class="row">
+        <div class="col-sm-8 panel">
+            <form action="addACpu" method="POST">
+                <div class="form-group">
+                    <label for="CpuName">Enter CPU Team Name:</label>
+                    <input class="form-control" name="CpuName">
+                </div>
+                <button type="submit" class="btn btn-primary">Add CPU</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <% } %>
 
 <div class="container panel panel-default">
@@ -60,6 +75,5 @@
 		</div>
 	</div>
 </div>
-
 </body>
 </html>
