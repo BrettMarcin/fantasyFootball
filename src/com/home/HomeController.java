@@ -4,9 +4,12 @@ import java.io.IOException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -119,7 +122,13 @@ public class HomeController {
         pickNumber++;
         response.sendRedirect("/");
     }
-
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
+    public void send(SentMessage theMessage) throws Exception {
+        String time = new SimpleDateFormat("HH:mm").format(new Date());
+        Message message = new Message();
+        message.addMessage(new MessageContents(theMessage.text(), theMessage.author(), time));
+    }
     @RequestMapping(value = "/getMessages", method = RequestMethod.GET)
     @ResponseBody
     public Message getMessages()
