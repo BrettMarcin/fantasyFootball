@@ -138,7 +138,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 			}
 		} else if(thePlayer.pos.equals("TE")){
 			if(TE == null){
-				RB1 = thePlayer;
+				TE = thePlayer;
 			}  else if(FLEX == null){
 				FLEX = thePlayer;
 			} else {

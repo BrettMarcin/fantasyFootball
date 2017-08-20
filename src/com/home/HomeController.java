@@ -15,7 +15,9 @@ import java.util.*;
 
 @Controller
 public class HomeController {
-	
+
+    private HashMap<Integer, Integer> theAssociation;
+    private HashSet<Player> playersDrafted;
 	private static ArrayList<Player> thePlayers = null;
 	private boolean draftStarted = false;
 	private ArrayList<Team> theTimeline;
@@ -34,6 +36,8 @@ public class HomeController {
 		thePlayers = theData.getPlayers();
 		thePlayers = quick_sort.sort(thePlayers, 0, thePlayers.size()-1);
 		List<Team> theTeams = teamService.getTeams();
+        theAssociation = new HashMap<>();
+        playersDrafted = new HashSet<>();
 		if (theTeams.size() > 0)
 			teamService.clearTeams(theTeams);
 	}
@@ -42,6 +46,8 @@ public class HomeController {
     public void resetDraft(HttpServletResponse response) throws IOException {
 	    endDraft = true;
         Cookie cookie = new Cookie("teamCookie", null);
+        theAssociation = new HashMap<>();
+        playersDrafted = new HashSet<>();
         cookie.setMaxAge(0);
         init();
         round = -1;
@@ -54,7 +60,8 @@ public class HomeController {
 	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
 		Team localTeam = null;
         if (!cookieValue.equals("defaultCookieValue")){
-            localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+            int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+            localTeam = teamService.getTeam(theHashCookie);
         }
         model.addAttribute("localTeam", localTeam);
         model.addAttribute("theTeams", teamService.getTeams());
@@ -79,7 +86,9 @@ public class HomeController {
 	    if (theTeams.size() < 10) {
             Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"), false);
             teamService.saveTeam(localTeam);
-            Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
+            int hashCookie = (int) (Math.random() * System.currentTimeMillis());
+            theAssociation.put(hashCookie, localTeam.id);
+            Cookie newCookie = new Cookie("teamCookie", String.valueOf(hashCookie));
             response.addCookie(newCookie);
             response.sendRedirect("/");
         }
@@ -99,7 +108,8 @@ public class HomeController {
     public void sendEmail(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException{
         if (endDraft == true && draftStarted == false){
             if (!cookieValue.equals("defaultCookieValue")) {
-                Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+                Team localTeam = teamService.getTeam(theHashCookie);
             }
         }
     }
@@ -186,10 +196,12 @@ public class HomeController {
             }
             if(!theTimeline.get(0).isACpu) {
                 if (!cookieValue.equals("defaultCookieValue")) {
-                    Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-                    if (theTimeline.get(0).teamName.equals(localTeam.teamName)) {
+                    int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+                    Team localTeam = teamService.getTeam(theHashCookie);
+                    if (theTimeline.get(0).teamName.equals(localTeam.teamName) && !playersDrafted.contains(json)) {
                         theTimeline.remove(0);
                         localTeam.addPlayer(json);
+                        playersDrafted.add(json);
                         teamService.updateTeam(localTeam);
                         for (Player thePlayer : thePlayers) {
                             if (thePlayer.isMatch(json)) {
@@ -241,6 +253,7 @@ public class HomeController {
             Team localTeam = teamService.getTeam(theTimeline.get(0).id);
             theTimeline.remove(0);
             localTeam.addPlayer(thePlayers.get(0));
+            playersDrafted.add(thePlayers.get(0));
             thePlayers.remove(0);
             teamService.updateTeam(localTeam);
             setTimer(120);
