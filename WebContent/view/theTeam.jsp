@@ -1,5 +1,5 @@
 <%@ page import ="java.util.*" %>
-<%@ page import ="com.home.Team" %>
+<%@ page import ="com.home.team.Team" %>
 <%@ page import ="com.home.Player" %>
 <% Team localTeam = (Team)request.getAttribute("localTeam"); %>
 <% ArrayList<Team> teams = (ArrayList<Team>)request.getAttribute("theTeams"); %>

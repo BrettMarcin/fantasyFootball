@@ -1,6 +1,7 @@
-package com.home;
+package com.home.team;
 
 
+import com.home.Player;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.CascadeType;

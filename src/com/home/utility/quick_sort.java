@@ -1,4 +1,6 @@
-package com.home;
+package com.home.utility;
+import com.home.Player;
+
 import java.util.ArrayList;
 
 public class quick_sort {

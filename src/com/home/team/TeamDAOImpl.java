@@ -1,4 +1,4 @@
-package com.home;
+package com.home.team;
 
 import java.util.List;
 
@@ -6,11 +6,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.PersistenceUtil;
 
 @Repository
 public class TeamDAOImpl implements TeamDAO {

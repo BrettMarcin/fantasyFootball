@@ -6,6 +6,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.logging.Logger;
 
+import com.home.team.Team;
+import com.home.team.TeamService;
+import com.home.utility.CreateOrder;
+import com.home.utility.quick_sort;
+import com.home.utility.theData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +22,7 @@ import java.util.*;
 public class HomeController {
 
     private HashMap<Integer, Integer> theAssociation;
-    private HashSet<Player> playersDrafted;
+    private HashSet<String> playersDrafted;
 	private static ArrayList<Player> thePlayers = null;
 	private boolean draftStarted = false;
 	private ArrayList<Team> theTimeline;
@@ -201,7 +206,7 @@ public class HomeController {
                     if (theTimeline.get(0).teamName.equals(localTeam.teamName) && !playersDrafted.contains(json)) {
                         theTimeline.remove(0);
                         localTeam.addPlayer(json);
-                        playersDrafted.add(json);
+                        playersDrafted.add(json.first + json.last + json.pos + json.team);
                         teamService.updateTeam(localTeam);
                         for (Player thePlayer : thePlayers) {
                             if (thePlayer.isMatch(json)) {
@@ -253,7 +258,7 @@ public class HomeController {
             Team localTeam = teamService.getTeam(theTimeline.get(0).id);
             theTimeline.remove(0);
             localTeam.addPlayer(thePlayers.get(0));
-            playersDrafted.add(thePlayers.get(0));
+            playersDrafted.add(thePlayers.get(0).first + thePlayers.get(0).last + thePlayers.get(0).pos + thePlayers.get(0).team);
             thePlayers.remove(0);
             teamService.updateTeam(localTeam);
             setTimer(120);
