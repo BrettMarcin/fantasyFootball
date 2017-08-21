@@ -1,4 +1,4 @@
-package com.home.utility;
+package com.home;
 
 
 import java.io.IOException;

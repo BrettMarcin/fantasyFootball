@@ -1,5 +1,6 @@
 $(function() {
 
+    checkIfDraftHasStarted();
     updateCurrentTeams();
 });
 
@@ -20,6 +21,24 @@ function updateCurrentTeams(){
             },
             error: function () {
                 updateCurrentTeams();
+            }});
+    }, 980);
+}
+
+function checkIfDraftHasStarted(){
+    window.setTimeout(function () {
+        $.ajax({
+            async: false,
+            type: "GET",
+            url: '/checkIfDraftHasStarted',
+            success: function (result) {
+                if(result){
+                    window.location.reload();
+                }
+                checkIfDraftHasStarted();
+            },
+            error: function () {
+                checkIfDraftHasStarted();
             }});
     }, 980);
 }

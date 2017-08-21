@@ -1,4 +1,4 @@
-package com.home.utility;
+package com.home;
 
 public class NextTask {
 }

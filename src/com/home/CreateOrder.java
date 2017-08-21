@@ -1,6 +1,6 @@
-package com.home.utility;
+package com.home;
 
-import com.home.team.Team;
+import com.home.Team;
 
 import java.util.ArrayList;
 import java.util.Collections;

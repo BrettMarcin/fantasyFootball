@@ -1,4 +1,4 @@
-package com.home.team;
+package com.home;
 
 import java.util.List;
 

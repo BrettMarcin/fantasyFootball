@@ -1,4 +1,4 @@
-package com.home.utility;
+package com.home;
 
 import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.hibernate.Session;

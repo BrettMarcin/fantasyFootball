@@ -12,7 +12,7 @@
 	<link href="${bootstrap}" rel="stylesheet" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <%@ page import ="java.util.*" %>
-	<%@ page import ="com.home.team.Team" %>
+	<%@ page import ="com.home.Team" %>
     <% List<Team> teams = (List<Team>)request.getAttribute("theTeams"); %>
     <% Team localTeam = (Team)request.getAttribute("localTeam"); %>
 </head>

@@ -48,6 +48,8 @@ import java.io.Serializable;
 	@XmlElement public String recYards = "-";
 	@Column
 	@XmlElement public String recTDs = "-";
+	@Column
+	@XmlElement public String teamOwner = "";
 	
 	public Player(int rank, String first, String last, String pos){
 		this.first = first;

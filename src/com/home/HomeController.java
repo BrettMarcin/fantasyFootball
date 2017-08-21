@@ -4,13 +4,9 @@ import java.io.IOException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import com.home.team.Team;
-import com.home.team.TeamService;
-import com.home.utility.CreateOrder;
-import com.home.utility.quick_sort;
-import com.home.utility.theData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +28,8 @@ public class HomeController {
     private Timer timer;
     private Timer cpuTimer;
     private long startTime;
+    private Player lastPlayerDrafted;
+    private ArrayList<Player> draftHistory;
 	@Autowired
 	private TeamService teamService;
 	private boolean endDraft = true;
@@ -43,6 +41,7 @@ public class HomeController {
 		List<Team> theTeams = teamService.getTeams();
         theAssociation = new HashMap<>();
         playersDrafted = new HashSet<>();
+        draftHistory = new ArrayList<>();
 		if (theTeams.size() > 0)
 			teamService.clearTeams(theTeams);
 	}
@@ -53,6 +52,7 @@ public class HomeController {
         Cookie cookie = new Cookie("teamCookie", null);
         theAssociation = new HashMap<>();
         playersDrafted = new HashSet<>();
+        draftHistory = new ArrayList<>();
         cookie.setMaxAge(0);
         init();
         round = -1;
@@ -91,7 +91,8 @@ public class HomeController {
 	    if (theTeams.size() < 10) {
             Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"), false);
             teamService.saveTeam(localTeam);
-            int hashCookie = (int) (Math.random() * System.currentTimeMillis());
+            int hashCookie = (int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) * Math.random());
+            System.out.printf("New hashCookie: %d", hashCookie);
             theAssociation.put(hashCookie, localTeam.id);
             Cookie newCookie = new Cookie("teamCookie", String.valueOf(hashCookie));
             response.addCookie(newCookie);
@@ -162,6 +163,12 @@ public class HomeController {
         }
     }
 
+    @RequestMapping(value = "/checkIfDraftHasStarted", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean checkIfDraftHasStarted(){
+        return draftStarted;
+    }
+
     @RequestMapping(value = "/getTimeline", method = RequestMethod.GET)
     @ResponseBody
     public ArrayList<Team> getTimeline(){
@@ -184,6 +191,18 @@ public class HomeController {
     @ResponseBody
     public int getRound(){
         return round;
+    }
+
+    @RequestMapping(value = "/getLastPlayerDrafted", method = RequestMethod.GET)
+    @ResponseBody
+    public Player getLastPlayerDrafted(){
+        return lastPlayerDrafted;
+    }
+
+    @RequestMapping(value = "/getDraftHistory", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Player> getDraftHistory(){
+        return draftHistory;
     }
 
     @RequestMapping(value = "/theEndDraft", method = RequestMethod.GET)
@@ -214,6 +233,9 @@ public class HomeController {
                                 break;
                             }
                         }
+                        lastPlayerDrafted = json;
+                        lastPlayerDrafted.teamOwner = localTeam.teamName;
+                        draftHistory.add(lastPlayerDrafted);
                         setTimer(120);
                         startTime = System.currentTimeMillis();
                         pickNumber++;
@@ -258,6 +280,9 @@ public class HomeController {
             Team localTeam = teamService.getTeam(theTimeline.get(0).id);
             theTimeline.remove(0);
             localTeam.addPlayer(thePlayers.get(0));
+            lastPlayerDrafted = thePlayers.get(0);
+            lastPlayerDrafted.teamOwner = localTeam.teamName;
+            draftHistory.add(lastPlayerDrafted);
             playersDrafted.add(thePlayers.get(0).first + thePlayers.get(0).last + thePlayers.get(0).pos + thePlayers.get(0).team);
             thePlayers.remove(0);
             teamService.updateTeam(localTeam);

@@ -1,4 +1,4 @@
-package com.home.utility;
+package com.home;
 import com.home.Player;
 
 import java.util.ArrayList;
