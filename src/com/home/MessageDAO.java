@@ -3,6 +3,6 @@ package com.home;
 import java.util.List;
 
 public interface MessageDAO {
-    public List<Message> getTeams();
-    public void addMessage();
+    public List<MessageContents> getMessages();
+    public void addMessage(MessageContents message);
 }

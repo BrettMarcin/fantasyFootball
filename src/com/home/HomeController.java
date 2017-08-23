@@ -29,6 +29,7 @@ public class HomeController {
     private long startTime;
 	@Autowired
 	private TeamService teamService;
+	@Autowired
 	private MessageService messageService;
 	
 	@javax.annotation.PostConstruct
@@ -126,19 +127,13 @@ public class HomeController {
     @SendTo("/topic/messages")
     public void send(SentMessage theMessage) throws Exception {
         String time = new SimpleDateFormat("HH:mm").format(new Date());
-        Message message = new Message();
-        message.addMessage(new MessageContents(theMessage.text(), theMessage.author(), time));
+        messageService.addMessage(new MessageContents(theMessage.text(), theMessage.author(), time));
     }
     @RequestMapping(value = "/getMessages", method = RequestMethod.GET)
     @ResponseBody
-    public Message getMessages()
+    public List<MessageContents> getMessages()
     {
-        List<Message> messages = messageService.getMessages();
-        for(Message m : messages)
-        {
-            return m;
-        }
-        return new Message();
+        return messageService.getMessages();
     }
 
     public void setTimer(int seconds) {

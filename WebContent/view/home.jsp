@@ -9,8 +9,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-	<script src="./js/sockjs-0.3.4.js"></script>
-	<script src="./js/stomp.js"></script>
+	<script src="/WebContent/resources/js/sockjs-0.3.4.js"></script>
+	<script src="/WebContent/resources/js/stomp.js"></script>
 	<script src ="${messaging}"></script>
 	<script src="${theJS}"></script>
 	<link href="${theCSS}" rel="stylesheet" />
@@ -25,7 +25,24 @@
 
 <h1> Welcome to Fantasy Football! </h1>
 <h2>Created by Brett Marcinkiewicz and Jacob Kahn</h2>
-
+<div>
+	<div>
+		<input type="text" id="from" placeholder="Choose a nickname"/>
+	</div>
+	<br />
+	<div>
+		<button id="connect" onclick="connect();">Connect</button>
+		<button id="disconnect" disabled="disabled" onclick="disconnect();">
+			Disconnect
+		</button>
+	</div>
+	<br />
+	<div id="conversationDiv">
+		<input type="text" id="text" placeholder="Write a message..."/>
+		<button id="sendMessage" onclick="sendMessage();">Send</button>
+		<p id="response"></p>
+	</div>
+</div>
 <% if(localTeam == null) { %>
 	<h3>Create your team!</h3>
 	<form action="setLocalTeam" method="POST">
