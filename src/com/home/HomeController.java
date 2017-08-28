@@ -65,19 +65,26 @@ public class HomeController {
 	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
 		Team localTeam = null;
         if (!cookieValue.equals("defaultCookieValue")){
-            int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
-            localTeam = teamService.getTeam(theHashCookie);
+            if (theAssociation.containsKey(Integer.valueOf(cookieValue))){
+                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+                localTeam = teamService.getTeam(theHashCookie);
+            } else {
+                cookieValue = "defaultCookieValue";
+            }
         }
         model.addAttribute("localTeam", localTeam);
         model.addAttribute("theTeams", teamService.getTeams());
 		if (draftStarted){
-			model.addAttribute("listOfPlayers", thePlayers);
-			model.addAttribute("theTimeline", theTimeline);
-			model.addAttribute("round", round);
-			model.addAttribute("pickNumber", pickNumber);
+            model.addAttribute("listOfPlayers", thePlayers);
+            model.addAttribute("theTimeline", theTimeline);
+            model.addAttribute("round", round);
+            model.addAttribute("pickNumber", pickNumber);
             response.addCookie(new Cookie("teamCookie", cookieValue));
-			return "listOfPlayers";
-            //return "end";
+		    if (localTeam != null) {
+                return "listOfPlayers";
+            } else {
+                return "guestDraft";
+            }
 		} else if(endDraft == true){
 			return "home";
 		} else {
@@ -123,7 +130,7 @@ public class HomeController {
 	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
 	@ResponseBody
 	public void startDraft(HttpServletResponse response) throws IOException{
-	    if (draftStarted == false){
+	    if (draftStarted == false && teamService.getTeams().size() > 0){
             draftStarted = true;
             getOrder();
             System.out.println();

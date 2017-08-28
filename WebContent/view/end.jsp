@@ -16,15 +16,11 @@
     <% Team localTeam = (Team)request.getAttribute("localTeam"); %>
 </head>
 <body>
-<p>Email Yourself your team!</p>
 
-<form action="/">
-    Send Yourself an Email of your team!: <input type="text" name="fname"><br>
-    <input type="submit" value="Send">
-</form>
 
 <button onclick="resetDraft()">Reset draft</button>
 
+<% if (localTeam != null) {%>
 <h2>Your Team: </h2>
 <div class="container">
     <div class="row">
@@ -135,6 +131,7 @@
         </div>
     </div>
 </div>
+<% } %>
 
 <% for(int x = 0; x < teams.size(); x++) { %>
 <div class="container">

@@ -3,6 +3,7 @@
 <%@ page import ="com.home.Player" %>
 <% Team localTeam = (Team)request.getAttribute("localTeam"); %>
 <% ArrayList<Team> teams = (ArrayList<Team>)request.getAttribute("theTeams"); %>
+<% if (localTeam == null) { localTeam = teams.get(0);}%>
 
 <div class="dropdown">
     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Teams
@@ -13,6 +14,7 @@
         <% }%>
     </ul>
 </div>
+
 
 <div class="container">
             <div class="col-sm-5">
