@@ -25,8 +25,8 @@
 	    <!-- Define Database DataSource / connection pool -->
 	<bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
           destroy-method="close">
-        <property name="driverClass" value="com.mysql.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/teams?useSSL=false" />
+        <property name="driverClass" value="org.postgresql.Driver" />
+        <property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/teams?useSSL=false" />
         <property name="user" value="new_user" />
         <property name="password" value="new_password" />
         <!-- these are connection pool properties for C3P0 -->
@@ -42,8 +42,8 @@
 		<property name="packagesToScan" value="com.home" />
 		<property name="hibernateProperties">
 		   <props>
-		      <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-		      <prop key="hibernate.show_sql">false</prop>
+		      <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+		      <prop key="hibernate.show_sql">true</prop>
 		      <prop key="hibernate.hbm2ddl.auto">create</prop>
 		   </props>
 		</property>
