@@ -53,8 +53,11 @@ public class HomeController {
         theAssociation = new HashMap<>();
         playersDrafted = new HashSet<>();
         draftHistory = new ArrayList<>();
+        timer.purge();
+        cpuTimer.purge();
         cookie.setMaxAge(0);
         init();
+        lastPlayerDrafted = null;
         round = -1;
         pickNumber = 1;
         response.addCookie(cookie);
