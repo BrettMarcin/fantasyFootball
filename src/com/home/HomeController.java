@@ -120,15 +120,15 @@ public class HomeController {
         }
     }
 
-    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
-    public void sendEmail(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException{
-        if (endDraft == true && draftStarted == false){
-            if (!cookieValue.equals("defaultCookieValue")) {
-                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
-                Team localTeam = teamService.getTeam(theHashCookie);
-            }
-        }
-    }
+//    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
+//    public void sendEmail(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException{
+//        if (endDraft == true && draftStarted == false){
+//            if (!cookieValue.equals("defaultCookieValue")) {
+//                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+//                Team localTeam = teamService.getTeam(theHashCookie);
+//            }
+//        }
+//    }
 	
 	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
 	@ResponseBody
