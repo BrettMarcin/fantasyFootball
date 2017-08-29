@@ -14,6 +14,7 @@ $(function() {
         getTeam($(this).text());
     });
     checkIfDraftIsRunning();
+    getLastPick();
     updateTeam();
     updateTimeline();
     getTime();
@@ -35,6 +36,28 @@ function getTeam(theTeam){
     });
 };
 
+function getDraftHistory(){
+    var stringBuilder;
+    $.ajax({
+        dataType: 'json',
+        url: '/getDraftHistory',
+        type: "GET",
+        processData: false,
+        async: true,
+        success: function (data) {
+            $('.draftRow').remove();
+            if(data != null){
+                for(var i = 0; i < data.length; i++){
+                    stringBuilder = '<tr class="draftRow"><td>' + (i + 1) + '</td><td>' + data[i].pos + '</td>';
+                    stringBuilder += '<td>' + data[i].first + ' ' + data[i].last + '</td>';
+                    stringBuilder += '<td>' + data[i].teamOwner + '</td></tr>';
+                    $('#DraftHistoryBody').append(stringBuilder);
+                }
+            }
+        }
+    });
+};
+
 
 function checkIfDraftIsRunning(){
     window.setTimeout(function () {
@@ -50,7 +73,6 @@ function checkIfDraftIsRunning(){
                 if (data) {
                     checkIfDraftIsRunning();
                 } else {
-                    console.log('Draft has ended!');
                     window.location.reload();
                 }
             }
@@ -291,6 +313,23 @@ function getCurrentPick(){
         }
     });
     return theData;
+}
+
+function getLastPick() {
+    window.setTimeout(function () {
+        $.ajax({
+            dataType: 'json',
+            url: '/getLastPlayerDrafted',
+            type: "GET",
+            success: function (result) {
+                if(result !== null){
+                    $('#lastSelectedPlayerP').text(result.first + ' ' + result.last);
+                }
+                getLastPick();
+            },
+            error: function () {
+            }});
+    }, 3000);
 }
 
 function getCurrentRound(){

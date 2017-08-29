@@ -4,6 +4,7 @@ import java.io.IOException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import java.util.*;
 
 @Controller
 public class HomeController {
-	
+
+    private HashMap<Integer, Integer> theAssociation;
+    private HashSet<String> playersDrafted;
 	private static ArrayList<Player> thePlayers = null;
 	private boolean draftStarted = false;
 	private ArrayList<Team> theTimeline;
@@ -25,6 +28,8 @@ public class HomeController {
     private Timer timer;
     private Timer cpuTimer;
     private long startTime;
+    private Player lastPlayerDrafted;
+    private ArrayList<Player> draftHistory;
 	@Autowired
 	private TeamService teamService;
 	private boolean endDraft = true;
@@ -34,6 +39,9 @@ public class HomeController {
 		thePlayers = theData.getPlayers();
 		thePlayers = quick_sort.sort(thePlayers, 0, thePlayers.size()-1);
 		List<Team> theTeams = teamService.getTeams();
+        theAssociation = new HashMap<>();
+        playersDrafted = new HashSet<>();
+        draftHistory = new ArrayList<>();
 		if (theTeams.size() > 0)
 			teamService.clearTeams(theTeams);
 	}
@@ -42,6 +50,9 @@ public class HomeController {
     public void resetDraft(HttpServletResponse response) throws IOException {
 	    endDraft = true;
         Cookie cookie = new Cookie("teamCookie", null);
+        theAssociation = new HashMap<>();
+        playersDrafted = new HashSet<>();
+        draftHistory = new ArrayList<>();
         cookie.setMaxAge(0);
         init();
         round = -1;
@@ -54,18 +65,26 @@ public class HomeController {
 	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
 		Team localTeam = null;
         if (!cookieValue.equals("defaultCookieValue")){
-            localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+            if (theAssociation.containsKey(Integer.valueOf(cookieValue))){
+                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+                localTeam = teamService.getTeam(theHashCookie);
+            } else {
+                cookieValue = "defaultCookieValue";
+            }
         }
         model.addAttribute("localTeam", localTeam);
         model.addAttribute("theTeams", teamService.getTeams());
 		if (draftStarted){
-			model.addAttribute("listOfPlayers", thePlayers);
-			model.addAttribute("theTimeline", theTimeline);
-			model.addAttribute("round", round);
-			model.addAttribute("pickNumber", pickNumber);
+            model.addAttribute("listOfPlayers", thePlayers);
+            model.addAttribute("theTimeline", theTimeline);
+            model.addAttribute("round", round);
+            model.addAttribute("pickNumber", pickNumber);
             response.addCookie(new Cookie("teamCookie", cookieValue));
-			return "listOfPlayers";
-            //return "end";
+		    if (localTeam != null) {
+                return "listOfPlayers";
+            } else {
+                return "guestDraft";
+            }
 		} else if(endDraft == true){
 			return "home";
 		} else {
@@ -79,7 +98,10 @@ public class HomeController {
 	    if (theTeams.size() < 10) {
             Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"), false);
             teamService.saveTeam(localTeam);
-            Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
+            int hashCookie = (int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) * Math.random());
+            System.out.printf("New hashCookie: %d", hashCookie);
+            theAssociation.put(hashCookie, localTeam.id);
+            Cookie newCookie = new Cookie("teamCookie", String.valueOf(hashCookie));
             response.addCookie(newCookie);
             response.sendRedirect("/");
         }
@@ -99,7 +121,8 @@ public class HomeController {
     public void sendEmail(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException{
         if (endDraft == true && draftStarted == false){
             if (!cookieValue.equals("defaultCookieValue")) {
-                Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
+                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+                Team localTeam = teamService.getTeam(theHashCookie);
             }
         }
     }
@@ -107,7 +130,7 @@ public class HomeController {
 	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
 	@ResponseBody
 	public void startDraft(HttpServletResponse response) throws IOException{
-	    if (draftStarted == false){
+	    if (draftStarted == false && teamService.getTeams().size() > 0){
             draftStarted = true;
             getOrder();
             System.out.println();
@@ -147,6 +170,12 @@ public class HomeController {
         }
     }
 
+    @RequestMapping(value = "/checkIfDraftHasStarted", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean checkIfDraftHasStarted(){
+        return draftStarted;
+    }
+
     @RequestMapping(value = "/getTimeline", method = RequestMethod.GET)
     @ResponseBody
     public ArrayList<Team> getTimeline(){
@@ -171,6 +200,18 @@ public class HomeController {
         return round;
     }
 
+    @RequestMapping(value = "/getLastPlayerDrafted", method = RequestMethod.GET)
+    @ResponseBody
+    public Player getLastPlayerDrafted(){
+        return lastPlayerDrafted;
+    }
+
+    @RequestMapping(value = "/getDraftHistory", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Player> getDraftHistory(){
+        return draftHistory;
+    }
+
     @RequestMapping(value = "/theEndDraft", method = RequestMethod.GET)
     @ResponseBody
     public boolean theEndDraft(){
@@ -186,10 +227,12 @@ public class HomeController {
             }
             if(!theTimeline.get(0).isACpu) {
                 if (!cookieValue.equals("defaultCookieValue")) {
-                    Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-                    if (theTimeline.get(0).teamName.equals(localTeam.teamName)) {
+                    int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+                    Team localTeam = teamService.getTeam(theHashCookie);
+                    if (theTimeline.get(0).teamName.equals(localTeam.teamName) && !playersDrafted.contains(json)) {
                         theTimeline.remove(0);
                         localTeam.addPlayer(json);
+                        playersDrafted.add(json.first + json.last + json.pos + json.team);
                         teamService.updateTeam(localTeam);
                         for (Player thePlayer : thePlayers) {
                             if (thePlayer.isMatch(json)) {
@@ -197,6 +240,9 @@ public class HomeController {
                                 break;
                             }
                         }
+                        lastPlayerDrafted = json;
+                        lastPlayerDrafted.teamOwner = localTeam.teamName;
+                        draftHistory.add(lastPlayerDrafted);
                         setTimer(120);
                         startTime = System.currentTimeMillis();
                         pickNumber++;
@@ -241,6 +287,10 @@ public class HomeController {
             Team localTeam = teamService.getTeam(theTimeline.get(0).id);
             theTimeline.remove(0);
             localTeam.addPlayer(thePlayers.get(0));
+            lastPlayerDrafted = thePlayers.get(0);
+            lastPlayerDrafted.teamOwner = localTeam.teamName;
+            draftHistory.add(lastPlayerDrafted);
+            playersDrafted.add(thePlayers.get(0).first + thePlayers.get(0).last + thePlayers.get(0).pos + thePlayers.get(0).team);
             thePlayers.remove(0);
             teamService.updateTeam(localTeam);
             setTimer(120);

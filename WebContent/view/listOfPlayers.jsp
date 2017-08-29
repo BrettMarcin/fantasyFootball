@@ -25,6 +25,35 @@
     <% int round = (int)request.getAttribute("round"); %>
 </head>
 <body>
+<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Draft History</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<table class="table table-sm table-bordered table-hover">
+					<thead>
+					<tr class="TableHead">
+					<th>Pick #</th>
+					<th>Position</th>
+					<th>Name</th>
+						<th>Draft by</th>
+					</tr>
+					</thead>
+					<tbody id="DraftHistoryBody">
+
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
 <div id="particles-js">
 	<div id="theDraft">
 <h3>Fantasy Football</h3>
@@ -52,6 +81,7 @@
 <br>
 	</div>
 	<div class="row">
+		<div class="container">
 		<div class="col-md-2">
 <button id="draftButton" onclick="draftButton()">Draft player</button>
 			<div class="panel panel-default" id="SelectedPlayer">
@@ -59,8 +89,19 @@
 				<p id="SelectedPlayerP"></p>
 			</div>
 		</div>
+		<div class="col-md-2">
+			<div class="panel panel-default" id="lastSelectedPlayer">
+				<h4>Last Selected Player</h4>
+				<p id="lastSelectedPlayerP"></p>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="panel panel-default" >
+				<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#historyModal" onclick="getDraftHistory()">Show Draft History</button>
+			</div>
+		</div>
+		</div>
 	</div>
-
 
 
 <div class="row">
@@ -115,6 +156,6 @@
         console.log('particles.json loaded...');
     });
 </script>
-</div>
 </body>
+</div>
 </html>

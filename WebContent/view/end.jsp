@@ -1,7 +1,7 @@
 <html>
 <head>
     <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-    <spring:url value="/WebContent/resources/scripts/home.js" var="theJS" />
+    <spring:url value="/WebContent/resources/scripts/scripts.js" var="theJS" />
     <spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -16,15 +16,11 @@
     <% Team localTeam = (Team)request.getAttribute("localTeam"); %>
 </head>
 <body>
-<p>Email Yourself your team!</p>
 
-<form action="/">
-    Send Yourself an Email of your team!: <input type="text" name="fname"><br>
-    <input type="submit" value="Send">
-</form>
 
-<button onclick="reset()">Reset draft</button>
+<button onclick="resetDraft()">Reset draft</button>
 
+<% if (localTeam != null) {%>
 <h2>Your Team: </h2>
 <div class="container">
     <div class="row">
@@ -135,6 +131,7 @@
         </div>
     </div>
 </div>
+<% } %>
 
 <% for(int x = 0; x < teams.size(); x++) { %>
 <div class="container">
@@ -203,9 +200,9 @@
                 </tr>
                 <tr id="te_id <%= x %>">
                     <th>TE</th>
-                    <% if(teams.get(x).WR1 != null){ %>
+                    <% if(teams.get(x).TE != null){ %>
                     <td class="pos_name" id="TE_first <%= x %>"><%=teams.get(x).TE.first%></td>
-                    <td class="pos_name" id="TE_last <%= x %>"><%=teams.get(x).TE.first%></td>
+                    <td class="pos_name" id="TE_last <%= x %>"><%=teams.get(x).TE.last%></td>
                     <% } else { %>
                     <td class="pos_name" id="TE_first <%= x %>"></td>
                     <td class="pos_name" id="TE_last <%= x %>"></td>
@@ -233,8 +230,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% for(int i = 0; i < teams.get(i).bench.size(); i++) { %>
-                <tr><td><%=teams.get(i).bench.get(i).pos%></td><td><%=teams.get(i).bench.get(i).first%></td><td><%=teams.get(i).bench.get(i).last%></td></tr>
+                <% for(int i = 0; i < teams.get(x).bench.size(); i++) { %>
+                <tr><td><%=teams.get(x).bench.get(i).pos%></td><td><%=teams.get(x).bench.get(i).first%></td><td><%=teams.get(x).bench.get(i).last%></td></tr>
                 <% } %>
                 </tbody>
             </table>

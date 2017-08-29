@@ -4,6 +4,8 @@ package com.home;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
+
+import com.home.Player;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -40,16 +42,25 @@ public class theData {
 			String text = cols.text();
 			boolean tierCheck = text.contains("Tier");
 			if(tierCheck != true){
-				String[] words=text.split("\\s");
+				String[] words= text.split("\\s");
 				try{
 					offset = 0;
 					last = words[2];
-					if(words[2] == "Jr."){
-						last += " Jr.";
-						offset = 1;
+					Elements nameElement = cols.select("a");
+					String theName = nameElement.get(0).text();
+					String[] nameArray = theName.split("\\s");
+					String First = nameArray[0];
+					last = "";
+//					for(int x = 1; x < nameArray.length; x++){
+//						last += nameArray[x];
+//						if(x + 1 != nameArray.length)
+//							last += " ";
+//					}
+					if(nameArray.length == 3){
+						offset++;
 					}
-					Player p1 = new Player(Integer.parseInt(words[0]), words[1], last, words[4 + offset].substring(0, 2));
-					playersOpen.put(p1.first + p1.last + p1.pos + words[3].toUpperCase(), p1);
+					Player p1 = new Player(words[1], nameArray[1], words[4 + offset].substring(0, 2),words[3 + offset].substring(0, 3), Integer.parseInt(words[0]));
+					playersOpen.put(p1.first + p1.last + p1.pos + p1.team, p1);
 				}catch(Exception e){
 					
 				}
@@ -92,25 +103,21 @@ public class theData {
 				String last = "";
 				int off = 0;
 				Player p1 = null;
-				// Build last name
-				for(int i = 1; i < Name.length; i++){
-					last += Name[i];
-					if (i + 1 != Name.length){
-						last += " ";
-					}
-				}
+
+
 				if(teamAndPos.length == 1){
 					//              first,   last, pos, FPoints  passYards passTDs,    ints,   rushYards,     rushTDs,   recYards,     recTDs,      fumble
-					p1 = new Player(Name[0], last, pos, total, passingYds, passingTds, ints, rushingYds, rushingTds, recYds, recTds, fumbles);
+					p1 = new Player(Name[0], Name[1], pos, total, passingYds, passingTds, ints, rushingYds, rushingTds, recYds, recTds, fumbles);
 				} else {
 					//              first,    last,     pos,        FPoints         passYards passTDs,          ints,        rushYards,     rushTDs,         recYards,     recTDs,      fumble        team
-					p1 = new Player(Name[0], last, pos, total, passingYds, passingTds, ints, rushingYds, rushingTds, recYds, recTds, fumbles, teamAndPos[2].toUpperCase());
+					p1 = new Player(Name[0], Name[1], pos, total, passingYds, passingTds, ints, rushingYds, rushingTds, recYds, recTds, fumbles, teamAndPos[2].toUpperCase());
 				}
-				Player p2 = bst.get(Name[0] + last + pos + p1.team.toUpperCase());
+				Player p2 = bst.get(Name[0] + Name[1] + pos + p1.team.toUpperCase());
+
 				if(p2 != null){
 					p1.rank = p2.rank;
-					bst.remove(Name[0] + last);
-					bst.put(Name[0] + last + pos + p1.team.toUpperCase(), p1);
+					bst.remove(Name[0] + Name[1] + pos + p1.team.toUpperCase());
+					bst.put(Name[0] + Name[1] + pos + p1.team.toUpperCase(), p1);
 				}
 			}
 			location+= 25;
