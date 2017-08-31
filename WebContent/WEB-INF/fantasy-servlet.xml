@@ -30,7 +30,7 @@
         <property name="user" value="kobqsbvmsizuts" />
         <property name="password" value="e6ae4a816a2301e8936883d309f6be835cff71c7e48c6be85fdeaa8839c879d1" />
         <!-- these are connection pool properties for C3P0 -->
-        <property name="minPoolSize" value="5" />
+        <property name="minPoolSize" value="3" />
         <property name="maxPoolSize" value="20" />
         <property name="maxIdleTime" value="30000" />
 	</bean>  
