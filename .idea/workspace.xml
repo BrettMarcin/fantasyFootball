@@ -7,9 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e1b615fd-ab21-4cb6-ae5d-6a54be227b4d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_postgresql_postgresql_42_1_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_postgresql_postgresql_9_4_1201_jdbc4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/FantasyFootball_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/FantasyFootball_war_exploded.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FantasyFootball.iml" afterPath="$PROJECT_DIR$/FantasyFootball.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/build/classes/" />
@@ -57,17 +59,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fantasy-servlet.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fantasy-servlet.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="82">
-              <caret line="30" column="57" lean-forward="false" selection-start-line="30" selection-start-column="57" selection-end-line="30" selection-end-column="57" />
-              <folding>
-                <marker date="1504142955000" expanded="true" signature="2115:2243" ph="..." />
-                <marker date="1504142955000" expanded="true" signature="2115:2257" ph="..." />
-                <marker date="1504142955000" expanded="true" signature="2115:2268" ph="..." />
-                <marker date="1504142955000" expanded="true" signature="2355:2513" ph="..." />
-              </folding>
+            <state relative-caret-position="313">
+              <caret line="29" column="26" lean-forward="false" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="26" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -82,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="29" column="56" lean-forward="false" selection-start-line="29" selection-start-column="56" selection-end-line="29" selection-end-column="56" />
+            <state relative-caret-position="266">
+              <caret line="116" column="17" lean-forward="false" selection-start-line="116" selection-start-column="17" selection-end-line="116" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -232,9 +229,9 @@
         <option value="$PROJECT_DIR$/WebContent/view/guestDraft.jsp" />
         <option value="$PROJECT_DIR$/WebContent/view/theTeam.jsp" />
         <option value="$PROJECT_DIR$/src/com/home/HomeController.java" />
-        <option value="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" />
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" />
       </list>
     </option>
   </component>
@@ -646,7 +643,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="138643000" />
+    <option name="totallyTimeSpent" value="138923000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1050,19 +1047,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="82">
-          <caret line="30" column="57" lean-forward="false" selection-start-line="30" selection-start-column="57" selection-end-line="30" selection-end-column="57" />
-          <folding>
-            <marker date="1504142955000" expanded="true" signature="2115:2243" ph="..." />
-            <marker date="1504142955000" expanded="true" signature="2115:2257" ph="..." />
-            <marker date="1504142955000" expanded="true" signature="2115:2268" ph="..." />
-            <marker date="1504142955000" expanded="true" signature="2355:2513" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Procfile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1073,8 +1057,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="56" lean-forward="false" selection-start-line="29" selection-start-column="56" selection-end-line="29" selection-end-column="56" />
+        <state relative-caret-position="266">
+          <caret line="116" column="17" lean-forward="false" selection-start-line="116" selection-start-column="17" selection-end-line="116" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="313">
+          <caret line="29" column="26" lean-forward="false" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="26" />
           <folding />
         </state>
       </provider>
