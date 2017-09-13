@@ -5,13 +5,18 @@ import javax.xml.bind.annotation.XmlElement;
 
 @XmlRootElement public class SentMessage
 {
-    @XmlElement private String text;
-    @XmlElement private String author;
 
-    public SentMessage(String text, String author)
+    @XmlElement private String author;
+    @XmlElement private String text;
+
+    public SentMessage()
     {
-        this.text = text;
-        this.author = author;
+        super();
+    }
+    public SentMessage(String newText, String newAuthor)
+    {
+        text = newText;
+        author = newAuthor;
     }
     public String text()
     {

@@ -20,11 +20,11 @@ import javax.xml.bind.annotation.XmlElement;
     @Column
     @XmlElement private String time;
 
-    public MessageContents(String text, String author, String time)
+    public MessageContents(String newText, String newAuthor, String newTime)
     {
-        this.text = text;
-        this.author = author;
-        this.time = time;
+        text = newText;
+        author = newAuthor;
+        time = newTime;
     }
     public String text()
     {

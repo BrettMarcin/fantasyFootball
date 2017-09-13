@@ -46,11 +46,6 @@ function getMessages(){
     });
 }
 
-function displayMessages(data)
-{
-
-}
-
 function addToPlayerTable(data){
     var theTableRow = '';
     $("#theTeamName").text(data.teamName);

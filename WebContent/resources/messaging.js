@@ -1,6 +1,7 @@
+/*globals jQuery */
 var stompClient = null;
 
-function setConnected(connected) {
+function setConnectedToSocket(connected) {
     document.getElementById('connect').disabled = connected;
     document.getElementById('disconnect').disabled = !connected;
     document.getElementById('conversationDiv').style.visibility
@@ -8,38 +9,55 @@ function setConnected(connected) {
     document.getElementById('response').innerHTML = '';
 }
 
-function connect() {
-    var socket = new SockJS('/spring-mvc-java/chat');
+function connectToSocket() {
+    console.log("inside the method()");
+    var socket = new SockJS('/chat');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
-        setConnected(true);
+        setConnectedToSocket(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/messages', function(messageOutput) {
-            showMessageOutput(JSON.parse(messageOutput.body));
+        console.log("before the subscribe");
+        stompClient.subscribe('/topic/greetings', function(messageOutput) {
+            console.log("inside the subscribe");
+            showMessageOutputFromSocket(JSON.parse(messageOutput.body));
         });
     });
 }
 
-function disconnect() {
+function disconnectFromSocket() {
     if(stompClient != null) {
         stompClient.disconnect();
     }
-    setConnected(false);
+    setConnectedToSocket(false);
     console.log("Disconnected");
 }
 
-function sendMessage() {
-    var from = document.getElementById('from').value;
+function sendMessageToSocket() {
+    var from = document.getElementById('author').value;
     var text = document.getElementById('text').value;
-    stompClient.send("/app/chat", {},
-        JSON.stringify({'from':from, 'text':text}));
+    console.log("inside the send method");
+    stompClient.send("/app/hello", {},
+        JSON.stringify({'author':from, 'text':text}));
 }
 
-function showMessageOutput(messageOutput) {
-    var response = document.getElementById('response');
-    var p = document.createElement('p');
-    p.style.wordWrap = 'break-word';
-    p.appendChild(document.createTextNode(messageOutput.from + ": "
-        + messageOutput.text + " (" + messageOutput.time + ")"));
-    response.appendChild(p);
+function showMessageOutputFromSocket(messageOutput) {
+    console.log("Getting messages!");
+    // var response = document.getElementById('response');
+    // var p = document.createElement('p');
+    // p.style.wordWrap = 'break-word';
+    // p.appendChild(document.createTextNode(messageOutput.from + ": "
+    //     + messageOutput.text + " (" + messageOutput.time + ")"));
+    // response.appendChild(p);
+    jQuery.ajax({
+        url: '/getMessages',
+        type: "GET",
+        headers: {
+            'Accept': 'application/json'
+        },
+        processData: false,
+        async: true,
+        success: function (data) {
+            console.log(data);
+        }
+    });
 }

@@ -7,12 +7,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import java.util.*;
 
@@ -73,6 +81,7 @@ public class HomeController {
 	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
 	@ResponseBody
 	public void startDraft(HttpServletResponse response) throws IOException{
+	    log.info("DRAFT STARTED");
 		draftStarted = true;
 		getOrder();
 		System.out.println();
@@ -123,16 +132,35 @@ public class HomeController {
         pickNumber++;
         response.sendRedirect("/");
     }
-    @MessageMapping("/chat")
-    @SendTo("/topic/messages")
-    public void send(SentMessage theMessage) throws Exception {
+
+    @MessageMapping("/hello")
+    @SendTo("/topic/greetings")
+    public void send(SentMessage theMessage){
+        log.info("message test: " + theMessage.author());
+        String json = null;
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try {
+            json = ow.writeValueAsString(theMessage);
+        } catch (JsonProcessingException e) {
+            log.severe(String.valueOf(e));
+        }
+        log.info("THE MESSAGE: " + json);
         String time = new SimpleDateFormat("HH:mm").format(new Date());
-        messageService.addMessage(new MessageContents(theMessage.text(), theMessage.author(), time));
+        MessageContents message = new MessageContents(theMessage.text(), theMessage.author(), time);
+        try {
+            json = ow.writeValueAsString(message);
+        } catch (JsonProcessingException e) {
+            log.severe(String.valueOf(e));
+        }
+        log.info("inside add: " + json);
+        messageService.addMessage(message);
     }
+
     @RequestMapping(value = "/getMessages", method = RequestMethod.GET)
     @ResponseBody
     public List<MessageContents> getMessages()
     {
+        log.info("inside getMessages");
         return messageService.getMessages();
     }
 
@@ -141,7 +169,7 @@ public class HomeController {
             timer.cancel();
         timer = new Timer();
         //Scheduling NextTask() call in 10 second.
-        timer.schedule(new NextTask(), seconds * 1000);
+        timer.schedule(new NextTask(),  seconds * 1000);
     }
 
     private void autoDraftPlayer(){

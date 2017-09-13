@@ -4,14 +4,13 @@
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts.js" var="theJS" />
 	<spring:url value="/WebContent/resources/table.css" var="theCSS" />
-	<spring:url value="/WebContent/resources/messaging.js" var="messaging" />
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="/WebContent/resources/js/sockjs-0.3.4.js"></script>
 	<script src="/WebContent/resources/js/stomp.js"></script>
-	<script src ="${messaging}"></script>
+	<script src ="/WebContent/resources/messaging.js"></script>
 	<script src="${theJS}"></script>
 	<link href="${theCSS}" rel="stylesheet" />
 	<link href="${bootstrap}" rel="stylesheet" />
@@ -23,23 +22,23 @@
 </head>
 <body>
 
-<h1> Welcome to Fantasy Football! </h1>
+<h1 id = "welcome"> Welcome to Fantasy Football! </h1>
 <h2>Created by Brett Marcinkiewicz and Jacob Kahn</h2>
 <div>
 	<div>
-		<input type="text" id="from" placeholder="Choose a nickname"/>
+		<input type="text" id="author" placeholder="Choose a nickname"/>
 	</div>
 	<br />
 	<div>
-		<button id="connect" onclick="connect();">Connect</button>
-		<button id="disconnect" disabled="disabled" onclick="disconnect();">
+		<button id="connect" onclick="connectToSocket();">Connect</button>
+		<button id="disconnect" disabled="disabled" onclick="disconnectFromSocket();">
 			Disconnect
 		</button>
 	</div>
 	<br />
 	<div id="conversationDiv">
 		<input type="text" id="text" placeholder="Write a message..."/>
-		<button id="sendMessage" onclick="sendMessage();">Send</button>
+		<button id="sendMessage" onclick="sendMessageToSocket();">Send</button>
 		<p id="response"></p>
 	</div>
 </div>
