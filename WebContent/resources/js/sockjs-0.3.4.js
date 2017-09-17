@@ -1171,6 +1171,9 @@ SockJS = (function(){
     };
 
     SockJS.prototype.send = function(data) {
+        console.log("DATA");
+        console.log(data);
+        console.log("after data");
         var that = this;
         if (that.readyState === SockJS.CONNECTING)
             throw new Error('INVALID_STATE_ERR');
