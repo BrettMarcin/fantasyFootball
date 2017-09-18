@@ -246,7 +246,6 @@ public class HomeController {
                         lastPlayerDrafted = json;
                         lastPlayerDrafted.teamOwner = localTeam.teamName;
                         draftHistory.add(lastPlayerDrafted);
-                        setTimer(120);
                         startTime = System.currentTimeMillis();
                         pickNumber++;
                     }
@@ -256,9 +255,12 @@ public class HomeController {
             if (theTimeline.size() == 0){
                 endDraft = false;
                 draftStarted = false;
+            } else if (!theTimeline.get(0).isACpu){
+                setTimer(120);
             } else {
                 setCPUTimer(5);
             }
+
         }
         response.sendRedirect("/");
     }
@@ -300,6 +302,10 @@ public class HomeController {
             setCPUTimer(5);
             pickNumber++;
             startTime = System.currentTimeMillis();
+        }
+        if (theTimeline.size() == 0) {
+            endDraft = false;
+            draftStarted = false;
         }
     }
 	
