@@ -61,7 +61,3 @@
 	<mvc:resources mapping="/WebContent/resources/**" location="/resources/" />
 	<mvc:annotation-driven/>
 </beans>
-
-
-
-
