@@ -8,10 +8,6 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.jsoup:jsoup:1.8.3" />
-          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-websocket:unknown" />
-          <element id="library" level="project" name="Maven: org.webjars:webjars-locator:unknown" />
-          <element id="library" level="project" name="Maven: org.webjars:sockjs-client:1.0.2" />
-          <element id="library" level="project" name="Maven: org.webjars:stomp-websocket:2.3.3" />
           <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.2.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.2.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context:4.2.1.RELEASE" />
@@ -29,8 +25,6 @@
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.6.1" />
           <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.6.1" />
           <element id="library" level="project" name="Maven: org.aspectj:aspectjrt:1.6.12" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-websocket:4.2.4.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-messaging:4.2.4.RELEASE" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.3" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.3" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.0" />
@@ -47,7 +41,7 @@
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-c3p0:5.2.10.Final" />
           <element id="library" level="project" name="Maven: com.mchange:c3p0:0.9.5.2" />
           <element id="library" level="project" name="Maven: com.mchange:mchange-commons-java:0.2.11" />
-          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.39" />
+          <element id="library" level="project" name="Maven: org.postgresql:postgresql:42.1.4" />
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
         </element>
       </element>

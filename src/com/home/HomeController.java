@@ -5,95 +5,162 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.messaging.handler.annotation.MessageMapping;
+//import org.springframework.messaging.handler.annotation.SendTo;
+//import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+//import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
+//import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+//import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import java.util.*;
 
 @Controller
 public class HomeController {
-	
+
+    private HashMap<Integer, Integer> theAssociation;
+    private HashSet<String> playersDrafted;
 	private static ArrayList<Player> thePlayers = null;
 	private boolean draftStarted = false;
-	private List<Team> theTimeline;
+	private ArrayList<Team> theTimeline;
 	private final static Logger log = Logger.getLogger(HomeController.class.getName());
 	private int round = -1;
 	private int pickNumber = 1;
     private Timer timer;
+    private Timer cpuTimer;
     private long startTime;
+    private Player lastPlayerDrafted;
+    private ArrayList<Player> draftHistory;
 	@Autowired
 	private TeamService teamService;
 	@Autowired
 	private MessageService messageService;
+	private boolean endDraft = true;
 	
 	@javax.annotation.PostConstruct
 	public void init() throws IOException {
 		thePlayers = theData.getPlayers();
 		thePlayers = quick_sort.sort(thePlayers, 0, thePlayers.size()-1);
 		List<Team> theTeams = teamService.getTeams();
+        theAssociation = new HashMap<>();
+        playersDrafted = new HashSet<>();
+        draftHistory = new ArrayList<>();
 		if (theTeams.size() > 0)
 			teamService.clearTeams(theTeams);
 	}
+
+    @RequestMapping(value = "/resetDraft", method = RequestMethod.GET)
+    public void resetDraft(HttpServletResponse response) throws IOException {
+	    endDraft = true;
+        Cookie cookie = new Cookie("teamCookie", null);
+        theAssociation = new HashMap<>();
+        playersDrafted = new HashSet<>();
+        draftHistory = new ArrayList<>();
+        timer.purge();
+        cpuTimer.purge();
+        cookie.setMaxAge(0);
+        init();
+        lastPlayerDrafted = null;
+        round = -1;
+        pickNumber = 1;
+        response.addCookie(cookie);
+        response.sendRedirect("/");
+    }
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
 		Team localTeam = null;
-		if (!cookieValue.equals("defaultCookieValue")){
-			localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-		}
-		model.addAttribute("localTeam", localTeam);
-		model.addAttribute("theTeams", teamService.getTeams());
-		response.addCookie(new Cookie("teamCookie", cookieValue));
+        if (!cookieValue.equals("defaultCookieValue")){
+            if (theAssociation.containsKey(Integer.valueOf(cookieValue))){
+                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+                localTeam = teamService.getTeam(theHashCookie);
+            } else {
+                cookieValue = "defaultCookieValue";
+            }
+        }
+        model.addAttribute("localTeam", localTeam);
+        model.addAttribute("theTeams", teamService.getTeams());
 		if (draftStarted){
-			model.addAttribute("listOfPlayers", thePlayers);
-			model.addAttribute("theTimeline", theTimeline);
-			model.addAttribute("round", round);
-			model.addAttribute("pickNumber", pickNumber);
-			return "listOfPlayers";
+            model.addAttribute("listOfPlayers", thePlayers);
+            model.addAttribute("theTimeline", theTimeline);
+            model.addAttribute("round", round);
+            model.addAttribute("pickNumber", pickNumber);
+            response.addCookie(new Cookie("teamCookie", cookieValue));
+		    if (localTeam != null) {
+                return "listOfPlayers";
+            } else {
+                return "guestDraft";
+            }
+		} else if(endDraft == true){
+			return "home";
 		} else {
-			return "home"; 
-		}
+		    return "end";
+        }
     }
 	
 	@RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
 	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"));
-		teamService.saveTeam(localTeam);
-		Cookie newCookie = new Cookie("teamCookie", String.valueOf(localTeam.id));
-		response.addCookie(newCookie);
-		response.sendRedirect("/");
+        List<Team> theTeams = teamService.getTeams();
+	    if (theTeams.size() < 10) {
+            Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"), false);
+            teamService.saveTeam(localTeam);
+            int hashCookie = (int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) * Math.random());
+            System.out.printf("New hashCookie: %d", hashCookie);
+            theAssociation.put(hashCookie, localTeam.id);
+            Cookie newCookie = new Cookie("teamCookie", String.valueOf(hashCookie));
+            response.addCookie(newCookie);
+            response.sendRedirect("/");
+        }
     }
+
+    @RequestMapping(value = "/addACpu", method = RequestMethod.POST)
+    public void addACpu(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        List<Team> theTeams = teamService.getTeams();
+        if (theTeams.size() < 10) {
+            Team localTeam = new Team(request.getParameter("CpuName"), "Cpu" ,true);
+            teamService.saveTeam(localTeam);
+            response.sendRedirect("/");
+        }
+    }
+
+//    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
+//    public void sendEmail(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue) throws IOException{
+//        if (endDraft == true && draftStarted == false){
+//            if (!cookieValue.equals("defaultCookieValue")) {
+//                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+//                Team localTeam = teamService.getTeam(theHashCookie);
+//            }
+//        }
+//    }
 	
 	@RequestMapping(value = "/startDraft", method = RequestMethod.GET)
 	@ResponseBody
 	public void startDraft(HttpServletResponse response) throws IOException{
-	    log.info("DRAFT STARTED");
-		draftStarted = true;
-		getOrder();
-		System.out.println();
-        setTimer(120);
-        startTime = System.currentTimeMillis();
-		response.sendRedirect("/");
+	    if (draftStarted == false && teamService.getTeams().size() > 0){
+            draftStarted = true;
+            getOrder();
+            System.out.println();
+            setTimer(120);
+            setCPUTimer(5);
+            startTime = System.currentTimeMillis();
+            response.sendRedirect("/");
+        }
 	}
 
     @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)
     @ResponseBody
     public  ArrayList<Player> getPlayers(){
-            return thePlayers;
+        return thePlayers;
     }
 
     @RequestMapping(value = "/getTeam/{teamName}", method = RequestMethod.GET)
@@ -103,95 +170,197 @@ public class HomeController {
     	return theTeam;
     }
 
+    @RequestMapping(value = "/getTeams", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Team> getTeams(){
+        return teamService.getTeams();
+    }
+
     @RequestMapping(value = "/getTime", method = RequestMethod.GET)
     @ResponseBody
     public long getTime(){
-        return (System.currentTimeMillis()) - startTime;
+        if (draftStarted == true){
+            return (System.currentTimeMillis()) - startTime;
+        } else {
+            return -696969;
+        }
+    }
+
+    @RequestMapping(value = "/checkIfDraftHasStarted", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean checkIfDraftHasStarted(){
+        return draftStarted;
+    }
+
+    @RequestMapping(value = "/getTimeline", method = RequestMethod.GET)
+    @ResponseBody
+    public ArrayList<Team> getTimeline(){
+        return theTimeline;
+    }
+
+    @RequestMapping(value = "/getPick", method = RequestMethod.GET)
+    @ResponseBody
+    public int getPick(){
+        return pickNumber;
+    }
+
+    @RequestMapping(value = "/isDraftStillGoing", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean isDraftStillGoing(){
+        return draftStarted;
+    }
+
+    @RequestMapping(value = "/getRound", method = RequestMethod.GET)
+    @ResponseBody
+    public int getRound(){
+        return round;
+    }
+
+    @RequestMapping(value = "/getLastPlayerDrafted", method = RequestMethod.GET)
+    @ResponseBody
+    public Player getLastPlayerDrafted(){
+        return lastPlayerDrafted;
+    }
+
+    @RequestMapping(value = "/getDraftHistory", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Player> getDraftHistory(){
+        return draftHistory;
+    }
+
+    @RequestMapping(value = "/theEndDraft", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean theEndDraft(){
+        return endDraft;
     }
 	
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, HttpServletResponse response) throws IOException {
-        if(theTimeline.get(0).teamName.equals("Round"))
-            theTimeline.remove(0);
-        if(!cookieValue.equals("defaultCookieValue")){
-			Team localTeam = teamService.getTeam(Integer.valueOf(cookieValue));
-            if(theTimeline.get(0).teamName.equals(localTeam.teamName)){
+        if (draftStarted == true && theTimeline.size() != 0) {
+            if (theTimeline.get(0).teamName.equals("Round")) {
                 theTimeline.remove(0);
-                localTeam.addPlayer(json);
-                teamService.updateTeam(localTeam);
-                for (Player thePlayer : thePlayers){
-                    if(thePlayer.isMatch(json)){
-                        thePlayers.remove(thePlayer);
-                        break;
+                round++;
+            }
+            if(!theTimeline.get(0).isACpu) {
+                if (!cookieValue.equals("defaultCookieValue")) {
+                    int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+                    Team localTeam = teamService.getTeam(theHashCookie);
+                    if (theTimeline.get(0).teamName.equals(localTeam.teamName) && !playersDrafted.contains(json)) {
+                        theTimeline.remove(0);
+                        localTeam.addPlayer(json);
+                        playersDrafted.add(json.first + json.last + json.pos + json.team);
+                        teamService.updateTeam(localTeam);
+                        for (Player thePlayer : thePlayers) {
+                            if (thePlayer.isMatch(json)) {
+                                thePlayers.remove(thePlayer);
+                                break;
+                            }
+                        }
+                        lastPlayerDrafted = json;
+                        lastPlayerDrafted.teamOwner = localTeam.teamName;
+                        draftHistory.add(lastPlayerDrafted);
+                        startTime = System.currentTimeMillis();
+                        pickNumber++;
                     }
                 }
-                setTimer(120);
-                startTime = System.currentTimeMillis();
             }
-		}
-        pickNumber++;
+
+            if (theTimeline.size() == 0){
+                endDraft = false;
+                draftStarted = false;
+            } else if (!theTimeline.get(0).isACpu){
+                setTimer(120);
+            } else {
+                setCPUTimer(5);
+            }
+
+        }
         response.sendRedirect("/");
     }
 
-    @MessageMapping("/chat")
-    @SendTo("/topic/messages")
-    public void send(SentMessage theMessage){
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonInString = null;
-        try {
-            jsonInString = mapper.writeValueAsString(theMessage);
-            log.info("THE MESSAGE: " + jsonInString);
-        }
-        catch(Exception e)
-        {
-            log.severe(String.valueOf(e));
-        }
-//        log.info("message test: " + theMessage.author());
-//        String json = null;
-//        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+//    @MessageMapping("/chat")
+//    @SendTo("/topic/messages")
+//    public void send(SentMessage theMessage){
+//        ObjectMapper mapper = new ObjectMapper();
+//        String jsonInString = null;
 //        try {
-//            json = ow.writeValueAsString(theMessage);
-//        } catch (JsonProcessingException e) {
+//            jsonInString = mapper.writeValueAsString(theMessage);
+//            log.info("THE MESSAGE: " + jsonInString);
+//        }
+//        catch(Exception e)
+//        {
 //            log.severe(String.valueOf(e));
 //        }
-//        log.info("THE MESSAGE: " + json);
-//        String time = new SimpleDateFormat("HH:mm").format(new Date());
-//        MessageContents message = new MessageContents(theMessage.text(), theMessage.author(), time);
-//        try {
-//            json = ow.writeValueAsString(message);
-//        } catch (JsonProcessingException e) {
-//            log.severe(String.valueOf(e));
-//        }
-//        log.info("inside add: " + json);
-//        messageService.addMessage(message);
-    }
-
-    @RequestMapping(value = "/getMessages", method = RequestMethod.GET)
-    @ResponseBody
-    public List<MessageContents> getMessages()
-    {
-        log.info("inside getMessages");
-        return messageService.getMessages();
-    }
+////        log.info("message test: " + theMessage.author());
+////        String json = null;
+////        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+////        try {
+////            json = ow.writeValueAsString(theMessage);
+////        } catch (JsonProcessingException e) {
+////            log.severe(String.valueOf(e));
+////        }
+////        log.info("THE MESSAGE: " + json);
+////        String time = new SimpleDateFormat("HH:mm").format(new Date());
+////        MessageContents message = new MessageContents(theMessage.text(), theMessage.author(), time);
+////        try {
+////            json = ow.writeValueAsString(message);
+////        } catch (JsonProcessingException e) {
+////            log.severe(String.valueOf(e));
+////        }
+////        log.info("inside add: " + json);
+////        messageService.addMessage(message);
+//    }
+//
+//    @RequestMapping(value = "/getMessages", method = RequestMethod.GET)
+//    @ResponseBody
+//    public List<MessageContents> getMessages()
+//    {
+//        log.info("inside getMessages");
+//        return messageService.getMessages();
+//    }
 
     public void setTimer(int seconds) {
-        if (timer != null)
-            timer.cancel();
-        timer = new Timer();
-        //Scheduling NextTask() call in 10 second.
-        timer.schedule(new NextTask(),  seconds * 1000);
+        if (timer == null){
+            timer = new Timer();
+        } else {
+            timer.purge();
+        }
+        timer.schedule(new NextTask(), seconds * 1000);
+    }
+
+    public void setCPUTimer(int seconds) {
+        if (cpuTimer == null){
+            cpuTimer = new Timer();
+        } else {
+            cpuTimer.purge();
+        }
+        cpuTimer.schedule(new checkComputer(), seconds * 1000);
     }
 
     private void autoDraftPlayer(){
-        if(theTimeline.get(0).teamName.equals("Round"))
+        if (theTimeline.size() != 0) {
+            if (theTimeline.get(0).teamName.equals("Round")) {
+                theTimeline.remove(0);
+                round++;
+            }
+            Team localTeam = teamService.getTeam(theTimeline.get(0).id);
             theTimeline.remove(0);
-        Team localTeam = teamService.getTeam(theTimeline.get(0).id);
-        theTimeline.remove(0);
-        localTeam.addPlayer(thePlayers.get(0));
-        thePlayers.remove(0);
-        teamService.updateTeam(localTeam);
-        setTimer(120);
-        startTime = System.currentTimeMillis();
+            localTeam.addPlayer(thePlayers.get(0));
+            lastPlayerDrafted = thePlayers.get(0);
+            lastPlayerDrafted.teamOwner = localTeam.teamName;
+            draftHistory.add(lastPlayerDrafted);
+            playersDrafted.add(thePlayers.get(0).first + thePlayers.get(0).last + thePlayers.get(0).pos + thePlayers.get(0).team);
+            thePlayers.remove(0);
+            teamService.updateTeam(localTeam);
+            setTimer(120);
+            setCPUTimer(5);
+            pickNumber++;
+            startTime = System.currentTimeMillis();
+        }
+        if (theTimeline.size() == 0) {
+            endDraft = false;
+            draftStarted = false;
+        }
     }
 	
 	private void getOrder(){
@@ -205,7 +374,23 @@ public class HomeController {
         @Override
         public void run() {
             autoDraftPlayer();
-            timer.cancel(); // Terminate the thread
+        }
+    }
+
+    class checkComputer extends TimerTask {
+        @Override
+        public void run() {
+            if (theTimeline.size() > 0){
+                if(theTimeline.get(0).teamName.equals("Round")){
+                    theTimeline.remove(0);
+                    round++;
+                }
+                if(theTimeline.get(0).isACpu){
+                    autoDraftPlayer();
+                } else {
+                    cpuTimer.purge();
+                }
+            }
         }
     }
 
