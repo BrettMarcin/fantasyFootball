@@ -8,6 +8,10 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.jsoup:jsoup:1.8.3" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-websocket:unknown" />
+          <element id="library" level="project" name="Maven: org.webjars:webjars-locator:unknown" />
+          <element id="library" level="project" name="Maven: org.webjars:sockjs-client:1.0.2" />
+          <element id="library" level="project" name="Maven: org.webjars:stomp-websocket:2.3.3" />
           <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.2.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.2.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context:4.2.1.RELEASE" />

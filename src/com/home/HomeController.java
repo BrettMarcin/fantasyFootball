@@ -133,27 +133,37 @@ public class HomeController {
         response.sendRedirect("/");
     }
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
     public void send(SentMessage theMessage){
-        log.info("message test: " + theMessage.author());
-        String json = null;
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = null;
         try {
-            json = ow.writeValueAsString(theMessage);
-        } catch (JsonProcessingException e) {
+            jsonInString = mapper.writeValueAsString(theMessage);
+            log.info("THE MESSAGE: " + jsonInString);
+        }
+        catch(Exception e)
+        {
             log.severe(String.valueOf(e));
         }
-        log.info("THE MESSAGE: " + json);
-        String time = new SimpleDateFormat("HH:mm").format(new Date());
-        MessageContents message = new MessageContents(theMessage.text(), theMessage.author(), time);
-        try {
-            json = ow.writeValueAsString(message);
-        } catch (JsonProcessingException e) {
-            log.severe(String.valueOf(e));
-        }
-        log.info("inside add: " + json);
-        messageService.addMessage(message);
+//        log.info("message test: " + theMessage.author());
+//        String json = null;
+//        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+//        try {
+//            json = ow.writeValueAsString(theMessage);
+//        } catch (JsonProcessingException e) {
+//            log.severe(String.valueOf(e));
+//        }
+//        log.info("THE MESSAGE: " + json);
+//        String time = new SimpleDateFormat("HH:mm").format(new Date());
+//        MessageContents message = new MessageContents(theMessage.text(), theMessage.author(), time);
+//        try {
+//            json = ow.writeValueAsString(message);
+//        } catch (JsonProcessingException e) {
+//            log.severe(String.valueOf(e));
+//        }
+//        log.info("inside add: " + json);
+//        messageService.addMessage(message);
     }
 
     @RequestMapping(value = "/getMessages", method = RequestMethod.GET)

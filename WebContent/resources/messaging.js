@@ -10,15 +10,12 @@ function setConnectedToSocket(connected) {
 }
 
 function connectToSocket() {
-    console.log("inside the method()");
     var socket = new SockJS('/chat');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
         setConnectedToSocket(true);
         console.log('Connected: ' + frame);
-        console.log("before the subscribe");
-        stompClient.subscribe('/topic/greetings', function(messageOutput) {
-            console.log("inside the subscribe");
+        stompClient.subscribe('/topic/messages', function(messageOutput) {
             showMessageOutputFromSocket(JSON.parse(messageOutput.body));
         });
     });
@@ -35,8 +32,7 @@ function disconnectFromSocket() {
 function sendMessageToSocket() {
     var from = document.getElementById('author').value;
     var text = document.getElementById('text').value;
-    console.log("inside the send method");
-    stompClient.send("/app/hello", {},
+    stompClient.send("/app/chat", {},
         JSON.stringify({'author':from, 'text':text}));
 }
 

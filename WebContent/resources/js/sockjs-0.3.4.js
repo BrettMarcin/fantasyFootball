@@ -1171,9 +1171,6 @@ SockJS = (function(){
     };
 
     SockJS.prototype.send = function(data) {
-        console.log("DATA");
-        console.log(data);
-        console.log("after data");
         var that = this;
         if (that.readyState === SockJS.CONNECTING)
             throw new Error('INVALID_STATE_ERR');
@@ -1275,6 +1272,8 @@ SockJS = (function(){
         that.sender = sender;
     };
     BufferedSender.prototype.doSend = function(message) {
+        console.log("MESSAGE");
+        console.log(message);
         var that = this;
         that.send_buffer.push(message);
         if (!that.send_stop) {
