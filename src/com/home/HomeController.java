@@ -19,7 +19,6 @@ public class HomeController {
 
     private HashMap<Integer, Integer> theAssociation;
     private HashSet<String> playersDrafted;
-	private static ArrayList<Player> thePlayers = null;
 	private boolean draftStarted = false;
 	private ArrayList<Team> theTimeline;
 	private final static Logger log = Logger.getLogger(HomeController.class.getName());
@@ -30,20 +29,25 @@ public class HomeController {
     private long startTime;
     private Player lastPlayerDrafted;
     private ArrayList<Player> draftHistory;
+    private List<Player> remainingPlayers;
+
 	@Autowired
 	private TeamService teamService;
+	@Autowired
+    private PlayerService playerService;
 	private boolean endDraft = true;
 	
 	@javax.annotation.PostConstruct
-	public void init() throws IOException {
-		thePlayers = theData.getPlayers();
-		thePlayers = quick_sort.sort(thePlayers, 0, thePlayers.size()-1);
+	public void init() {
+        updatePlayers();
 		List<Team> theTeams = teamService.getTeams();
+        remainingPlayers = getDBPlayers();
+        remainingPlayers = quick_sort.sort((ArrayList<Player>)remainingPlayers, 0, remainingPlayers.size()-1);
         theAssociation = new HashMap<>();
         playersDrafted = new HashSet<>();
         draftHistory = new ArrayList<>();
-		if (theTeams.size() > 0)
-			teamService.clearTeams(theTeams);
+//		if (theTeams.size() > 0)
+//			teamService.clearTeams(theTeams);
 	}
 
     @RequestMapping(value = "/resetDraft", method = RequestMethod.GET)
@@ -63,7 +67,7 @@ public class HomeController {
         response.addCookie(cookie);
         response.sendRedirect("/");
     }
-	
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
 		Team localTeam = null;
@@ -78,7 +82,7 @@ public class HomeController {
         model.addAttribute("localTeam", localTeam);
         model.addAttribute("theTeams", teamService.getTeams());
 		if (draftStarted){
-            model.addAttribute("listOfPlayers", thePlayers);
+            model.addAttribute("listOfPlayers", remainingPlayers);
             model.addAttribute("theTimeline", theTimeline);
             model.addAttribute("round", round);
             model.addAttribute("pickNumber", pickNumber);
@@ -94,8 +98,11 @@ public class HomeController {
 		    return "end";
         }
     }
-	
-	@RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
+
+    /////////////////////////////////////////////////////////////////////
+
+
+    @RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
 	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
         List<Team> theTeams = teamService.getTeams();
 	    if (theTeams.size() < 10) {
@@ -143,12 +150,6 @@ public class HomeController {
             response.sendRedirect("/");
         }
 	}
-
-    @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)
-    @ResponseBody
-    public  ArrayList<Player> getPlayers(){
-        return thePlayers;
-    }
 
     @RequestMapping(value = "/getTeam/{teamName}", method = RequestMethod.GET)
     @ResponseBody
@@ -220,7 +221,28 @@ public class HomeController {
     public boolean theEndDraft(){
         return endDraft;
     }
-	
+
+    @RequestMapping(value = "/updatePlayers", method = RequestMethod.GET)
+    public void updatePlayers() {
+        try {
+            ArrayList<Player> thePlayers = theData.getPlayers();
+            thePlayers = quick_sort.sort(thePlayers, 0, thePlayers.size() - 1);
+            for (Player p : thePlayers) {
+                playerService.savePlayer(p);
+            }
+        }
+        catch (java.io.IOException e){
+
+        }
+    }
+
+    @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Player> getDBPlayers(){
+        List<Player> theDBPlayers = playerService.getDBPlayers();
+        return theDBPlayers;
+    }
+
 	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
 	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, HttpServletResponse response) throws IOException {
         if (draftStarted == true && theTimeline.size() != 0) {
@@ -232,14 +254,15 @@ public class HomeController {
                 if (!cookieValue.equals("defaultCookieValue")) {
                     int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
                     Team localTeam = teamService.getTeam(theHashCookie);
+                    List<Player> thePlayerList = getDBPlayers();
                     if (theTimeline.get(0).teamName.equals(localTeam.teamName) && !playersDrafted.contains(json)) {
                         theTimeline.remove(0);
                         localTeam.addPlayer(json);
                         playersDrafted.add(json.first + json.last + json.pos + json.team);
                         teamService.updateTeam(localTeam);
-                        for (Player thePlayer : thePlayers) {
+                        for (Player thePlayer : remainingPlayers) {
                             if (thePlayer.isMatch(json)) {
-                                thePlayers.remove(thePlayer);
+                                remainingPlayers.remove(thePlayer);
                                 break;
                             }
                         }
@@ -291,12 +314,12 @@ public class HomeController {
             }
             Team localTeam = teamService.getTeam(theTimeline.get(0).id);
             theTimeline.remove(0);
-            localTeam.addPlayer(thePlayers.get(0));
-            lastPlayerDrafted = thePlayers.get(0);
+            localTeam.addPlayer(remainingPlayers.get(0));
+            lastPlayerDrafted = remainingPlayers.get(0);
             lastPlayerDrafted.teamOwner = localTeam.teamName;
             draftHistory.add(lastPlayerDrafted);
-            playersDrafted.add(thePlayers.get(0).first + thePlayers.get(0).last + thePlayers.get(0).pos + thePlayers.get(0).team);
-            thePlayers.remove(0);
+            playersDrafted.add(remainingPlayers.get(0).first + remainingPlayers.get(0).last + remainingPlayers.get(0).pos + remainingPlayers.get(0).team);
+            remainingPlayers.remove(0);
             teamService.updateTeam(localTeam);
             setTimer(120);
             setCPUTimer(5);
