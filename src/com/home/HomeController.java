@@ -39,15 +39,15 @@ public class HomeController {
 	
 	@javax.annotation.PostConstruct
 	public void init() {
-        updatePlayers();
+        //updatePlayers();
 		List<Team> theTeams = teamService.getTeams();
         remainingPlayers = getDBPlayers();
         remainingPlayers = quick_sort.sort((ArrayList<Player>)remainingPlayers, 0, remainingPlayers.size()-1);
         theAssociation = new HashMap<>();
         playersDrafted = new HashSet<>();
         draftHistory = new ArrayList<>();
-//		if (theTeams.size() > 0)
-//			teamService.clearTeams(theTeams);
+		if (theTeams.size() > 0)
+			teamService.clearTeams(theTeams);
 	}
 
     @RequestMapping(value = "/resetDraft", method = RequestMethod.GET)
