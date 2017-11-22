@@ -29,7 +29,7 @@ public class HomeController {
     private long startTime;
     private Player lastPlayerDrafted;
     private ArrayList<Player> draftHistory;
-    private List<Player> remainingPlayers;
+    private ArrayList<Player> remainingPlayers;
 
 	@Autowired
 	private TeamService teamService;
@@ -238,8 +238,8 @@ public class HomeController {
 
     @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)
     @ResponseBody
-    public List<Player> getDBPlayers(){
-        List<Player> theDBPlayers = playerService.getDBPlayers();
+    public ArrayList<Player> getDBPlayers(){
+        ArrayList<Player> theDBPlayers = (ArrayList<Player>)playerService.getDBPlayers();
         return theDBPlayers;
     }
 

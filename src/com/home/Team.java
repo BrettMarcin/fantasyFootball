@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player WR1 = null;
 
-	@JoinColumn(name="id_player_theW2")
+	@JoinColumn(name="id_player_wr2")
 	@OneToOne
 	@Cascade({CascadeType.ALL})
 	@Fetch(FetchMode.JOIN)
