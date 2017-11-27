@@ -1,5 +1,9 @@
 package com.home;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.persistence.Entity;
@@ -14,6 +18,10 @@ import java.io.Serializable;
 @Entity
 @Table(name="Player")
 @XmlRootElement public class Player{
+
+	// need to inject the session factory
+	@Autowired
+	private SessionFactory sessionFactory;
 	
 	@Id
 	@Column(name="id_player")
@@ -102,9 +110,12 @@ import java.io.Serializable;
 	}
 	
 	public boolean isMatch(Player theOther){
-		if(theOther.first.equals(first) && theOther.last.equals(last) && theOther.team.equals(team) && theOther.pos.equals(pos)){
+		Session currentSession = sessionFactory.getCurrentSession();
+		if(theOther.first.equals(first) && theOther.last.equals(last) && theOther.team.equals(team) && theOther.pos.equals(pos)) {
+			//return sessionFactory.getCurrentSession();
 			return true;
 		} else {
+			//return null;
 			return false;
 		}
 	}

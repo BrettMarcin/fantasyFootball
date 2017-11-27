@@ -39,7 +39,7 @@ public class HomeController {
 	
 	@javax.annotation.PostConstruct
 	public void init() {
-        //updatePlayers();
+        updatePlayers();
 		List<Team> theTeams = teamService.getTeams();
         remainingPlayers = getDBPlayers();
         remainingPlayers = quick_sort.sort((ArrayList<Player>)remainingPlayers, 0, remainingPlayers.size()-1);
@@ -259,7 +259,17 @@ public class HomeController {
                         theTimeline.remove(0);
                         localTeam.addPlayer(json);
                         playersDrafted.add(json.first + json.last + json.pos + json.team);
-                        teamService.updateTeam(localTeam);
+                        for (Player thePlayer : remainingPlayers) {
+                            boolean test = thePlayer.isMatch(json);
+                            //org.hibernate.Session sess = thePlayer.isMatch(json);
+                            //org.hibernate.Session sess1 = thePlayer.isMatch(json);
+                            System.out.println("\n\n\n\nHELLO\n\n\n\n");
+//                            if (sess1 != null) {
+//                                sess.getEntityName(Player.class);
+//                                //teamService.updateTeam(thePlayer.isMatch(json));
+//                                break;
+//                            }
+                        }
                         for (Player thePlayer : remainingPlayers) {
                             if (thePlayer.isMatch(json)) {
                                 remainingPlayers.remove(thePlayer);
