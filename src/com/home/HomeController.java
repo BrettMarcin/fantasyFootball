@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -257,21 +258,18 @@ public class HomeController {
                     List<Player> thePlayerList = getDBPlayers();
                     if (theTimeline.get(0).teamName.equals(localTeam.teamName) && !playersDrafted.contains(json)) {
                         theTimeline.remove(0);
-                        localTeam.addPlayer(json);
                         playersDrafted.add(json.first + json.last + json.pos + json.team);
                         for (Player thePlayer : remainingPlayers) {
-                            boolean test = thePlayer.isMatch(json);
-                            //org.hibernate.Session sess = thePlayer.isMatch(json);
-                            //org.hibernate.Session sess1 = thePlayer.isMatch(json);
-                            System.out.println("\n\n\n\nHELLO\n\n\n\n");
-//                            if (sess1 != null) {
-//                                sess.getEntityName(Player.class);
-//                                //teamService.updateTeam(thePlayer.isMatch(json));
-//                                break;
-//                            }
+                            Player current = thePlayer.isMatch(json);
+                            if (current != null) {
+                                localTeam.addPlayer(current);
+                                current.updateTeamOwner(localTeam.teamName);
+                                teamService.updateTeam(localTeam);
+                                break;
+                            }
                         }
                         for (Player thePlayer : remainingPlayers) {
-                            if (thePlayer.isMatch(json)) {
+                            if (thePlayer.isMatch(json) != null) {
                                 remainingPlayers.remove(thePlayer);
                                 break;
                             }

@@ -33,54 +33,54 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@JoinColumn(name="id_player_qb")
 	//@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@OneToOne
-	@Cascade({CascadeType.SAVE_UPDATE})
+	@Cascade({CascadeType.MERGE})
 	//@Cascade({CascadeType.ALL})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player QB = null;
 
 	@JoinColumn(name="id_player_wr1")
 	@OneToOne
-	@Cascade({CascadeType.SAVE_UPDATE})
+	@Cascade({CascadeType.MERGE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player WR1 = null;
 
 	@JoinColumn(name="id_player_wr2")
 	@OneToOne
-	@Cascade({CascadeType.ALL})
+	@Cascade({CascadeType.MERGE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player WR2 = null;
 
 	@JoinColumn(name="id_player_rb1")
 	@OneToOne
-	@Cascade({CascadeType.SAVE_UPDATE})
+	@Cascade({CascadeType.MERGE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player RB1 = null;
 
 	@JoinColumn(name="id_player_rb2")
 	@OneToOne
-	@Cascade({CascadeType.SAVE_UPDATE})
+	@Cascade({CascadeType.MERGE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player RB2 = null;
 
 	@JoinColumn(name="id_player_te")
 	@OneToOne
-	@Cascade({CascadeType.SAVE_UPDATE})
+	@Cascade({CascadeType.MERGE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player TE = null;
 
 	@JoinColumn(name="id_player_flex")
 	@OneToOne
-	@Cascade({CascadeType.SAVE_UPDATE})
+	@Cascade({CascadeType.MERGE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player FLEX = null;
 
 	@JoinColumn(name="id_player_dst")
 	@OneToOne
-	@Cascade({CascadeType.SAVE_UPDATE})
+	@Cascade({CascadeType.MERGE})
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player DST = null;
 
-	@JoinTable(name="id_player")
+	@JoinTable(name="id_player_bench")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@OneToMany
 	@Cascade({CascadeType.ALL})
