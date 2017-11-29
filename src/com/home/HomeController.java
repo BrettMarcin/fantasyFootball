@@ -46,6 +46,8 @@ public class HomeController {
 			teamService.clearTeams(theTeams);
 	}
 
+	///////////////////////
+
     @RequestMapping(value = "/resetDraft", method = RequestMethod.GET)
     public void resetDraft(HttpServletResponse response) throws IOException {
 	    endDraft = true;
