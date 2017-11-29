@@ -19,16 +19,16 @@
 	<bean
 			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/view/" />
-		<property name="suffix" value=".jsp" />
+		<property name="suffix" value=".jsp" />git ch
 	</bean>
 
 	<!-- Define Database DataSource / connection pool -->
 	<bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		  destroy-method="close">
 		<property name="driverClass" value="org.postgresql.Driver" />
-		<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/teams" />
-		<property name="user" value="root" />
-		<property name="password" value="abacus" />
+		<property name="jdbcUrl" value="jdbc:postgresql://ec2-54-225-68-71.compute-1.amazonaws.com:5432/d1tq9l3gg0sdsm" />
+		<property name="user" value="kobqsbvmsizuts" />
+		<property name="password" value="e6ae4a816a2301e8936883d309f6be835cff71c7e48c6be85fdeaa8839c879d1" />
 		<!-- these are connection pool properties for C3P0 -->
 		<property name="minPoolSize" value="5" />
 		<property name="maxPoolSize" value="20" />
