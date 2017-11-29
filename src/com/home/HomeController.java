@@ -40,6 +40,7 @@ public class HomeController {
 	
 	@javax.annotation.PostConstruct
 	public void init() {
+	    updatePlayers();
 		List<Team> theTeams = teamService.getTeams();
         remainingPlayers = getDBPlayers();
         remainingPlayers = quick_sort.sort((ArrayList<Player>)remainingPlayers, 0, remainingPlayers.size()-1);
