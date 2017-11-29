@@ -1,5 +1,9 @@
 package com.home;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.persistence.Entity;
@@ -9,11 +13,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 
 @Entity
 @Table(name="Player")
 @XmlRootElement public class Player{
+
+	private final static Logger log = Logger.getLogger(Player.class.getName());
+
+	// need to inject the session factory
+	@Autowired
+	private SessionFactory sessionFactory;
 	
 	@Id
 	@Column(name="id_player")
@@ -101,12 +112,17 @@ import java.io.Serializable;
 		super();
 	}
 	
-	public boolean isMatch(Player theOther){
-		if(theOther.first.equals(first) && theOther.last.equals(last) && theOther.team.equals(team) && theOther.pos.equals(pos)){
-			return true;
+	public Player isMatch(Player theOther){
+		if(theOther.first.equals(first) && theOther.last.equals(last) && theOther.team.equals(team) && theOther.pos.equals(pos)) {
+			return this;
+			//return true;
 		} else {
-			return false;
+			return null;
+			//return false;
 		}
+	}
+	public void updateTeamOwner(String owner){
+		teamOwner = owner;
 	}
 	
 }

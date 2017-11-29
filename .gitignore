@@ -403,3 +403,9 @@
 /target/
 /idea/
 /mysql-5.7.19-winx64/
+/.metadata/
+/.recommenders/
+/RemoteSystemsTempFiles/
+/Servers/
+/test/
+

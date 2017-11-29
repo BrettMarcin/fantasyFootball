@@ -59,6 +59,13 @@ public class theData {
 					if(nameArray.length == 3){
 						offset++;
 					}
+					int z = 0;
+					for(int k = 0; k < words.length; k++){
+						if(!(words[k].equals(""))){
+							words[z] = words[k];
+							z++;
+						}
+					}
 					Player p1 = new Player(words[1], nameArray[1], words[4 + offset].substring(0, 2),words[3 + offset].substring(0, 3), Integer.parseInt(words[0]));
 					playersOpen.put(p1.first + p1.last + p1.pos + p1.team, p1);
 				}catch(Exception e){
