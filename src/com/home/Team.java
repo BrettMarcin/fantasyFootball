@@ -80,7 +80,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@Fetch(FetchMode.JOIN)
 	@XmlElement public Player DST = null;
 
-	@JoinTable(name="id_player_bench")
+	@JoinTable(name="id_player")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@OneToMany
 	@Cascade({CascadeType.ALL})
