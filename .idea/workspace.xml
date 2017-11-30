@@ -8,13 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e1b615fd-ab21-4cb6-ae5d-6a54be227b4d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" afterPath="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebContent/view/home.jsp" afterPath="$PROJECT_DIR$/WebContent/view/home.jsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/HomeController.java" afterPath="$PROJECT_DIR$/src/com/home/HomeController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/Player.java" afterPath="$PROJECT_DIR$/src/com/home/Player.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/PlayerDAO.java" afterPath="$PROJECT_DIR$/src/com/home/PlayerDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/PlayerDAOImpl.java" afterPath="$PROJECT_DIR$/src/com/home/PlayerDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/PlayerService.java" afterPath="$PROJECT_DIR$/src/com/home/PlayerService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/home/PlayerServiceImpl.java" afterPath="$PROJECT_DIR$/src/com/home/PlayerServiceImpl.java" />
     </list>
     <ignored path="$PROJECT_DIR$/build/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -38,11 +31,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="HomeController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="HomeController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/home/HomeController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="228" column="53" lean-forward="false" selection-start-line="228" selection-start-column="53" selection-end-line="228" selection-end-column="53" />
+            <state relative-caret-position="323">
+              <caret line="46" column="41" lean-forward="true" selection-start-line="46" selection-start-column="41" selection-end-line="46" selection-end-column="41" />
               <folding>
                 <element signature="e#6284#6285#0" expanded="true" />
                 <element signature="e#6329#6330#0" expanded="true" />
@@ -103,11 +96,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fantasy-servlet.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fantasy-servlet.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="30" column="47" lean-forward="false" selection-start-line="30" selection-start-column="47" selection-end-line="30" selection-end-column="47" />
+            <state relative-caret-position="221">
+              <caret line="21" column="47" lean-forward="true" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -269,7 +262,6 @@
         <option value="$MAVEN_REPOSITORY$/com/mchange/c3p0/0.9.5.2/c3p0-0.9.5.2.jar!/com/mchange/v2/resourcepool/BasicResourcePool.class" />
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" />
         <option value="$PROJECT_DIR$/WebContent/view/home.jsp" />
         <option value="$PROJECT_DIR$/src/com/home/Player.java" />
         <option value="$PROJECT_DIR$/src/com/home/PlayerDAOImpl.java" />
@@ -277,6 +269,7 @@
         <option value="$PROJECT_DIR$/src/com/home/PlayerService.java" />
         <option value="$PROJECT_DIR$/src/com/home/PlayerServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/com/home/HomeController.java" />
+        <option value="$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml" />
       </list>
     </option>
   </component>
@@ -722,7 +715,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="153245000" />
+    <option name="totallyTimeSpent" value="153503000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -735,6 +728,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1358" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -754,7 +748,7 @@
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295099" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295099" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30549684" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30549684" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295099" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24583334" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1070,14 +1064,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="30" column="47" lean-forward="false" selection-start-line="30" selection-start-column="47" selection-end-line="30" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/home/Player.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="385">
@@ -1140,8 +1126,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/home/HomeController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="228" column="53" lean-forward="false" selection-start-line="228" selection-start-column="53" selection-end-line="228" selection-end-column="53" />
+        <state relative-caret-position="323">
+          <caret line="46" column="41" lean-forward="true" selection-start-line="46" selection-start-column="41" selection-end-line="46" selection-end-column="41" />
           <folding>
             <element signature="e#6284#6285#0" expanded="true" />
             <element signature="e#6329#6330#0" expanded="true" />
@@ -1166,6 +1152,14 @@
             <element signature="e#13126#13127#0" expanded="true" />
             <element signature="e#13167#13168#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WebContent/WEB-INF/fantasy-servlet.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="21" column="47" lean-forward="true" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
+          <folding />
         </state>
       </provider>
     </entry>
