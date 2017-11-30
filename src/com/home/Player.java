@@ -111,6 +111,10 @@ import java.util.logging.Logger;
 	public Player(){
 		super();
 	}
+
+	public int id(){
+		return id;
+	}
 	
 	public Player isMatch(Player theOther){
 		if(theOther.first.equals(first) && theOther.last.equals(last) && theOther.team.equals(team) && theOther.pos.equals(pos)) {

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,7 +29,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional
-    public void clearPlayers(){}
+    public void clearPlayers(ArrayList<Player> thePlayers){
+        playerDAO.clearPlayers(thePlayers);
+    }
 
     @Override
     @Transactional

@@ -18,8 +18,13 @@
 </head>
 <body>
 
-<h1> Welcome to Fantasy Football! </h1>
-<h2>Created by Brett Marcinkiewicz and Jacob Kahn</h2>
+<h1 style="margin-left: 10px;"> Welcome to Fantasy Football! </h1>
+<h2 style="margin-left: 10px;">Created by Brett Marcinkiewicz and Jacob Kahn</h2>
+<form action="updatePlayers" method="GET">
+	<button type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px">Update Rosters</button>
+</form>
+
+
 
 <% if(localTeam == null) { %>
 <div class="container panel panel-default">

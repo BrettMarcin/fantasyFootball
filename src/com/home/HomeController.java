@@ -40,7 +40,6 @@ public class HomeController {
 	
 	@javax.annotation.PostConstruct
 	public void init() {
-	    updatePlayers();
 		List<Team> theTeams = teamService.getTeams();
         remainingPlayers = getDBPlayers();
         remainingPlayers = quick_sort.sort((ArrayList<Player>)remainingPlayers, 0, remainingPlayers.size()-1);
@@ -223,10 +222,11 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/updatePlayers", method = RequestMethod.GET)
-    public void updatePlayers() {
+    public void updatePlayers(HttpServletResponse response) throws IOException{
         try {
             ArrayList<Player> thePlayers = theData.getPlayers();
             thePlayers = quick_sort.sort(thePlayers, 0, thePlayers.size() - 1);
+            playerService.clearPlayers(getDBPlayers());
             for (Player p : thePlayers) {
                 playerService.savePlayer(p);
             }
@@ -235,6 +235,7 @@ public class HomeController {
         catch (java.io.IOException e){
 
         }
+        response.sendRedirect("/");
     }
 
     @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)

@@ -6,6 +6,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -33,7 +34,14 @@ public class PlayerDAOImpl implements PlayerDAO {
     public void deletePlayer(int theId){}
 
     @Override
-    public void clearPlayers(){}
+    public void clearPlayers(ArrayList<Player> thePlayers) {
+        for (Player thePlayer : thePlayers){
+            Session currentSession = sessionFactory.getCurrentSession();
+            Query theQuery = currentSession.createQuery("delete from Player where id=:playerId");
+            theQuery.setParameter("playerId", thePlayer.id());
+            theQuery.executeUpdate();
+        }
+    }
 
     @Override
     public void updatePlayer(Player thePlayer){}
