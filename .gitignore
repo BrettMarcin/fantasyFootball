@@ -3,3 +3,12 @@
 /.idea/
 /.settings/
 /.project/
+/idea/
+.idea/
+.settings/
+/mysql-5.7.19-winx64/
+/.metadata/
+/.recommenders/
+/RemoteSystemsTempFiles/
+/Servers/
+/test/
