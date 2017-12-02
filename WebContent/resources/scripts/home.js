@@ -1,3 +1,13 @@
+/*globals jQuery */
+var source = new EventSource('/questions');
+source.addEventListener('spring', function(event){
+    $('#questions').prepend('<div class="row"><div class="col s12"><div class="card grey-text"><div class="card-content center"><p>' + event.data + '</p></div></div></div></div>')
+
+});
+function sendForm(){
+    $.post('/new-question', ("hello"));
+}
+
 $(function() {
 
     checkIfDraftHasStarted();

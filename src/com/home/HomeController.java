@@ -5,6 +5,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 //import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 //import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 //import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @Controller
+//@RestController
 public class HomeController {
 
     private HashMap<Integer, Integer> theAssociation;
@@ -75,6 +78,30 @@ public class HomeController {
         pickNumber = 1;
         response.addCookie(cookie);
         response.sendRedirect("/");
+    }
+
+    private List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+
+	@RequestMapping("/questions")
+    public SseEmitter questions(){
+	    SseEmitter sseEmitter = new SseEmitter();
+
+	    emitters.add(sseEmitter);
+
+	    sseEmitter.onCompletion(() -> emitters.remove(sseEmitter));
+
+	    return sseEmitter;
+    }
+
+    @RequestMapping(value="/new-question", method = RequestMethod.POST)
+    public void postQuestion(String question, HttpServletRequest request, HttpServletResponse response) {
+        for(SseEmitter emitter : emitters){
+            try {
+                emitter.send(SseEmitter.event().name("spring").data(question));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)

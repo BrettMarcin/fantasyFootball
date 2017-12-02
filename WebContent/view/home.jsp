@@ -7,13 +7,10 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<<<<<<< HEAD
 	<script src="/WebContent/resources/js/sockjs-0.3.4.js"></script>
 	<script src="/WebContent/resources/js/stomp.js"></script>
 	<script src ="/WebContent/resources/messaging.js"></script>
-=======
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.0.2/particles.js"></script>
->>>>>>> AWS
 	<script src="${theJS}"></script>
 	<link href="${bootstrap}" rel="stylesheet" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -44,12 +41,13 @@
 		<p id="response"></p>
 	</div>
 </div>
+<button id="testButton" type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px" onclick="sendForm()">Click</button>
 <% if(localTeam == null) { %>
 <div class="container panel panel-default">
 	<h3>Create your team!</h3>
 	<div class="row">
 		<div class="col-sm-8 panel">
-	<form action="setLocalTeam" method="POST">
+	<form action="new-question" method="POST">
   		<div class="form-group">
     		<label for="TeamNameInput">Enter Team Name:</label>
     		<input class="form-control" name="TeamNameInput">
