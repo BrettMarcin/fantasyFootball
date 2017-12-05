@@ -20,12 +20,13 @@
     <% Team localTeam = (Team)request.getAttribute("localTeam"); %>
 </head>
 <body>
-
-<h1 id = "welcome"> Welcome to Fantasy Football! </h1>
-<h2>Created by Brett Marcinkiewicz and Jacob Kahn</h2>
-<button id="testButton" type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px" onclick="sendForm()">Click</button>
+<h1 style="margin-left: 10px;"> Welcome to Fantasy Football! </h1>
+<h2 style="margin-left: 10px;">Created by Brett Marcinkiewicz and Jacob Kahn</h2>
+<form action="updatePlayers" method="GET">
+	<button type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px">Update Rosters</button>
+</form>
 <script>
-	connect();
+    connect();
 </script>
 <% if(localTeam == null) { %>
 <table id="homeTable" class="table table-striped">
@@ -95,10 +96,6 @@
 	<% for(Team aTeam : teams){ %>
 		<% if (aTeam != null) %>
 	<a href="#" class="list-group-item currentTeamInSession">Team Name: <%=aTeam.teamName%>, Owned by: <%=aTeam.name%></a>
-	<% } %>>
-</div>
-		</div>
-	</div>
-</div>
+	<% } %>
 </body>
 </html>
