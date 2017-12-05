@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html>
-<head> 
+<head>
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts/home.js" var="theJS" />
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
@@ -35,17 +35,17 @@
 			<h3>Create your team!</h3>
 			<div class="row">
 				<div class="col-sm-8 panel">
-			<form action="new-question" method="POST">
-				<div class="form-group">
-					<label for="TeamNameInput">Enter Team Name:</label>
-					<input class="form-control" name="TeamNameInput">
-				</div>
-				<div class="form-group">
-					<label for="theName">Enter Your Name:</label>
-					<input class="form-control" name="theName">
-				</div>
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
+					<form action="setLocalTeam" method="POST">
+						<div class="form-group">
+							<label for="TeamNameInput">Enter Team Name:</label>
+							<input class="form-control" name="TeamNameInput">
+						</div>
+						<div class="form-group">
+							<label for="theName">Enter Your Name:</label>
+							<input class="form-control" name="theName">
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
 				</div>
 			</div>
 		</div>
