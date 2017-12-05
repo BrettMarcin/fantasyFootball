@@ -4,28 +4,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.logging.Logger;
 
-@XmlRootElement public class SentMessage
+public class SentMessage
 {
     private final static Logger log = Logger.getLogger(SentMessage.class.getName());
-    @XmlElement private String author;
-    @XmlElement private String text;
+    private String author;
+    private String text;
 
-    public SentMessage()
-    {
-        super();
-        log.info("INSIDE DEFAULT");
+    public SentMessage() {
     }
-    public SentMessage(String newText, String newAuthor)
+    public SentMessage(String text, String author)
     {
-        log.info("INSIDE ATTRIBUTE");
-        text = newText;
-        author = newAuthor;
+        log.info("THERE");
+        this.text = text;
+        this.author = author;
     }
-    public String text()
+    public String getText()
     {
         return text;
     }
-    public String author()
+    public String getAuthor()
     {
         return author;
     }

@@ -4,7 +4,7 @@
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts/home.js" var="theJS" />
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="/WebContent/resources/js/sockjs-0.3.4.js"></script>
@@ -23,44 +23,50 @@
 
 <h1 id = "welcome"> Welcome to Fantasy Football! </h1>
 <h2>Created by Brett Marcinkiewicz and Jacob Kahn</h2>
-<div>
-	<div>
-		<input type="text" id="author" placeholder="Choose a nickname"/>
-	</div>
-	<br />
-	<div>
-		<button id="connect" onclick="connectToSocket();">Connect</button>
-		<button id="disconnect" disabled="disabled" onclick="disconnectFromSocket();">
-			Disconnect
-		</button>
-	</div>
-	<br />
-	<div id="conversationDiv">
-		<input type="text" id="text" placeholder="Write a message..."/>
-		<button id="sendMessage" onclick="sendMessageToSocket();">Send</button>
-		<p id="response"></p>
-	</div>
-</div>
 <button id="testButton" type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px" onclick="sendForm()">Click</button>
 <% if(localTeam == null) { %>
-<div class="container panel panel-default">
-	<h3>Create your team!</h3>
-	<div class="row">
-		<div class="col-sm-8 panel">
-	<form action="new-question" method="POST">
-  		<div class="form-group">
-    		<label for="TeamNameInput">Enter Team Name:</label>
-    		<input class="form-control" name="TeamNameInput">
-  		</div>
-  		<div class="form-group">
-    		<label for="theName">Enter Your Name:</label>
-    		<input class="form-control" name="theName">
-  		</div>
-  		<button type="submit" class="btn btn-primary">Submit</button>
-	</form>
+<table id="homeTable" class="table table-striped">
+	<td>
+		<div class="container panel panel-default" style="width:100%;">
+			<h3>Create your team!</h3>
+			<div class="row">
+				<div class="col-sm-8 panel">
+			<form action="new-question" method="POST">
+				<div class="form-group">
+					<label for="TeamNameInput">Enter Team Name:</label>
+					<input class="form-control" name="TeamNameInput">
+				</div>
+				<div class="form-group">
+					<label for="theName">Enter Your Name:</label>
+					<input class="form-control" name="theName">
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
+	</td>
+	<td>
+		<div>
+			<div>
+				<input type="text" id="author" placeholder="Choose a nickname"/>
+			</div>
+			<br />
+			<div>
+				<button id="connect">Connect</button>
+				<button id="disconnect" disabled="disabled">
+					Disconnect
+				</button>
+			</div>
+			<br />
+			<div id="conversationDiv">
+				<input type="text" id="text" placeholder="Write a message..."/>
+				<button id="send">Send</button>
+				<p id="response"></p>
+			</div>
+		</div>
+	</td>
+</table>
 <% } else { %>
 	<h3>Welcome! <%=localTeam.teamName%> press start to start the draft</h3>
 	<form action="startDraft" method="GET">

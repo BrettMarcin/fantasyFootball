@@ -17,6 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.messaging.handler.annotation.MessageMapping;
 //import org.springframework.messaging.handler.annotation.SendTo;
 //import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -78,30 +82,6 @@ public class HomeController {
         pickNumber = 1;
         response.addCookie(cookie);
         response.sendRedirect("/");
-    }
-
-    private List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
-
-	@RequestMapping("/questions")
-    public SseEmitter questions(){
-	    SseEmitter sseEmitter = new SseEmitter();
-
-	    emitters.add(sseEmitter);
-
-	    sseEmitter.onCompletion(() -> emitters.remove(sseEmitter));
-
-	    return sseEmitter;
-    }
-
-    @RequestMapping(value="/new-question", method = RequestMethod.POST)
-    public void postQuestion(String question, HttpServletRequest request, HttpServletResponse response) {
-        for(SseEmitter emitter : emitters){
-            try {
-                emitter.send(SseEmitter.event().name("spring").data(question));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -305,46 +285,12 @@ public class HomeController {
         response.sendRedirect("/");
     }
 
-//    @MessageMapping("/chat")
-//    @SendTo("/topic/messages")
-//    public void send(SentMessage theMessage){
-//        ObjectMapper mapper = new ObjectMapper();
-//        String jsonInString = null;
-//        try {
-//            jsonInString = mapper.writeValueAsString(theMessage);
-//            log.info("THE MESSAGE: " + jsonInString);
-//        }
-//        catch(Exception e)
-//        {
-//            log.severe(String.valueOf(e));
-//        }
-////        log.info("message test: " + theMessage.author());
-////        String json = null;
-////        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-////        try {
-////            json = ow.writeValueAsString(theMessage);
-////        } catch (JsonProcessingException e) {
-////            log.severe(String.valueOf(e));
-////        }
-////        log.info("THE MESSAGE: " + json);
-////        String time = new SimpleDateFormat("HH:mm").format(new Date());
-////        MessageContents message = new MessageContents(theMessage.text(), theMessage.author(), time);
-////        try {
-////            json = ow.writeValueAsString(message);
-////        } catch (JsonProcessingException e) {
-////            log.severe(String.valueOf(e));
-////        }
-////        log.info("inside add: " + json);
-////        messageService.addMessage(message);
-//    }
-//
-//    @RequestMapping(value = "/getMessages", method = RequestMethod.GET)
-//    @ResponseBody
-//    public List<MessageContents> getMessages()
-//    {
-//        log.info("inside getMessages");
-//        return messageService.getMessages();
-//    }
+    @MessageMapping("/hello")
+    @SendTo("/topic/greetings")
+    public MessageContents greeting(SentMessage message) throws Exception {
+        String time = new SimpleDateFormat("HH:mm").format(new Date());
+        return new MessageContents(message.getText(), message.getAuthor(), time);
+    }
 
     public void setTimer(int seconds) {
         if (timer == null){
