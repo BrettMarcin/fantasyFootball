@@ -24,6 +24,9 @@
 <h1 id = "welcome"> Welcome to Fantasy Football! </h1>
 <h2>Created by Brett Marcinkiewicz and Jacob Kahn</h2>
 <button id="testButton" type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px" onclick="sendForm()">Click</button>
+<script>
+	connect();
+</script>
 <% if(localTeam == null) { %>
 <table id="homeTable" class="table table-striped">
 	<td>
@@ -47,24 +50,19 @@
 		</div>
 	</td>
 	<td>
-		<div>
-			<div>
-				<input type="text" id="author" placeholder="Choose a nickname"/>
+		<h3>Live Messaging</h3>
+		<form>
+			<div class="form-group">
+				<label>Name:</label>
+				<input type="text" class="form-control" id="author">
 			</div>
-			<br />
-			<div>
-				<button id="connect">Connect</button>
-				<button id="disconnect" disabled="disabled">
-					Disconnect
-				</button>
+			<textarea id="area" style="width: 100%; height: 150px;" readonly></textarea>
+			<div class="form-group">
+				<label>Enter message:</label>
+				<input type="text" class="form-control" id="text">
 			</div>
-			<br />
-			<div id="conversationDiv">
-				<input type="text" id="text" placeholder="Write a message..."/>
-				<button id="send">Send</button>
-				<p id="response"></p>
-			</div>
-		</div>
+			<button id="send" class="btn btn-default">Submit</button>
+		</form>
 	</td>
 </table>
 <% } else { %>

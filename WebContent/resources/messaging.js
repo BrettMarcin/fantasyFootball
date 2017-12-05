@@ -39,8 +39,14 @@ function send() {
 }
 
 function showGreeting(message) {
-    console.log(message);
-    $("#conversationDiv").append("<tr><td>" + message.text + ' ' + message.author + "</td></tr>");
+    console.log("AREA");
+    var textArea = $('#area');
+    if(textArea.val() === "") {
+        textArea.val(textArea.val() + message.author + ": " + message.text);
+    }
+    else{
+        textArea.val(textArea.val() + "\n" + message.author + ": " + message.text);
+    }
 }
 
 $(function () {
