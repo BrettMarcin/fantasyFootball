@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @Controller
+@RequestMapping(value = "/api")
 public class HomeController {
 
     private HashMap<Integer, Integer> theAssociation;
@@ -42,15 +43,14 @@ public class HomeController {
 	public void init() {
 		List<Team> theTeams = teamService.getTeams();
         remainingPlayers = getDBPlayers();
-        remainingPlayers = quick_sort.sort((ArrayList<Player>)remainingPlayers, 0, remainingPlayers.size()-1);
+        if (remainingPlayers.size() > 0)
+            remainingPlayers = quick_sort.sort((ArrayList<Player>)remainingPlayers, 0, remainingPlayers.size()-1);
         theAssociation = new HashMap<>();
         playersDrafted = new HashSet<>();
         draftHistory = new ArrayList<>();
 		if (theTeams.size() > 0)
 			teamService.clearTeams(theTeams);
 	}
-
-	///////////////////////
 
     @RequestMapping(value = "/resetDraft", method = RequestMethod.GET)
     public void resetDraft(HttpServletResponse response) throws IOException {

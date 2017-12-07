@@ -1,8 +1,10 @@
 /build/
+/build
 /target/
-/.idea/
-/.settings/
-/.project/
+/.idea
+/.settings
+/.project
+.project/
 /idea/
 .idea/
 .settings/
@@ -12,3 +14,8 @@
 /RemoteSystemsTempFiles/
 /Servers/
 /test/
+.classpath/
+/.classpath
+FantasyFootball.iml
+FantasyFootball.iml/
+/FantasyFootball.iml
