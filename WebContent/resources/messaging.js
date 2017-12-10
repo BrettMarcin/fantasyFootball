@@ -33,9 +33,9 @@ function disconnect() {
 }
 
 function send() {
-    console.log("LOGGING:");
-    console.log($("#text").val() + $("#author").val());
-    stompClient.send("/app/hello", {}, JSON.stringify({'text': $("#text").val(), 'author':$("#author").val()}));
+    var authorName = getAuthor();
+    console.log("AUTHOR NAME: " + authorName);
+    stompClient.send("/app/hello", {}, JSON.stringify({'text': $("#text").val(), 'author':authorName}));
 }
 
 function showGreeting(message) {

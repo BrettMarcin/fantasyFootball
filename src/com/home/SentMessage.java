@@ -7,14 +7,13 @@ import java.util.logging.Logger;
 public class SentMessage
 {
     private final static Logger log = Logger.getLogger(SentMessage.class.getName());
-    private String author;
     private String text;
+    private String author;
 
     public SentMessage() {
     }
     public SentMessage(String text, String author)
     {
-        log.info("THERE");
         this.text = text;
         this.author = author;
     }
@@ -22,8 +21,7 @@ public class SentMessage
     {
         return text;
     }
-    public String getAuthor()
-    {
+    public String getAuthor(){
         return author;
     }
 }
