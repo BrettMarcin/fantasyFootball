@@ -54,10 +54,10 @@
 	console.log("else");
 	connect();
 </script>
-<h3>Welcome! <%=localTeam.teamName%> press start to start the draft</h3>
-<button type="submit" class="btn btn-primary" onclick="startDraft()">Start Draft!</button>
-<table>
-	<td>
+<h3 style="margin-left:10px;">Welcome! <%=localTeam.teamName%> press start to start the draft</h3>
+<button type="submit" class="btn btn-primary" onclick="startDraft()" style="margin-left:10px;">Start Draft!</button>
+<div class="row">
+	<div class="col-sm-4" style="clear:left;margin-left:10px">
 		<div class="container panel panel-default" style="width:500px;">
 			<h3>Create a CPU!</h3>
 			<div class="row">
@@ -72,8 +72,8 @@
 				</div>
 			</div>
 		</div>
-	</td>
-	<td>
+	</div>
+	<div class="col-sm-4" style="margin-left:70px; margin-top:-55px">
 		<h3>Live Messaging</h3>
 		<textarea id="area" style="width: 500px; height: 150px;" readonly></textarea>
 		<div class="form-group">
@@ -81,8 +81,8 @@
 			<input type="text" class="form-control" id="text">
 		</div>
 		<button id="send" class="btn btn-default">Submit</button>
-	</td>
-</table>
+	</div>
+</div>
 
 <% } %>
 
