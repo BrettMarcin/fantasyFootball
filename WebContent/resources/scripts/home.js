@@ -24,6 +24,7 @@ function addACpu(){
 }
 
 function startDraft(){
+    disconnect();
     $.ajax({
         async: false,
         type: "GET",

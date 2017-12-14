@@ -10,6 +10,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+	<script src="/WebContent/resources/js/sockjs-0.3.4.js"></script>
+	<script src="/WebContent/resources/js/stomp.js"></script>
+	<script src ="/WebContent/resources/messaging.js"></script>
 	<script src="${theJS}"></script>
 	<link rel="stylesheet" type="text/css" href="${theCSS}" />
 	<link href="${bootstrap}" rel="stylesheet" />
@@ -54,6 +57,9 @@
 		</div>
 	</div>
 </div>
+<script>
+	connect();
+</script>
 <div id="particles-js">
 	<div id="theDraft">
 		<h3>Fantasy Football</h3>

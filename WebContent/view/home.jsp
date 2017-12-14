@@ -23,16 +23,11 @@
 
 <h1 style="margin-left: 10px;"> Welcome to Fantasy Football! </h1>
 <h2 style="margin-left: 10px;">Created by Brett Marcinkiewicz and Jacob Kahn</h2>
+
+<% if(localTeam == null) { %>
 <form action="updatePlayers" method="GET">
 	<button type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px">Update Rosters</button>
 </form>
-
-
-
-<% if(localTeam == null) { %>
-<script>
-	console.log("if");
-</script>
 <div class="container panel panel-default">
 	<h3>Create your team!</h3>
 	<div class="row">
@@ -54,7 +49,7 @@
 	console.log("else");
 	connect();
 </script>
-<h3 style="margin-left:10px;">Welcome! <%=localTeam.teamName%> press start to start the draft</h3>
+<h3 style="margin-left:10px;">Welcome! <%=localTeam.teamName%> press "Start Draft!" to start the draft</h3>
 <button type="submit" class="btn btn-primary" onclick="startDraft()" style="margin-left:10px;">Start Draft!</button>
 <div class="row">
 	<div class="col-sm-4" style="clear:left;margin-left:10px">

@@ -34,12 +34,11 @@ function disconnect() {
 
 function send() {
     var authorName = getAuthor();
-    console.log("AUTHOR NAME: " + authorName);
     stompClient.send("/app/hello", {}, JSON.stringify({'text': $("#text").val(), 'author':authorName}));
 }
 
 function showGreeting(message) {
-    console.log("AREA");
+    $('#text').val('');
     var textArea = $('#area');
     if(textArea.val() === "") {
         textArea.val(textArea.val() + message.author + ": " + message.text);
