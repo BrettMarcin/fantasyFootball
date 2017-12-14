@@ -1,8 +1,72 @@
+/*globals jQuery */
 $(function() {
 
     checkIfDraftHasStarted();
     updateCurrentTeams();
 });
+
+function addACpu(){
+    jsonData = {
+        CpuName: $('#CpuName').text()
+    };
+    console.log("adding cpu");
+    $.ajax({
+        url: '/addCpu',
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'text',
+        data: JSON.stringify(jsonData),
+        async: true,
+        success: function(response){
+            window.location.reload();
+        }
+    });
+}
+
+function startDraft(){
+    disconnect();
+    $.ajax({
+        async: false,
+        type: "GET",
+        url: '/startDraft',
+        success: function () {
+            window.location.reload();
+        }
+    });
+}
+function setLocalTeam(){
+    jsonData = {
+        teamName: $('#teamName').val(),
+        userName: $('#theName').val()
+    };
+    $.ajax({
+        url: '/setLocalTeam',
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'text',
+        data: JSON.stringify(jsonData),
+        async: true,
+        success: function(response){
+            window.location.reload();
+        }
+    });
+
+}
+function getAuthor(){
+    var author = null;
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/getAuthor',
+        dataType: 'text',
+        success: function(result){
+            console.log("RESULT:");
+            console.log(result);
+            author = result;
+        }
+    });
+    return author;
+}
 
 function updateCurrentTeams(){
     window.setTimeout(function () {

@@ -4,6 +4,7 @@ var playerRank = null;
 var team = null;
 var pos = null;
 var rank = null;
+var jsonData = null;
 
 $(function() {
     getTeam($('#theTeamName').text());
@@ -57,7 +58,6 @@ function getDraftHistory(){
         }
     });
 };
-
 
 function checkIfDraftIsRunning(){
     window.setTimeout(function () {
@@ -300,6 +300,20 @@ function draftButton() {
     team = null;
     pos = null;
     $('#SelectedPlayerP').text('');
+}
+
+function getAuthor(){
+    var author = null;
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/getAuthor',
+        dataType: 'text',
+        success: function(result){
+            author = result;
+        }
+    });
+    return author;
 }
 
 function getCurrentPick(){

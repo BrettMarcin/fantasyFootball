@@ -4,18 +4,40 @@ import java.io.IOException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.messaging.handler.annotation.MessageMapping;
+//import org.springframework.messaging.handler.annotation.SendTo;
+//import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+//import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
+//import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+//import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import java.util.*;
 
 @Controller
+//@RestController
 public class HomeController {
 
     private HashMap<Integer, Integer> theAssociation;
@@ -102,10 +124,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
-	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void changeName(@RequestBody TeamModel json, HttpServletResponse response) throws IOException{
         List<Team> theTeams = teamService.getTeams();
 	    if (theTeams.size() < 10) {
-            Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"), false);
+            Team localTeam = new Team(json.getTeamName(), json.getUserName(), false);
             teamService.saveTeam(localTeam);
             int hashCookie = (int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) * Math.random());
             System.out.printf("New hashCookie: %d", hashCookie);
@@ -117,10 +139,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/addACpu", method = RequestMethod.POST)
-    public void addACpu(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public void addACpu(@RequestBody TeamModel json, HttpServletResponse response) throws IOException{
         List<Team> theTeams = teamService.getTeams();
         if (theTeams.size() < 10) {
-            Team localTeam = new Team(request.getParameter("CpuName"), "Cpu" ,true);
+            Team localTeam = new Team(json.getTeamName(), "Cpu" ,true);
             teamService.saveTeam(localTeam);
             response.sendRedirect("/");
         }
@@ -301,6 +323,27 @@ public class HomeController {
         response.sendRedirect("/");
     }
 
+    @RequestMapping(value = "/getAuthor", method = RequestMethod.GET)
+    @ResponseBody
+    public String getAuthor(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue){
+        log.info("INSIDE GET AUTHOR");
+        String author = null;
+        if (!cookieValue.equals("defaultCookieValue")) {
+            int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+            Team localTeam = teamService.getTeam(theHashCookie);
+            author = localTeam.name;
+        }
+        log.info("returning: " + author);
+        return author;
+    }
+
+    @MessageMapping("/hello")
+    @SendTo("/topic/greetings")
+    public MessageContents greeting(SentMessage message) throws Exception {
+        String time = new SimpleDateFormat("HH:mm").format(new Date());
+        return new MessageContents(message.getText(), message.getAuthor(), time);
+    }
+
     public void setTimer(int seconds) {
         if (timer == null){
             timer = new Timer();
@@ -375,4 +418,5 @@ public class HomeController {
             }
         }
     }
+
 }
