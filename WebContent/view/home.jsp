@@ -4,6 +4,7 @@
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts/home.js" var="theJS" />
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
+	<spring:url value="/WebContent/resources/stylesheets/table.css" var="theCSS" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -11,8 +12,10 @@
 	<script src="/WebContent/resources/js/sockjs-0.3.4.js"></script>
 	<script src="/WebContent/resources/js/stomp.js"></script>
 	<script src ="/WebContent/resources/messaging.js"></script>
+	<script src ="/WebContent/resources/Logic.js"></script>
 	<script src="${theJS}"></script>
 	<link href="${bootstrap}" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="${theCSS}" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<%@ page import ="java.util.*" %>
 	<%@ page import ="com.home.Team" %>
@@ -46,7 +49,6 @@
 </div>
 <% } else { %>
 <script>
-	console.log("else");
 	connect();
 </script>
 <h3 style="margin-left:10px;">Welcome! <%=localTeam.teamName%> press "Start Draft!" to start the draft</h3>
@@ -70,12 +72,15 @@
 	</div>
 	<div class="col-sm-4" style="margin-left:70px; margin-top:-55px">
 		<h3>Live Messaging</h3>
-		<textarea id="area" style="width: 500px; height: 150px;" readonly></textarea>
+		<textarea id="area" style="width: 500px; height: 150px;overflow-y:scroll" readonly></textarea>
 		<div class="form-group">
 			<label>Enter message:</label>
-			<input type="text" class="form-control" id="text">
+			<input type="text" class="form-control" id="text<%=localTeam.id%>">
 		</div>
-		<button id="send" class="btn btn-default">Submit</button>
+		<button id="send" class="btn btn-default" onclick="send(<%=localTeam.id%>)">Submit</button>
+		<script>
+            fillMessages();
+		</script>
 	</div>
 </div>
 

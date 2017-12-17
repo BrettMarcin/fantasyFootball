@@ -13,6 +13,7 @@
 	<script src="/WebContent/resources/js/sockjs-0.3.4.js"></script>
 	<script src="/WebContent/resources/js/stomp.js"></script>
 	<script src ="/WebContent/resources/messaging.js"></script>
+	<script src ="/WebContent/resources/Logic.js"></script>
 	<script src="${theJS}"></script>
 	<link rel="stylesheet" type="text/css" href="${theCSS}" />
 	<link href="${bootstrap}" rel="stylesheet" />
@@ -62,7 +63,7 @@
 </script>
 <div id="particles-js">
 	<div id="theDraft">
-		<h3>Fantasy Football</h3>
+		<h3 id="titleHead">Fantasy Football</h3>
 		<div class="row">
 			<div class="row">
 				<div class="col-sm-2" style="clear:left">
@@ -86,13 +87,16 @@
 					</ul>
 				</div>
 				<div class="col-sm-6" style="margin-top:-56px">
-					<h3>Live Messaging</h3>
+					<h3 id="mesTitle">Live Messaging</h3>
 					<textarea id="area" style="width: 500px; height: 150px;" readonly></textarea>
 					<div class="form-group">
-						<label>Enter message:</label>
-						<input type="text" class="form-control" id="text" style="width:500px">
+						<label id="mesLabel">Enter message:</label>
+						<input id="text<%=localTeam.id%>" type="text" class="form-control" id="text" style="width:500px">
 					</div>
-					<button id="send" class="btn btn-default">Submit</button>
+					<button id="send" class="btn btn-default" onclick="send(<%=localTeam.id%>)">Submit</button>
+					<script>
+                        fillMessages();
+					</script>
 				</div>
 			</div>
 			<div class="row">
@@ -121,7 +125,7 @@
 
 			<div class="row">
 				<div class="col-md-8">
-					<h2>Draft List</h2>
+					<h2 id="draftHead">Draft List</h2>
 					<table id="resizable" class="ui-widget-content allPlayers table table-sm table-bordered table-hover ">
 						<thead>
 						<tr class="TableHead">

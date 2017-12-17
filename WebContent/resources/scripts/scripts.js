@@ -89,6 +89,19 @@ function updateTeam(){
     }, 980);
 }
 
+function getMessages(){
+    var messages;
+    $.ajax({
+        url: '/getMessages',
+        type: 'GET',
+        async: false,
+        success: function(result){
+            messages = result;
+        }
+    });
+    return messages;
+}
+
 function updateTimeline(){
     window.setTimeout(function () {
         $.ajax({

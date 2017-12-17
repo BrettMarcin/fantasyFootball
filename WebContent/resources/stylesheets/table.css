@@ -87,3 +87,11 @@ body table tr.thePlayer.selectedRow{background-color: #00FFFF;}
 .theTeam{
     width: 200px;
 }
+
+#mesTitle, #draftHead, #mesLabel, #titleHead{
+    color: white;
+    text-shadow: -1px 0 black,
+                 0 1px black,
+                 1px 0 black,
+                 0 -1px black;
+}

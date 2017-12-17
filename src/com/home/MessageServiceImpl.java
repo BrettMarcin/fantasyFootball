@@ -1,13 +1,9 @@
 package com.home;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.beans.Transient;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,22 +15,21 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    public List<MessageContents> getMessages() {
+    public List<Messages> getMessages() {
         return messageDAO.getMessages();
     }
 
     @Override
     @Transactional
-    public void addMessage(MessageContents theMessage) {
-        String json = null;
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        try {
-            json = ow.writeValueAsString(theMessage);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        log.info("inside messageService: " + json);
-        MessageDAO messageDAO = new MessageDAOImpl();
+    public void addMessage(Messages theMessage) {
         messageDAO.addMessage(theMessage);
+    }
+    @Override
+    @Transactional
+    public void clearMessages(){
+        List<Messages> messages = messageDAO.getMessages();
+        if(messages.size() > 0) {
+            messageDAO.clearMessages(messages);
+        }
     }
 }

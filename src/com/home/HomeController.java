@@ -2,34 +2,22 @@ package com.home;
 import java.io.IOException;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Configuration;
 //import org.springframework.messaging.handler.annotation.MessageMapping;
 //import org.springframework.messaging.handler.annotation.SendTo;
 //import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import sun.misc.Request;
 //import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 //import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 //import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -58,10 +46,13 @@ public class HomeController {
 	private TeamService teamService;
 	@Autowired
     private PlayerService playerService;
+	@Autowired
+    private MessageService messageService;
 	private boolean endDraft = true;
 	
 	@javax.annotation.PostConstruct
 	public void init() {
+	    messageService.clearMessages();
 		List<Team> theTeams = teamService.getTeams();
         remainingPlayers = getDBPlayers();
         remainingPlayers = quick_sort.sort((ArrayList<Player>)remainingPlayers, 0, remainingPlayers.size()-1);
@@ -326,22 +317,34 @@ public class HomeController {
     @RequestMapping(value = "/getAuthor", method = RequestMethod.GET)
     @ResponseBody
     public String getAuthor(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue){
-        log.info("INSIDE GET AUTHOR");
         String author = null;
         if (!cookieValue.equals("defaultCookieValue")) {
             int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
             Team localTeam = teamService.getTeam(theHashCookie);
             author = localTeam.name;
         }
-        log.info("returning: " + author);
         return author;
+    }
+
+    @RequestMapping(value = "/getMessages", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Messages> getMessages(){
+        List<Messages> theMessages = messageService.getMessages();
+        if(theMessages.size() > 0) {
+            return theMessages;
+        }
+        else{
+            return null;
+        }
     }
 
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
-    public MessageContents greeting(SentMessage message) throws Exception {
+    public Messages greeting(SentMessage message) throws Exception {
         String time = new SimpleDateFormat("HH:mm").format(new Date());
-        return new MessageContents(message.getText(), message.getAuthor(), time);
+        Messages theMessage = new Messages(message.getText(), message.getAuthor(), time);
+        messageService.addMessage(theMessage);
+        return theMessage;
     }
 
     public void setTimer(int seconds) {

@@ -9,7 +9,6 @@ function addACpu(){
     jsonData = {
         CpuName: $('#CpuName').text()
     };
-    console.log("adding cpu");
     $.ajax({
         url: '/addCpu',
         type: 'POST',
@@ -21,6 +20,19 @@ function addACpu(){
             window.location.reload();
         }
     });
+}
+
+function getMessages(){
+    var messages;
+    $.ajax({
+        url: '/getMessages',
+        type: 'GET',
+        async: false,
+        success: function(result){
+            messages = result;
+        }
+    });
+    return messages;
 }
 
 function startDraft(){
@@ -60,8 +72,6 @@ function getAuthor(){
         url: '/getAuthor',
         dataType: 'text',
         success: function(result){
-            console.log("RESULT:");
-            console.log(result);
             author = result;
         }
     });
