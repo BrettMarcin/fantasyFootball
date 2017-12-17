@@ -1,7 +1,5 @@
 package com.home;
 
-import sun.plugin2.message.Message;
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
