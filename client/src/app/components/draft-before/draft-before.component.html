@@ -1,0 +1,53 @@
+<h1 style="margin-left: 10px;"> Welcome to Fantasy Football! </h1>
+<h2 style="margin-left: 10px;">Created by Brett Marcinkiewicz and Jacob Kahn</h2>
+
+<div *ngIf="!checkLocalTeam()">
+  <div class="container panel panel-default">
+    <h3>Create your team!</h3>
+    <div class="row">
+      <div class="col-sm-8 panel">
+        <form [formGroup]="form" (ngSubmit)="setLocalTeam(form.value)">
+          <div class="form-group">
+            <label for="teamName">Enter Team Name:</label>
+            <input class="form-control" name="teamName" formControlName="teamName">
+          </div>
+          <div class="form-group">
+            <label for="name">Enter Your Name:</label>
+            <input class="form-control" name="name" required formControlName="name">
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="checkLocalTeam()">
+  <h1>{{localTeam.name}}</h1>
+  <div class="container panel panel-default">
+    <h3>Create a CPU!</h3>
+    <div class="row">
+      <div class="col-sm-8 panel">
+        <form [formGroup]="cpuForm">
+          <div class="form-group">
+            <label for="CpuName">Enter CPU Team Name:</label>
+            <input class="form-control" name="CpuName">
+          </div>
+          <button type="submit" class="btn btn-primary">Add CPU</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container panel panel-default">
+  <h3> Current users in Session:<h3>
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="list-group" id="listOfSessionTeams">
+          <div *ngFor="let team of teamsInSession;">
+            <a href="#" class="list-group-item currentTeamInSession">Team Name: {{team.teamName}}, Owned by: {{team.name}}</a>
+          </div>
+        </div>
+      </div>
+    </div>

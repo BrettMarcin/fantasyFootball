@@ -68,7 +68,7 @@
 <% } %>
 
 <div class="container panel panel-default">
-<h3> Current users in Session:<h3>
+<h3> Current users in Session:</h3>
 	<div class="row">
 		<div class="col-sm-8">
 <div class="list-group" id="listOfSessionTeams">

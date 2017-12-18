@@ -70,49 +70,53 @@ public class HomeController {
         response.sendRedirect("/");
     }
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
-		Team localTeam = null;
-        if (!cookieValue.equals("defaultCookieValue")){
-            if (theAssociation.containsKey(Integer.valueOf(cookieValue))){
-                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
-                localTeam = teamService.getTeam(theHashCookie);
-            } else {
-                cookieValue = "defaultCookieValue";
-            }
-        }
-        model.addAttribute("localTeam", localTeam);
-        model.addAttribute("theTeams", teamService.getTeams());
-		if (draftStarted){
-            model.addAttribute("listOfPlayers", remainingPlayers);
-            model.addAttribute("theTimeline", theTimeline);
-            model.addAttribute("round", round);
-            model.addAttribute("pickNumber", pickNumber);
-            response.addCookie(new Cookie("teamCookie", cookieValue));
-		    if (localTeam != null) {
-                return "listOfPlayers";
-            } else {
-                return "guestDraft";
-            }
-		} else if(endDraft == true){
-			return "home";
-		} else {
-		    return "end";
-        }
-    }
+//	@RequestMapping(value = "/", method = RequestMethod.GET)
+//	public String getHome(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, Model model, HttpServletResponse response) throws IOException {
+//		Team localTeam = null;
+//        if (!cookieValue.equals("defaultCookieValue")){
+//            if (theAssociation.containsKey(Integer.valueOf(cookieValue))){
+//                int theHashCookie = theAssociation.get(Integer.valueOf(cookieValue));
+//                localTeam = teamService.getTeam(theHashCookie);
+//            } else {
+//                cookieValue = "defaultCookieValue";
+//            }
+//        }
+//        model.addAttribute("localTeam", localTeam);
+//        model.addAttribute("theTeams", teamService.getTeams());
+//		if (draftStarted){
+//            model.addAttribute("listOfPlayers", remainingPlayers);
+//            model.addAttribute("theTimeline", theTimeline);
+//            model.addAttribute("round", round);
+//            model.addAttribute("pickNumber", pickNumber);
+//            response.addCookie(new Cookie("teamCookie", cookieValue));
+//		    if (localTeam != null) {
+//                return "listOfPlayers";
+//            } else {
+//                return "guestDraft";
+//            }
+//		} else if(endDraft == true){
+//			return "home";
+//		} else {
+//		    return "end";
+//        }
+//    }
 
     @RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
-	public void changeName(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    @ResponseBody
+	public Team setLocalTeam(@RequestBody Team json, HttpServletResponse response) throws IOException{
         List<Team> theTeams = teamService.getTeams();
 	    if (theTeams.size() < 10) {
-            Team localTeam = new Team(request.getParameter("TeamNameInput"), request.getParameter("theName"), false);
+            Team localTeam = new Team(json.teamName, json.name, false);
             teamService.saveTeam(localTeam);
             int hashCookie = (int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) * Math.random());
-            System.out.printf("New hashCookie: %d", hashCookie);
             theAssociation.put(hashCookie, localTeam.id);
             Cookie newCookie = new Cookie("teamCookie", String.valueOf(hashCookie));
             response.addCookie(newCookie);
-            response.sendRedirect("/");
+            response.setStatus(200);
+            return json;
+        } else {
+	        response.setStatus(400);
+	        return null;
         }
     }
 
