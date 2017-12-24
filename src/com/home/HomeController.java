@@ -261,9 +261,17 @@ public class HomeController {
         ArrayList<Player> theDBPlayers = (ArrayList<Player>)playerService.getDBPlayers();
         return theDBPlayers;
     }
+    @RequestMapping(value = "/getCookie", method = RequestMethod.GET)
+    @ResponseBody
+    public String getCookie(@CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue){
+        return cookieValue;
+    }
 
-	@RequestMapping(value = "/draftPlayer", method = RequestMethod.POST)
-	public void draftPlayer(@RequestBody Player json, @CookieValue(value = "teamCookie",defaultValue = "defaultCookieValue") String cookieValue, HttpServletResponse response) throws IOException {
+	@MessageMapping(value = "/draftPlayer")
+    @SendTo("/topic/addPlayer")
+	public boolean draftPlayer(DraftedPlayer json) throws IOException {
+        String cookieValue = json.getCookieValue();
+        boolean success = true;
         if (draftStarted == true && theTimeline.size() != 0) {
             if (theTimeline.get(0).teamName.equals("Round")) {
                 theTimeline.remove(0);
@@ -276,9 +284,9 @@ public class HomeController {
                     List<Player> thePlayerList = getDBPlayers();
                     if (theTimeline.get(0).teamName.equals(localTeam.teamName) && !playersDrafted.contains(json)) {
                         theTimeline.remove(0);
-                        playersDrafted.add(json.first + json.last + json.pos + json.team);
+                        playersDrafted.add(json.getPlayer().first + json.getPlayer().last + json.getPlayer().pos + json.getPlayer().team);
                         for (Player thePlayer : remainingPlayers) {
-                            Player current = thePlayer.isMatch(json);
+                            Player current = thePlayer.isMatch(json.getPlayer());
                             if (current != null) {
                                 localTeam.addPlayer(current);
                                 current.updateTeamOwner(localTeam.teamName);
@@ -287,12 +295,12 @@ public class HomeController {
                             }
                         }
                         for (Player thePlayer : remainingPlayers) {
-                            if (thePlayer.isMatch(json) != null) {
+                            if (thePlayer.isMatch(json.getPlayer()) != null) {
                                 remainingPlayers.remove(thePlayer);
                                 break;
                             }
                         }
-                        lastPlayerDrafted = json;
+                        lastPlayerDrafted = json.getPlayer();
                         lastPlayerDrafted.teamOwner = localTeam.teamName;
                         draftHistory.add(lastPlayerDrafted);
                         startTime = System.currentTimeMillis();
@@ -309,9 +317,8 @@ public class HomeController {
             } else {
                 setCPUTimer(5);
             }
-
         }
-        response.sendRedirect("/");
+        return success;
     }
 
     @RequestMapping(value = "/getAuthor", method = RequestMethod.GET)
@@ -340,7 +347,7 @@ public class HomeController {
 
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
-    public Messages greeting(SentMessage message) throws Exception {
+    public Messages greeting(SentMessage message) {
         String time = new SimpleDateFormat("HH:mm").format(new Date());
         Messages theMessage = new Messages(message.getText(), message.getAuthor(), time);
         messageService.addMessage(theMessage);
