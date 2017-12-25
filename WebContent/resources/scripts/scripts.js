@@ -301,34 +301,6 @@ function getCookie(){
 }
 
 function draftButton() {
-    // theLastRowSelected = null;
-    // $(theLastRowSelected).removeClass('selectedRow');
-    // if (infoOfLastCLicked != null) {
-    //     jsonData = {
-    //         first: infoOfLastCLicked[0],
-    //         last: infoOfLastCLicked[1],
-    //         pos: pos,
-    //         team: team
-    //     };
-    //     $.ajax({
-    //         url: '/draftPlayer',
-    //         type: "POST",
-    //         contentType: "application/json",
-    //         processData: false,
-    //         dataType: "json",
-    //         data: JSON.stringify(jsonData),
-    //         async: true,
-    //         success: function () {
-    //             window.location.reload();
-    //         }
-    //     });
-    // }
-    // window.location.reload();
-    // infoOfLastCLicked = null;
-    // playerRank = null;
-    // team = null;
-    // pos = null;
-    // $('#SelectedPlayerP').text('');
     if (infoOfLastCLicked != null) {
         player = {
             first: infoOfLastCLicked[0],
@@ -336,8 +308,11 @@ function draftButton() {
             pos: pos,
             team: team
         };
-        console.log("SEND IT");
         var cookieVal = getCookie();
+        infoOfLastCLicked = null;
+        playerRank = null;
+        team = null;
+        pos = null;
         draftStompClient.send("/app/draftPlayer", {}, JSON.stringify({'player': player, 'cookieValue': cookieVal}));
     }
 }

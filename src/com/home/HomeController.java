@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,8 @@ public class HomeController {
     private PlayerService playerService;
 	@Autowired
     private MessageService messageService;
+    @Autowired
+    private SimpMessagingTemplate template;
 	private boolean endDraft = true;
 	
 	@javax.annotation.PostConstruct
@@ -373,6 +376,7 @@ public class HomeController {
     }
 
     private void autoDraftPlayer(){
+        boolean success = true;
         if (theTimeline.size() != 0) {
             if (theTimeline.get(0).teamName.equals("Round")) {
                 theTimeline.remove(0);
@@ -396,6 +400,7 @@ public class HomeController {
             endDraft = false;
             draftStarted = false;
         }
+        this.template.convertAndSend("/topic/addPlayer", success);
     }
 	
 	private void getOrder(){
