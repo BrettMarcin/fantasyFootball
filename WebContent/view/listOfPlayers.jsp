@@ -60,6 +60,7 @@
 </div>
 <script>
 	connect();
+	connectDraft();
 </script>
 <div id="particles-js">
 	<div id="theDraft">

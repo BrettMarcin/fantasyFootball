@@ -7,10 +7,11 @@ $(function() {
 
 function addACpu(){
     jsonData = {
-        CpuName: $('#CpuName').text()
+        teamName: $('#CpuName').val(),
+        userName: "CPU"
     };
     $.ajax({
-        url: '/addCpu',
+        url: '/addACpu',
         type: 'POST',
         contentType: 'application/json',
         dataType: 'text',

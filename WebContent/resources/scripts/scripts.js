@@ -4,7 +4,8 @@ var playerRank = null;
 var team = null;
 var pos = null;
 var rank = null;
-var jsonData = null;
+var player = null;
+var draftStompClient = null;
 
 $(function() {
     getTeam($('#theTeamName').text());
@@ -14,13 +15,27 @@ $(function() {
     $('a.dropdown-item').click(function(){
         getTeam($(this).text());
     });
-    checkIfDraftIsRunning();
-    getLastPick();
+    getTime();
+});
+
+function connectDraft() {
+    var draftSocket = new SockJS('/chat');
+    draftStompClient = Stomp.over(draftSocket);
+    draftStompClient.connect({}, function (frame) {
+        draftStompClient.subscribe('/topic/addPlayer', function (success) {
+            postDraft(success);
+        });
+    });
+}
+
+function postDraft(success){
     updateTeam();
     updateTimeline();
-    getTime();
+    getLastPick();
     pollServer();
-});
+    checkIfDraftIsRunning();
+    $('#SelectedPlayerP').text('');
+}
 
 function getTeam(theTeam){
     $.ajax({
@@ -60,33 +75,26 @@ function getDraftHistory(){
 };
 
 function checkIfDraftIsRunning(){
-    window.setTimeout(function () {
-        $.ajax({
-            url: '/isDraftStillGoing',
-            type: "GET",
-            headers: {
-                'Accept': 'application/json'
-            },
-            processData: false,
-            async: false,
-            success: function (data) {
-                if (data) {
-                    checkIfDraftIsRunning();
-                } else {
-                    window.location.reload();
-                }
+    $.ajax({
+        url: '/isDraftStillGoing',
+        type: "GET",
+        headers: {
+            'Accept': 'application/json'
+        },
+        processData: false,
+        async: false,
+        success: function (data) {
+            if (!data) {
+                window.location.reload();
             }
-        });
-    }, 10000);
+        }
+    });
 };
 
 function updateTeam(){
     var theTeam;
-    window.setTimeout(function () {
-        theTeam = $('#theTeamName').text();
-        getTeam(theTeam);
-        updateTeam();
-    }, 980);
+    theTeam = $('#theTeamName').text();
+    getTeam(theTeam);
 }
 
 function getMessages(){
@@ -103,32 +111,29 @@ function getMessages(){
 }
 
 function updateTimeline(){
-    window.setTimeout(function () {
-        $.ajax({
-            async: false,
-            type: "GET",
-            url: '/getTimeline',
-            success: function (result) {
-                var stringBuilder = '';
-                var round = getCurrentRound();
-                var pick = getCurrentPick();
-                $('.timelineItem').remove();
-                for (var i = 0; i < result.length; i++){
-                    if(result[i].teamName === 'Round'){
-                        stringBuilder += '<li class="list-group-item timelineItem round">Round ' + round + '</li>';
-                        round++;
-                    } else {
-                        stringBuilder += '<li class="list-group-item timelineItem team">#' + pick + ' ' + result[i].teamName + '</li>';
-                        pick++;
-                    }
+    $.ajax({
+        async: false,
+        type: "GET",
+        url: '/getTimeline',
+        success: function (result) {
+            var stringBuilder = '';
+            var round = getCurrentRound();
+            var pick = getCurrentPick();
+            $('.timelineItem').remove();
+            for (var i = 0; i < result.length; i++){
+                if(result[i].teamName === 'Round'){
+                    stringBuilder += '<li class="list-group-item timelineItem round">Round ' + round + '</li>';
+                    round++;
+                } else {
+                    stringBuilder += '<li class="list-group-item timelineItem team">#' + pick + ' ' + result[i].teamName + '</li>';
+                    pick++;
                 }
-                $('#timeline').append(stringBuilder);
-                updateTimeline();
-            },
-            error: function () {
-                //updateTimeline();
-            }});
-    }, 980);
+            }
+            $('#timeline').append(stringBuilder);
+        },
+        error: function () {
+            //updateTimeline();
+        }});
 }
 
 function addToPlayerTable(data){
@@ -210,18 +215,15 @@ function getTime(){
 }
 
 function pollServer() {
-    window.setTimeout(function () {
-        $.ajax({
-            url: '/getPlayers',
-            type: "GET",
-            success: function (result) {
-                updateDraftTable(result);
-                pollServer();
-            },
-            error: function () {
-                //pollServer();
-            }});
-    }, 2000);
+    $.ajax({
+        url: '/getPlayers',
+        type: "GET",
+        success: function (result) {
+            updateDraftTable(result);
+        },
+        error: function () {
+            //pollServer();
+        }});
 }
 
 function updateDraftTable(players){
@@ -284,35 +286,35 @@ function clickRow(){
     });
 }
 
+function getCookie(){
+    var cookie = null;
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/getCookie',
+        dataType: 'text',
+        success: function(result){
+            cookie = result;
+        }
+    });
+    return cookie;
+}
+
 function draftButton() {
-    theLastRowSelected = null;
-    $(theLastRowSelected).removeClass('selectedRow');
     if (infoOfLastCLicked != null) {
-        jsonData = {
+        player = {
             first: infoOfLastCLicked[0],
             last: infoOfLastCLicked[1],
             pos: pos,
             team: team
         };
-        $.ajax({
-            url: '/draftPlayer',
-            type: "POST",
-            contentType: "application/json",
-            processData: false,
-            dataType: "json",
-            data: JSON.stringify(jsonData),
-            async: true,
-            success: function () {
-                window.location.reload();
-            }
-        });
+        var cookieVal = getCookie();
+        infoOfLastCLicked = null;
+        playerRank = null;
+        team = null;
+        pos = null;
+        draftStompClient.send("/app/draftPlayer", {}, JSON.stringify({'player': player, 'cookieValue': cookieVal}));
     }
-    window.location.reload();
-    infoOfLastCLicked = null;
-    playerRank = null;
-    team = null;
-    pos = null;
-    $('#SelectedPlayerP').text('');
 }
 
 function getAuthor(){
@@ -343,20 +345,17 @@ function getCurrentPick(){
 }
 
 function getLastPick() {
-    window.setTimeout(function () {
-        $.ajax({
-            dataType: 'json',
-            url: '/getLastPlayerDrafted',
-            type: "GET",
-            success: function (result) {
-                if(result !== null){
-                    $('#lastSelectedPlayerP').text(result.first + ' ' + result.last);
-                }
-                getLastPick();
-            },
-            error: function () {
-            }});
-    }, 3000);
+    $.ajax({
+        dataType: 'json',
+        url: '/getLastPlayerDrafted',
+        type: "GET",
+        success: function (result) {
+            if(result !== null){
+                $('#lastSelectedPlayerP').text(result.first + ' ' + result.last);
+            }
+        },
+        error: function () {
+        }});
 }
 
 function getCurrentRound(){
