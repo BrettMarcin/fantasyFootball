@@ -10,7 +10,7 @@ function addACpu(){
         CpuName: $('#CpuName').text()
     };
     $.ajax({
-        url: '/addCpu',
+        url: '/addACpu',
         type: 'POST',
         contentType: 'application/json',
         dataType: 'text',

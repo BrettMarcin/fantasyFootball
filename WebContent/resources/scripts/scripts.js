@@ -15,7 +15,6 @@ $(function() {
     $('a.dropdown-item').click(function(){
         getTeam($(this).text());
     });
-    checkIfDraftIsRunning();
     getTime();
 });
 
@@ -34,6 +33,8 @@ function postDraft(success){
     updateTimeline();
     getLastPick();
     pollServer();
+    checkIfDraftIsRunning();
+    $('#SelectedPlayerP').text('');
 }
 
 function getTeam(theTeam){
@@ -74,24 +75,20 @@ function getDraftHistory(){
 };
 
 function checkIfDraftIsRunning(){
-    window.setTimeout(function () {
-        $.ajax({
-            url: '/isDraftStillGoing',
-            type: "GET",
-            headers: {
-                'Accept': 'application/json'
-            },
-            processData: false,
-            async: false,
-            success: function (data) {
-                if (data) {
-                    checkIfDraftIsRunning();
-                } else {
-                    window.location.reload();
-                }
+    $.ajax({
+        url: '/isDraftStillGoing',
+        type: "GET",
+        headers: {
+            'Accept': 'application/json'
+        },
+        processData: false,
+        async: false,
+        success: function (data) {
+            if (!data) {
+                window.location.reload();
             }
-        });
-    }, 10000);
+        }
+    });
 };
 
 function updateTeam(){
