@@ -235,7 +235,7 @@ function updateDraftTable(players){
         if(infoOfLastCLicked != null && (players[i].first === infoOfLastCLicked[0] && players[i].last === infoOfLastCLicked[1])){
             foundThePlayer = true;
         }
-        StringBuilder = '<tr class="thePlayer playerInfo ' + players[i].first + players[i].last + players[i].pos + players[i].team + '">';
+        StringBuilder = "<tr class='thePlayer playerInfo " + players[i].first + players[i].last + players[i].pos + players[i].team + "'>";
         StringBuilder += '<td class="thePlayer playerRank">' + players[i].rank + '</td>';
         StringBuilder += '<td class="thePlayer playerName">' + players[i].first + ' ' + players[i].last + '</td>';
         StringBuilder += '<td class="thePlayer playerTeam">' + players[i].team + '</td>';
@@ -258,9 +258,9 @@ function updateDraftTable(players){
         } else {
             var theRow = '.' + theArray[0] + '.' + theArray[1] + '.' + theArray[2];
         }
-        if (theLastRowSelected !== '') {
-            $(theRow).addClass('selectedRow');
-        }
+        // if (theLastRowSelected !== '') {
+        //     $(theRow).addClass('selectedRow');
+        // }
         clickRow();
     } else {
         infoOfLastCLicked = null;
@@ -272,7 +272,7 @@ function updateDraftTable(players){
 }
 
 function clickRow(){
-    $('tr.thePlayer.playerInfo').click(function(){
+    $("tr.thePlayer.playerInfo").click(function(){
         $(".thePlayer.playerInfo").removeClass('selectedRow');
         theLastRowSelected = $(this).attr("class");
         $(this).addClass('selectedRow');
