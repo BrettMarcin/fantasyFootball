@@ -44,19 +44,25 @@ function updatePlayers(){
             type: 'GET',
             async: false,
             success: function (result) {
-                alert = $('<div class="alert alert-success alert-dismissable fade in" role="alert" style="margin-left:10px; width:300px"/>')
+                alert = $('<div id="successAlert" class="alert alert-success alert-dismissable fade in" role="alert" style="margin-left:10px; width:300px"/>')
                     .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
                     .append('Players updated successfully!');
                 $(alert).insertAfter('#updateBtn');
+                window.setTimeout(function(){
+                    $('#successAlert').alert('close');
+                }, 5000);
             }
         });
     }
     else{
-        alert = $('<div class="alert alert-danger alert-dismissable fade in" role="alert" style="margin-left:10px; width:500px"/>')
+        alert = $('<div id="errorAlert" class="alert alert-danger alert-dismissable fade in" role="alert" style="margin-left:10px; width:500px"/>')
             .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
             .append('<strong>Error. </strong>')
             .append('Someone is currently updating the rosters. Please wait.');
         $(alert).insertAfter('#updateBtn');
+        window.setTimeout(function(){
+            $('#errorAlert').alert('close');
+        }, 5000);
     }
 }
 
