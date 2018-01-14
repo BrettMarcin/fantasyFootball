@@ -3,9 +3,10 @@
 <head>
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts/home.js" var="theJS" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
 	<spring:url value="/WebContent/resources/stylesheets/table.css" var="theCSS" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.0.2/particles.js"></script>
@@ -28,9 +29,7 @@
 <h2 style="margin-left: 10px;">Created by Brett Marcinkiewicz and Jacob Kahn</h2>
 
 <% if(localTeam == null) { %>
-<form action="updatePlayers" method="GET">
-	<button type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px">Update Rosters</button>
-</form>
+<button id="updateBtn" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px" onclick="updatePlayers()">Update Rosters</button>
 <div class="container panel panel-default">
 	<h3>Create your team!</h3>
 	<div class="row">

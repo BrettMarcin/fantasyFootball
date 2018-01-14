@@ -23,6 +23,43 @@ function addACpu(){
     });
 }
 
+function updating(){
+    var updateResult;
+    $.ajax({
+        url: '/updating',
+        type: 'GET',
+        async: false,
+        success: function (result) {
+            updateResult = result;
+        }
+    });
+    return updateResult;
+}
+
+function updatePlayers(){
+    var alert;
+    if(!(updating())) {
+        $.ajax({
+            url: '/updatePlayers',
+            type: 'GET',
+            async: false,
+            success: function (result) {
+                alert = $('<div class="alert alert-success alert-dismissable fade in" role="alert" style="margin-left:10px; width:300px"/>')
+                    .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
+                    .append('Players updated successfully!');
+                $(alert).insertAfter('#updateBtn');
+            }
+        });
+    }
+    else{
+        alert = $('<div class="alert alert-danger alert-dismissable fade in" role="alert" style="margin-left:10px; width:500px"/>')
+            .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
+            .append('<strong>Error. </strong>')
+            .append('Someone is currently updating the rosters. Please wait.');
+        $(alert).insertAfter('#updateBtn');
+    }
+}
+
 function getMessages(){
     var messages;
     $.ajax({
