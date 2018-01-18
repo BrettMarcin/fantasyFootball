@@ -37,8 +37,8 @@ function updating(){
 }
 
 function updatePlayers(){
-    $('#updatingPopup').modal('show');
-    console.log("before update");
+    $('#updatingPopup').modal('show')
+    var error;
     var alert;
     if(!(updating())) {
         window.setTimeout(function(){
@@ -47,14 +47,27 @@ function updatePlayers(){
                 type: 'GET',
                 async: false,
                 success: function (result) {
-                    alert = $('<div id="successAlert" class="alert alert-success alert-dismissable fade in" role="alert" style="margin-left:10px; width:300px"/>')
-                        .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
-                        .append('Players updated successfully!');
-                    $(alert).insertAfter('#updateBtn');
-                    $('#updatingPopup').modal('hide');
-                    window.setTimeout(function(){
-                        $('#successAlert').alert('close');
-                    }, 5000);
+                    error = result;
+                    if(!error) {
+                        alert = $('<div id="successAlert" class="alert alert-success alert-dismissable fade in" role="alert" style="margin-left:10px; width:300px"/>')
+                            .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
+                            .append('Players updated successfully!');
+                        $(alert).insertAfter('#updateBtn');
+                        $('#updatingPopup').modal('hide');
+                        window.setTimeout(function () {
+                            $('#successAlert').alert('close');
+                        }, 5000);
+                    }
+                    else{
+                        alert = $('<div id="errorAlert" class="alert alert-danger alert-dismissable fade in" role="alert" style="margin-left:10px; width:500px"/>')
+                            .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
+                            .append('<strong>Error. </strong>')
+                            .append('An error occurred while updating. Default rosters will be used.');
+                        $(alert).insertAfter('#updateBtn');
+                        window.setTimeout(function(){
+                            $('#errorAlert').alert('close');
+                        }, 5000);
+                    }
                 }
             });
         }, 500);

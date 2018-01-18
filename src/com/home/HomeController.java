@@ -239,8 +239,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/updatePlayers", method = RequestMethod.GET)
-    public void updatePlayers(HttpServletResponse response) throws IOException{
+    @ResponseBody
+    public boolean updatePlayers(HttpServletResponse response) throws IOException{
         updating = true;
+        boolean error = false;
         try {
             ArrayList<Player> thePlayers = theData.getPlayers();
             thePlayers = quick_sort.sort(thePlayers, 0, thePlayers.size() - 1);
@@ -251,10 +253,12 @@ public class HomeController {
             remainingPlayers = getDBPlayers();
         }
         catch (java.io.IOException e){
+            error = true;
             updating = false;
         }
         updating = false;
-        response.sendRedirect("/");
+        //response.sendRedirect("/");
+        return error;
     }
 
     @RequestMapping(value = "/updating", method = RequestMethod.GET)
