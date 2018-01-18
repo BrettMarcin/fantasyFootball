@@ -42,6 +42,7 @@ public class HomeController {
     private Player lastPlayerDrafted;
     private ArrayList<Player> draftHistory;
     private ArrayList<Player> remainingPlayers;
+    private boolean updating = false;
 
 	@Autowired
 	private TeamService teamService;
@@ -238,7 +239,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/updatePlayers", method = RequestMethod.GET)
-    public void updatePlayers(HttpServletResponse response) throws IOException{
+    @ResponseBody
+    public boolean updatePlayers(HttpServletResponse response) throws IOException{
+        updating = true;
+        boolean error = false;
         try {
             ArrayList<Player> thePlayers = theData.getPlayers();
             thePlayers = quick_sort.sort(thePlayers, 0, thePlayers.size() - 1);
@@ -249,9 +253,18 @@ public class HomeController {
             remainingPlayers = getDBPlayers();
         }
         catch (java.io.IOException e){
-
+            error = true;
+            updating = false;
         }
-        response.sendRedirect("/");
+        updating = false;
+        //response.sendRedirect("/");
+        return error;
+    }
+
+    @RequestMapping(value = "/updating", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean updating(){
+        return updating;
     }
 
     @RequestMapping(value = "/getPlayers", method = RequestMethod.GET)

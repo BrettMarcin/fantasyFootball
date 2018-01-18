@@ -3,9 +3,10 @@
 <head>
 	<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 	<spring:url value="/WebContent/resources/scripts/home.js" var="theJS" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<spring:url value="/WebContent/resources/bootstrap-3.3.7-dist/css/bootstrap.min.css" var="bootstrap" />
 	<spring:url value="/WebContent/resources/stylesheets/table.css" var="theCSS" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.0.2/particles.js"></script>
@@ -28,9 +29,16 @@
 <h2 style="margin-left: 10px;">Created by Brett Marcinkiewicz and Jacob Kahn</h2>
 
 <% if(localTeam == null) { %>
-<form action="updatePlayers" method="GET">
-	<button type="submit" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px">Update Rosters</button>
-</form>
+<button id="updateBtn" class="btn btn-primary" style="margin-left: 10px; margin-bottom: 10px" onclick="updatePlayers()">Update Rosters</button>
+<div class="modal fade" id="updatingPopup" tabindex="-1" role="dialog" aria-labelledby="updateTitle" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title" id="updateTitle">Updating.....</h1>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="container panel panel-default">
 	<h3>Create your team!</h3>
 	<div class="row">
@@ -52,7 +60,7 @@
 	connect();
 </script>
 <h3 style="margin-left:10px;">Welcome! <%=localTeam.teamName%> press "Start Draft!" to start the draft</h3>
-<button type="submit" class="btn btn-primary" onclick="startDraft()" style="margin-left:10px;">Start Draft!</button>
+<button id="startBtn" class="btn btn-primary" onclick="startDraft()" style="margin-left:10px; margin-bottom:10px">Start Draft!</button>
 <div class="row">
 	<div class="col-sm-4" style="clear:left;margin-left:10px">
 		<div class="container panel panel-default" style="width:500px;">
