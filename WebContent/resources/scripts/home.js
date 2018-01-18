@@ -37,22 +37,27 @@ function updating(){
 }
 
 function updatePlayers(){
+    $('#updatingPopup').modal('show');
+    console.log("before update");
     var alert;
     if(!(updating())) {
-        $.ajax({
-            url: '/updatePlayers',
-            type: 'GET',
-            async: false,
-            success: function (result) {
-                alert = $('<div id="successAlert" class="alert alert-success alert-dismissable fade in" role="alert" style="margin-left:10px; width:300px"/>')
-                    .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
-                    .append('Players updated successfully!');
-                $(alert).insertAfter('#updateBtn');
-                window.setTimeout(function(){
-                    $('#successAlert').alert('close');
-                }, 5000);
-            }
-        });
+        window.setTimeout(function(){
+            $.ajax({
+                url: '/updatePlayers',
+                type: 'GET',
+                async: false,
+                success: function (result) {
+                    alert = $('<div id="successAlert" class="alert alert-success alert-dismissable fade in" role="alert" style="margin-left:10px; width:300px"/>')
+                        .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
+                        .append('Players updated successfully!');
+                    $(alert).insertAfter('#updateBtn');
+                    $('#updatingPopup').modal('hide');
+                    window.setTimeout(function(){
+                        $('#successAlert').alert('close');
+                    }, 5000);
+                }
+            });
+        }, 500);
     }
     else{
         alert = $('<div id="errorAlert" class="alert alert-danger alert-dismissable fade in" role="alert" style="margin-left:10px; width:500px"/>')
@@ -80,15 +85,27 @@ function getMessages(){
 }
 
 function startDraft(){
-    disconnect();
-    $.ajax({
-        async: false,
-        type: "GET",
-        url: '/startDraft',
-        success: function () {
-            window.location.reload();
-        }
-    });
+    if(!(updating())) {
+        disconnect();
+        $.ajax({
+            async: false,
+            type: "GET",
+            url: '/startDraft',
+            success: function () {
+                window.location.reload();
+            }
+        });
+    }
+    else{
+        alert = $('<div id="errorAlert" class="alert alert-danger alert-dismissable fade in" role="alert" style="margin-left:10px; width:500px"/>')
+            .append('<span class="close" data-dismiss="alert" aria-label="close">&times;</span>')
+            .append('<strong>Error. </strong>')
+            .append('Someone is currently updating the rosters. Please wait.');
+        $(alert).insertAfter('#startBtn');
+        window.setTimeout(function(){
+            $('#errorAlert').alert('close');
+        }, 5000);
+    }
 }
 function setLocalTeam(){
     jsonData = {
