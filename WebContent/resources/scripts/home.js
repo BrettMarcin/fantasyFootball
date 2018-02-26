@@ -1,9 +1,24 @@
 /*globals jQuery */
+var teamStompClient = null;
 $(function() {
 
     checkIfDraftHasStarted();
     updateCurrentTeams();
 });
+
+function connectTeams(){
+    var teamSocket = new SockJS('/chat');
+    teamStompClient = Stomp.over(teamSocket);
+    teamStompClient.connect({}, function (frame) {
+        teamStompClient.subscribe('/topic/addTeams', function (success) {
+            postTeam(success);
+        });
+    });
+}
+
+function postTeam(){
+    updateCurrentTeams();
+}
 
 function addACpu(){
     jsonData = {
@@ -125,19 +140,9 @@ function setLocalTeam(){
         teamName: $('#teamName').val(),
         userName: $('#theName').val()
     };
-    $.ajax({
-        url: '/setLocalTeam',
-        type: 'POST',
-        contentType: 'application/json',
-        dataType: 'text',
-        data: JSON.stringify(jsonData),
-        async: true,
-        success: function(response){
-            window.location.reload();
-        }
-    });
-
+    teamStompClient.send("/app/setLocalTeam", {}, JSON.stringify(jsonData));
 }
+
 function getAuthor(){
     var author = null;
     $.ajax({
@@ -153,24 +158,21 @@ function getAuthor(){
 }
 
 function updateCurrentTeams(){
-    window.setTimeout(function () {
-        $.ajax({
-            async: false,
-            type: "GET",
-            url: '/getTeams',
-            success: function (result) {
-                var stringBuilder = '';
-                $('.list-group-item.currentTeamInSession').remove();
-                for(var i = 0; i < result.length; i++){
-                    stringBuilder = '<a href="#" class="list-group-item currentTeamInSession">Team Name: ' + result[i].teamName + ', Owned by: ' + result[i].name + '</a>';
-                    $('#listOfSessionTeams').append(stringBuilder);
-                }
-                updateCurrentTeams();
-            },
-            error: function () {
-                updateCurrentTeams();
-            }});
-    }, 980);
+    $.ajax({
+        async: false,
+        type: "GET",
+        url: '/getTeams',
+        success: function (result) {
+            var stringBuilder = '';
+            $('.list-group-item.currentTeamInSession').remove();
+            for(var i = 0; i < result.length; i++){
+                stringBuilder = '<a href="#" class="list-group-item currentTeamInSession">Team Name: ' + result[i].teamName + ', Owned by: ' + result[i].name + '</a>';
+                $('#listOfSessionTeams').append(stringBuilder);
+            }
+        },
+        error: function () {
+            updateCurrentTeams();
+        }});
 }
 
 function checkIfDraftHasStarted(){

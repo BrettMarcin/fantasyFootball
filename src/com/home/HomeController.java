@@ -118,8 +118,9 @@ public class HomeController {
         }
     }
 
-    @RequestMapping(value = "/setLocalTeam", method = RequestMethod.POST)
-	public void changeName(@RequestBody TeamModel json, HttpServletResponse response) throws IOException{
+    @MessageMapping(value = "/setLocalTeam")
+    @SendTo("/topic/addTeams")
+	public void changeName(TeamModel json, HttpServletResponse response) throws IOException{
         List<Team> theTeams = teamService.getTeams();
 	    if (theTeams.size() < 10) {
             Team localTeam = new Team(json.getTeamName(), json.getUserName(), false);
@@ -129,7 +130,6 @@ public class HomeController {
             theAssociation.put(hashCookie, localTeam.id);
             Cookie newCookie = new Cookie("teamCookie", String.valueOf(hashCookie));
             response.addCookie(newCookie);
-            response.sendRedirect("/");
         }
     }
 

@@ -39,6 +39,9 @@
 		</div>
 	</div>
 </div>
+<script>
+	connectTeams();
+</script>
 <div class="container panel panel-default">
 	<h3>Create your team!</h3>
 	<div class="row">
@@ -57,7 +60,7 @@
 </div>
 <% } else { %>
 <script>
-	connect();
+	connectMessage();
 </script>
 <h3 style="margin-left:10px;">Welcome! <%=localTeam.teamName%> press "Start Draft!" to start the draft</h3>
 <button id="startBtn" class="btn btn-primary" onclick="startDraft()" style="margin-left:10px; margin-bottom:10px">Start Draft!</button>

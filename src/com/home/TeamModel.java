@@ -1,14 +1,16 @@
 package com.home;
 
-import javax.xml.bind.annotation.XmlElement;
+import java.util.logging.Logger;
 
 public class TeamModel {
-    @XmlElement private String teamName;
-    @XmlElement private String userName;
-
+    private String teamName;
+    private String userName;
+    private final static Logger log = Logger.getLogger(TeamModel.class.getName());
     public TeamModel(){
-
+        super();
+        log.info("inside team model");
     }
+
     public TeamModel(String teamName, String userName){
         this.teamName = teamName;
         this.userName = userName;

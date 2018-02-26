@@ -12,7 +12,7 @@ function setConnected(connected) {
     $("#greetings").html("");
 }
 
-function connect() {
+function connectMessage() {
     var socket = new SockJS('/chat');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
